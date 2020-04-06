@@ -70,16 +70,16 @@
 ;;
 ;; Get all cards data.
 ;;
-(defun all-cards (&key id)
+(defun all-cards ()
   "Generates SxQL query. (yield) generates the SQL. It is not executed."
   (select (:search_card.title
-           (:as :search_card.id :id)
-           (:as :search_card.price :price)
-           (:as :search_card.isbn :isbn)
-           (:as :search_card.cover :cover)
-           (:as :search_card.details_url :details_url)
-           (:as :search_card.date_publication :date_publication)
-           (:as :search_card.summary :summary)
+           :search_card.id
+           :search_card.price
+           :search_card.isbn
+           :search_card.cover
+           :search_card.details_url
+           :search_card.date_publication
+           :search_card.summary
            (:as :search_author.name :author)
            (:as :search_shelf.name :shelf)
            ;; (:as :search_author.publishers :publishers)
