@@ -86,20 +86,14 @@
            :search_card.date_publication
            :search_card.summary
            (:as :search_author.name :author)
-           (:as :search_shelf.name :shelf)
-           ;; (:as :search_author.publishers :publishers)
-           )
+           (:as :search_shelf.name :shelf))
     (from :search_card
-          :search_author
-          :search_shelf)
+          :search_author)
     (join :search_card_authors
           :on (:and (:= :search_card.id :search_card_authors.card_id)
-                    (:= :search_author.id :search_card_authors.author_id))
-          :on (:= :search_card.shelf :search_shelf.id))
-    (when id
-      (where (:= :search_card.id id)))
-    ;; (where (:< :search_card.id 100))
-    ))
+                    (:= :search_author.id :search_card_authors.author_id)))
+    (join :search_shelf
+          :on (:= :search_card.shelf_id :search_shelf.id))))
 
 (defparameter *cards* nil
   "List of all books.")
