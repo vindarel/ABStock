@@ -1,22 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <link rel="stylesheet" href="style.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
     <title>{% block title %}My amazing site{% endblock %}</title>
-</head>
+  </head>
 
-<body>
-    <div id="sidebar">
-        {% block sidebar %}
-        <ul>
-            <li><a href="/">Home</a></li>
-            <li><a href="/blog/">Blog</a></li>
-        </ul>
-        {% endblock %}
-    </div>
+  <body>
+    <section class="hero is-info is-fullheight">
+      <div class="hero-head">
+        <nav class="navbar">
+          <div class="container">
+            <div class="navbar-brand">
+              <a class="navbar-item" href="../">
+                <!-- <img src="http://bulma.io/images/bulma-type-white.png" alt="Logo"> -->
+                <div> La Palpitante </div>
+              </a>
+              <span class="navbar-burger burger" data-target="navbarMenu">
+                <span></span>
+                <span></span>
+                <span></span>
+              </span>
+            </div>
+            <div id="navbarMenu" class="navbar-menu">
+              <div class="navbar-end">
+                <span class="navbar-item">
+                  <a class="button is-white is-outlined" href="http://www.lapalpitante.fr/">
+                    <span class="icon">
+                      <i class="fa fa-home"></i>
+                    </span>
+                    <span>Site ouéb</span>
+                  </a>
+                </span>
+              </div>
+            </div>
+          </div>
+        </nav>
+      </div>
 
-    <div id="content">
-        {% block content %}{% endblock %}
-    </div>
-</body>
+      <div class="hero-body">
+        <div class="container has-text-centered">
+          <div class="column is-6 is-offset-3">
+            <h1 class="title">
+              Coming Soon
+            </h1>
+            <h2 class="subtitle">
+              On vous prépare une interface pour commander nos livres à partir de chez vous ! <br>
+              Vous regardez nos livres puis vous nous passez un coup de fil pour passer commande, et on prends des nouvelles au passage.
+            </h2>
+            <div class="box">
+              <form action="search">
+                <div class="field is-grouped">
+                  <p class="control is-expanded">
+                    <input class="input" name="q" id="query" type="text" placeholder="Chercher un titre, un auteur…">
+                  </p>
+                  <p class="control">
+                    <a class="button is-info" type="submit">
+                      Chercher
+                    </a>
+                  </p>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+  </body>
 </html>

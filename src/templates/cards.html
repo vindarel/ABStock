@@ -4,7 +4,7 @@
 {% block content %}
 <ul>
   {% for card in cards %}
-  <li><a href="{{ card.details_url }}">{{ card.title }}</a></li>
+  <li><a href="{{ card.details_url }}" class="subtitle">{{ card.title }}</a></li>
   {% endfor %}
 </ul>
 {% endblock %}
