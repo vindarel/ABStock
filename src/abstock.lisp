@@ -37,6 +37,11 @@
 (defun card-by-id (id)
   "Generates SxQL query. (yield) generates the SQL. It is not executed."
   (select (:search_card.title
+           :search_card.price
+           :search_card.id
+           :search_card.isbn
+           :search_card.details_url
+           :search_card.cover
            (:as :search_author.name :author)
            (:as :search_shelf.name :shelf))
     (from :search_card
@@ -72,8 +77,8 @@
 ;;
 (defun all-cards ()
   "Generates SxQL query. (yield) generates the SQL. It is not executed."
-  (select (:search_card.title
-           :search_card.id
+  (select ((:distinct :search_card.id)
+           :search_card.title
            :search_card.price
            :search_card.isbn
            :search_card.cover
