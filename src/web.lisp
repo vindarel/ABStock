@@ -6,6 +6,7 @@
  (asdf:system-relative-pathname "abstock" "src/templates/"))
 
 (defparameter +base.html+ (djula:compile-template* "base.html"))
+(defparameter +welcome.html+ (djula:compile-template* "welcome.html"))
 (defparameter +cards.html+ (djula:compile-template* "cards.html"))
 
 (defun render-base ()
@@ -18,8 +19,8 @@
 
 (easy-routes:defroute root ("/" :method :get) ()
   (print :hello-root)
-  (djula:render-template* +cards.html+ nil
-                          :cards (subseq *cards* 0 10)))
+  (djula:render-template* +welcome.html+ nil
+                          :title "La Palpitante en ligne"))
 
 (easy-routes:defroute search-route ("/search" :method :get) (q)
   (djula:render-template* +cards.html+ nil
