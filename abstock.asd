@@ -16,6 +16,7 @@
                :hunchentoot
                :easy-routes
                :spinneret
+               :djula
 
                :log4cl
                :cl-i18n)
