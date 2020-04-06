@@ -21,5 +21,9 @@
   (djula:render-template* +cards.html+ nil
                           :cards (subseq *cards* 0 10)))
 
+(easy-routes:defroute search-route ("/search" :method :get) (q)
+  (djula:render-template* +cards.html+ nil
+                          :cards (subseq *cards* 0 10)))
+
 (defun start ()
   (hunchentoot:start *server*))
