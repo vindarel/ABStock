@@ -27,9 +27,12 @@
 
 (in-package :abstock)
 
-(defparameter *connection*
-  (dbi:connect :sqlite3
-               :database-name "db.db"))
+(defparameter *connection* nil)
+
+(defun connect ()
+  (setf *connection*
+        (dbi:connect :sqlite3
+                     :database-name "db.db")))
 
 (defun card-by-id (id)
   "Generates SxQL query. (yield) generates the SQL. It is not executed."
