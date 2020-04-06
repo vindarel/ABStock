@@ -1,5 +1,7 @@
 (in-package :abstock)
 
+(defparameter *server* nil)
+
 (djula:add-template-directory
  (asdf:system-relative-pathname "abstock" "src/templates/"))
 
@@ -10,3 +12,14 @@
   (with-output-to-string (s)
     (djula:render-template* +cards.html+ s
                             :cards (subseq *cards* 0 2))))
+
+(setf *server* (make-instance 'easy-routes:routes-acceptor
+                              :port 8899))
+
+(easy-routes:defroute root ("/" :method :get) ()
+  (print :hello-root)
+  (djula:render-template* +cards.html+ nil
+                          :cards (subseq *cards* 0 10)))
+
+(defun start ()
+  (hunchentoot:start *server*))
