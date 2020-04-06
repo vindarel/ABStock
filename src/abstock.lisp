@@ -113,3 +113,20 @@
     )
   t
   )
+
+;;
+;; Shelves
+;;
+(defun all-shelves ()
+  (select (:search_shelf.name
+           :search_shelf.id)
+    (from :search_shelf)))
+
+(defparameter *shelves* nil)
+
+(defun get-all-shelves ()
+  "Get shelves."
+  (let* ((query (dbi:prepare *connection* (yield (all-shelves))))
+         (query (dbi:execute query)))
+    (setf *shelves* (dbi:fetch-all query)))
+  t)
