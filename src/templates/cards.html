@@ -1,10 +1,53 @@
 {% extends "base.html" %}
 
-{% block title %} Livres {% endblock %}
+
 {% block content %}
-<ul>
-  {% for card in cards %}
-  <li><a href="{{ card.details_url }}" class="subtitle">{{ card.title }}</a></li>
-  {% endfor %}
-</ul>
+<div class="container">
+  <div class="columns">
+    <div class="column is-6 is-offset-3">
+
+      <div class="box">
+        <form action="search">
+          <div class="field is-grouped">
+            <p class="control is-expanded">
+              <input class="input" name="q" id="query" type="text" placeholder="Chercher un titre, un auteur…">
+            </p>
+            <p class="control">
+              <a class="button is-info" type="submit">
+                Chercher
+              </a>
+            </p>
+          </div>
+        </form>
+      </div>
+
+      {% for card in cards %}
+      <div class="box content">
+	<article class="post">
+	  <h4> {{ card.title }} </h4>
+	  <div class="media">
+	    <div class="media-left">
+	      <p class="image is-32x32">
+		<img src="http://bulma.io/images/placeholders/128x128.png">
+	      </p>
+	    </div>
+	    <div class="media-content">
+	      <div class="content">
+		<p>
+                  <span> {{ card.author }} </span>
+		  <!-- <a href="#">@jsmith</a> replied 34 minutes ago &nbsp; -->
+		  <span class="tag"> {{ card.shelf }} </span>
+		</p>
+	      </div>
+	    </div>
+	    <div class="media-right">
+	      <span class="has-text-grey-light"> {{ card.price }} €</span>
+	    </div>
+	  </div>
+	</article>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
 {% endblock %}
