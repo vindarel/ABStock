@@ -35,13 +35,12 @@
 	      <div class="content">
 		<p>
                   <span> {{ card.author }} </span>
-		  <!-- <a href="#">@jsmith</a> replied 34 minutes ago &nbsp; -->
 		  <span class="tag"> {{ card.shelf }} </span>
 		</p>
 	      </div>
 	    </div>
 	    <div class="media-right">
-	      <span class="has-text-grey-light"> {{ card.price }} €</span>
+	      <span class="has-text-grey-light"> {{ card.price | price }} €</span>
 	    </div>
 	  </div>
 	</article>

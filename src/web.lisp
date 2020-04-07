@@ -9,6 +9,12 @@
 (defparameter +welcome.html+ (djula:compile-template* "welcome.html"))
 (defparameter +cards.html+ (djula:compile-template* "cards.html"))
 
+;; Custom Djula filter to format prices.
+;; There is also the "format" filter.
+(djula:def-filter :price (val)
+  (format nil "~,2F" val))
+
+#+nil
 (defun render-base ()
   (with-output-to-string (s)
     (djula:render-template* +cards.html+ s
