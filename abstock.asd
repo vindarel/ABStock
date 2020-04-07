@@ -3,6 +3,7 @@
   :author "vindarel"
   :license "GPL3"
   :depends-on (
+               :bordeaux-threads
                ;; web client
                :dexador
                :mito
@@ -27,7 +28,7 @@
 
   :build-operation "program-op"
   :build-pathname "abstock"
-  :entry-point "abstock:main"
+  :entry-point "abstock::main"
 
   :description "Abelujo's DB as a simple website for clients."
   ;; :long-description

@@ -159,3 +159,17 @@
     (setf *result* result)
     (values result
             (length result))))
+
+(defun main ()
+  "Entry point of the executable."
+  (handler-case
+      (progn
+        (start)
+        (bt:join-thread
+         (find-if (lambda (th)
+                    (search "hunchentoot" (bt:thread-name th)))
+                  (bt:all-threads))))
+    (sb-sys:interactive-interrupt () (progn
+                                       (format *error-output* "User abort. Bye!~&")
+                                       (uiop:quit)))
+    (error (c) (format *error-output* "~&An error occured: ~A~&" c))))

@@ -76,4 +76,17 @@
   (unless *connection*
     (setf *connection* (connect)))
   (load-init)
-  (hunchentoot:start *server*))
+
+  (format t "~&Reading the DB...")
+  (force-output)
+  (get-all-cards)
+  (format t "~&Done. ~a cards found." (length *cards*))
+  (force-output)
+
+  (format t "~&Starting the web server on port ~a" *port*)
+  (force-output)
+  (setf *server* (make-instance 'easy-routes:routes-acceptor
+                                :port *port*))
+  (hunchentoot:start *server*)
+  (format t "~&Ready. You can access the application!~&")
+  (force-output))
