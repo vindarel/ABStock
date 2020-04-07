@@ -33,11 +33,39 @@
                   <span>Site ouéb</span>
                 </a>
               </span>
+              <span class="navbar-item">
+                <a class="button is-white is-outlined" href="#">
+                  <span class="icon">
+                    <i class="fa fa-shopping-basket"></i>
+                  </span>
+                  <span>
+                    Panier
+                    <span id="basketqty" class="tag is-light is-rounded"> 0 </span>
+                  </span>
+                </a>
+              </span>
             </div>
           </div>
         </div>
       </nav>
     </section>
+
+    <script>
+      function setbasketqty () {
+          let storage = window.localStorage;
+          let quantity = 0;
+          if (storage.getItem("savedcardids")) {
+              let ids = storage.getItem("savedcardids").split(",");
+              if (ids) {
+                  quantity = ids.length;
+              }
+          }
+          let elt = document.getElementById("basketqty");
+          elt.innerText = quantity;
+      }
+      setbasketqty();
+    </script>
+
     {% block content %} {% endblock %}
 
   </body>
