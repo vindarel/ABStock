@@ -6,8 +6,20 @@
   <div class="columns">
     <div class="column is-8 is-offset-2">
 
-      <div>
-        Total: <span id="total"> 0</span> <span>€</span>
+      <div class="box content">
+        <h3>Votre panier </h3>
+
+        <div>
+          Merci de nous commander des livres. Pour l'instant,
+          nous faisons simple: vous pouvez nous appeler ou nous envoyer un courriel pour valider votre commande. <br/>
+          Nos coordonnées: <br/>
+          <ul>
+            <li>Téléphone: {{ contact.phone }}</li>
+            <li>Courriel: <a href="mailto:{{ contact.email }}"> {{ contact.email }} </a></li>
+          </ul>
+        </div>
+        <br/>
+        Total de votre commande: <span id="total"> 0</span> <span>€</span>
       </div>
 
       {% for card in cards %}
@@ -31,7 +43,7 @@
 	    <div class="media-right">
 	      <span name="price" data-price="{{ card.price }}" class="has-text-grey-light"> {{ card.price | price }} €</span>
               <span  class="icon is-small" style="cursor: pointer;" title="Ajouter au panier" onclick="basketremove({{ card.id }})">
-                <i class="fas fa-trash"></i>
+                <i class="delete is-small"></i>
               </span>
 	    </div>
 	  </div>

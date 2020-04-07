@@ -27,12 +27,24 @@
 
 (in-package :abstock)
 
+(defparameter *config* #P"~/.abstock.lisp")
+(defparameter *contact-infos* nil
+  "Private contact information, read from the config file `*config*'.")
+
 (defparameter *connection* nil)
 
 (defun connect ()
+  ;TODO: needs to be run inside the directory of db.db
   (setf *connection*
         (dbi:connect :sqlite3
                      :database-name "db.db")))
+
+(defun load-init ()
+  "Read configuration variables (phone number,…) from `*config*'."
+  (let ((file (uiop:native-namestring *config*)))
+    (let ((*package* *package*))
+      (in-package abstock)
+      (load file))))
 
 (defun card-by-id (id)
   "Generates SxQL query. (yield) generates the SQL. It is not executed."

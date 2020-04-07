@@ -55,10 +55,12 @@
          )
     ;; (format t "-- cards: ~a" cards)
     (djula:render-template* +panier.html+ nil
-                          :title (format nil "La Palpitante - Mon Panier")
-                          :cards cards)))
+                            :title (format nil "La Palpitante - Mon Panier")
+                            :cards cards
+                            :contact *contact-infos*)))
 
 (defun start ()
   (unless *connection*
     (setf *connection* (connect)))
+  (load-init)
   (hunchentoot:start *server*))
