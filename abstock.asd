@@ -5,22 +5,22 @@
   :depends-on (
                :bordeaux-threads
                ;; web client
-               :dexador
+               ;; :dexador
                :mito
                :str
-               :local-time
-               :local-time-duration
+               ;; :local-time
+               ;; :local-time-duration
                :cl-ppcre
                :parse-float
 
                ;; web app
                :hunchentoot
                :easy-routes
-               :spinneret
                :djula
 
                :log4cl
-               :cl-i18n)
+               ;; :cl-i18n
+               )
   :components ((:module "src"
                 :components
                 ((:file "abstock")
