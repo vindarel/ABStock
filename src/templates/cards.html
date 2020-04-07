@@ -4,7 +4,7 @@
 {% block content %}
 <div class="container">
   <div class="columns">
-    <div class="column is-6 is-offset-3">
+    <div class="column is-8 is-offset-2">
 
       <div class="box">
         <form action="search">
@@ -22,7 +22,7 @@
       </div>
 
       {% for card in cards %}
-      <div class="box content">
+      <div id="{{ card.id }}" class="box content">
 	<article class="post">
 	  <div class="media">
 	    <div class="media-left">
@@ -41,6 +41,9 @@
 	    </div>
 	    <div class="media-right">
 	      <span class="has-text-grey-light"> {{ card.price | price }} €</span>
+              <span  class="icon is-medium" style="cursor: pointer;" title="Ajouter au panier" onclick="add_to_cart({{ card.id }})">
+                <i class="fas fa-lg fa-plus-circle"></i>
+              </span>
 	    </div>
 	  </div>
 	</article>
@@ -49,4 +52,20 @@
     </div>
   </div>
 </div>
+
+<script>
+  function add_to_cart (id) {
+      console.log("-- adding card of id ", id, " into the shopping basket.");
+      let storage = window.localStorage;
+      if (storage.getItem("savedcardids")) {
+          let ids = storage.getItem("savedcardids");
+          ids = ids + "," + id;
+          storage.setItem("savedcardids", ids);
+          console.log("local storage is now: ", ids);
+      } else {
+          console.log("saving card id: ", id);
+          storage.setItem("savedcardids", id);
+      }
+  };
+</script>
 {% endblock %}
