@@ -24,15 +24,15 @@
       {% for card in cards %}
       <div class="box content">
 	<article class="post">
-	  <h4> {{ card.title }} </h4>
 	  <div class="media">
 	    <div class="media-left">
-	      <p class="image is-32x32">
-		<img src="http://bulma.io/images/placeholders/128x128.png">
+	      <p class="image is-64x64">
+		<img src="{{ card.cover }}">
 	      </p>
 	    </div>
 	    <div class="media-content">
 	      <div class="content">
+                <h4> {{ card.title }} </h4>
 		<p>
                   <span> {{ card.author }} </span>
 		  <span class="tag"> {{ card.shelf }} </span>
