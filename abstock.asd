@@ -22,7 +22,8 @@
                :cl-i18n)
   :components ((:module "src"
                 :components
-                ((:file "abstock"))))
+                ((:file "abstock")
+                 (:file "web"))))
 
   :build-operation "program-op"
   :build-pathname "abstock"
