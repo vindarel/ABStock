@@ -27,6 +27,8 @@
 
 (in-package :abstock)
 
+(defparameter *version* "0.1")
+
 (defparameter *config* #P"~/.abstock.lisp")
 (defparameter *contact-infos* nil
   "Private contact information, read from the config file `*config*'.")

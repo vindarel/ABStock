@@ -52,30 +52,24 @@
                             :no-results (zerop (length cards)))))
 
 (easy-routes:defroute panier-route ("/panier" :method :get) (ids)
-  (format t "~& /panier ~&")
   (let* ((ids-list (str:split "," ids :omit-nulls t))
          (ids-list (mapcar (lambda (it)
                              (parse-integer it))
                            ids-list))
-         (allcards (subseq *cards* 0 10)) ;; DEV ;TODO:
          (cards (loop for id in (print ids-list)
-                   for position = (position id allcards :key (lambda (card)
+                   for position = (position id (get-cards) :key (lambda (card)
                                                                (getf card :|id|)))
                    when position
-                   ;; do (setf (getf (elt *cards* position) :|basketqty|)
-                   ;;          (count id ids-list))
-                   collect  (elt *cards* position)))
-         ;; (cards (remove-duplicates cards
-         ;;                           :key (lambda (card)
-         ;;                                  (getf card :|id|))))
-         )
-    ;; (format t "-- cards: ~a" cards)
+                   collect  (elt *cards* position))))
     (djula:render-template* +panier.html+ nil
                             :title (format nil "La Palpitante - Mon Panier")
                             :cards cards
                             :contact *contact-infos*)))
 
 (defun start ()
+  (format t "Abelujo visible stock v~a~&" *version*)
+  (force-output)
+
   (unless *connection*
     (setf *connection* (connect)))
   (load-init)
