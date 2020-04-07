@@ -29,11 +29,24 @@
   (djula:render-template* +welcome.html+ nil
                           :title "La Palpitante en ligne"))
 
+(defparameter *dev-mode* nil
+  "If t, use a subset of all the cards.")
+
+(defun get-cards ()
+  (if *dev-mode*
+      (progn
+        (format t "-- *dev-mode* activated: use a small subset of the DB.")
+        (subseq *cards* 0 50))
+      *cards*))
+
 (easy-routes:defroute search-route ("/search" :method :get) (q)
   (format t "~& /search ~&")
-  (djula:render-template* +cards.html+ nil
-                          :title (format nil "La Palpitante - ~a" q)
-                          :cards (subseq *cards* 0 10)))
+  (let ((cards (search-cards (get-cards) q)))
+    (djula:render-template* +cards.html+ nil
+                            :title (format nil "La Palpitante - ~a" q)
+                            :query q
+                            :cards cards
+                            :no-results (zerop (length cards)))))
 
 (easy-routes:defroute panier-route ("/panier" :method :get) (ids)
   (format t "~& /panier ~&")

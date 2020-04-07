@@ -21,6 +21,10 @@
         </form>
       </div>
 
+      {% if no-results %}
+      <div> Aucun résultat !</div>
+      {% endif %}
+
       {% for card in cards %}
       <div id="{{ card.id }}" class="box content">
 	<article class="post">

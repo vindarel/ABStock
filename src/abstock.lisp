@@ -141,3 +141,21 @@
          (query (dbi:execute query)))
     (setf *shelves* (dbi:fetch-all query)))
   t)
+
+;;
+;; Search cards
+;;
+(defparameter *result* nil
+  "search-cards results. Avoid printing thousands of cards in the REPL.")
+
+(defun search-cards (cards query)
+  (let ((result (loop for card in cards
+                   for repr = (str:concat (getf card :|title|)
+                                          (getf card :|authors|))
+                   when (str:contains? (str:downcase query)
+                                       (str:downcase repr))
+                   collect card)))
+    (format t "Found: ~a~&" (length result))
+    (setf *result* result)
+    (values result
+            (length result))))
