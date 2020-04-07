@@ -34,7 +34,7 @@
                 </a>
               </span>
               <span class="navbar-item">
-                <a class="button is-white is-outlined" href="#">
+                <a class="button is-white is-outlined" href="#" onclick="gotobasket()">
                   <span class="icon">
                     <i class="fa fa-shopping-basket"></i>
                   </span>
@@ -64,6 +64,17 @@
           elt.innerText = quantity;
       }
       setbasketqty();
+
+     function gotobasket () {
+         let storage = window.localStorage;
+         let ids = "";
+         if (storage.getItem("savedcardids")) {
+             ids = storage.getItem("savedcardids");
+         }
+         let url = "/panier?ids=" + ids;
+         console.log("redirecting to ", url);
+         window.location.href = url;
+     }
     </script>
 
     {% block content %} {% endblock %}

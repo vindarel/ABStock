@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container">
+  <div class="columns">
+    <div class="column is-8 is-offset-2">
+
+      <div>
+        Total: <span id="total"> 0</span> <span>€</span>
+      </div>
+
+      {% for card in cards %}
+      <div name="cardid" data-id="{{ card.id }}" id="card{{ card.id }}" class="box content">
+	<article class="post">
+	  <div class="media">
+	    <div class="media-left">
+	      <p class="image is-64x64">
+		<img src="{{ card.cover }}">
+	      </p>
+	    </div>
+	    <div class="media-content">
+	      <div class="content">
+                <h4> {{ card.title }} </h4>
+		<p>
+                  <span> {{ card.author }} </span>
+		  <span class="tag"> {{ card.shelf }} </span>
+		</p>
+	      </div>
+	    </div>
+	    <div class="media-right">
+	      <span name="price" data-price="{{ card.price }}" class="has-text-grey-light"> {{ card.price | price }} €</span>
+              <span  class="icon is-small" style="cursor: pointer;" title="Ajouter au panier" onclick="basketremove({{ card.id }})">
+                <i class="fas fa-trash"></i>
+              </span>
+	    </div>
+	  </div>
+	</article>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<script>
+function totalprice () {
+    let prices = document.getElementsByName("price");
+    let total = 0.0;
+    for (var i = 0; i < prices.length; i++) {
+        let val = prices[i].dataset.price;
+        if (val) {
+            val = parseFloat(val);
+            total += val;
+        }
+    }
+    let elt_total = document.getElementById("total");
+    elt_total.innerText = total;
+}
+totalprice();
+
+function basketremove (id) {
+    let idtag = "card" + id;
+    let elt = document.getElementById(idtag);
+    // Remove element.
+    if (elt) {
+        elt.remove();
+        console.log("-- card removed.");
+    }
+
+    // Update the total price.
+    totalprice();
+
+    // "remove" from local storage (recompute all).
+    let idelts = document.getElementsByName("cardid");
+    let ids_string = "";
+    for (var i = 0; i < idelts.length; i++) {
+        let id = idelts[i].dataset.id;
+        ids_string = ids_string + id + ",";
+    }
+    window.localStorage.setItem("savedcardids", ids_string);
+    console.log("-- saved ids are now: ", window.localStorage.getItem("savedcardids"));
+
+}
+</script>
+
+{% endblock %}
