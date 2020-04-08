@@ -153,7 +153,7 @@
 (defun search-cards (cards query)
   (let ((result (loop for card in cards
                    for repr = (str:concat (getf card :|title|)
-                                          (getf card :|authors|))
+                                          (getf card :|author|))
                    when (str:contains? (str:downcase query)
                                        (str:downcase repr))
                    collect card)))
