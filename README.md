@@ -25,7 +25,7 @@ Seeing one's shopping basket:
 
 ![](basket.png)
 
-Interested? Please get in touch.
+Interested? Please get in touch. We can host it for you and develop more features.
 
 
 ## Config
@@ -66,6 +66,8 @@ Ready. You can access the application!
 ```
 
 The UI uses the [Bulma](https://bulma.io) CSS framework.
+
+Issue tracker: https://gitlab.com/vindarel/abstock/-/issues
 
 ## Licence
 

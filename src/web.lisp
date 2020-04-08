@@ -56,7 +56,7 @@
          (ids-list (mapcar (lambda (it)
                              (parse-integer it))
                            ids-list))
-         (cards (loop for id in (print ids-list)
+         (cards (loop for id in ids-list
                    for position = (position id (get-cards) :key (lambda (card)
                                                                (getf card :|id|)))
                    when position
@@ -66,13 +66,18 @@
                             :cards cards
                             :contact *contact-infos*)))
 
-(defun start ()
+(defun start (&key port (load-init t))
   (format t "Abelujo visible stock v~a~&" *version*)
   (force-output)
 
   (unless *connection*
     (setf *connection* (connect)))
-  (load-init)
+  (if load-init
+      (progn
+        (format t "Loading init file...~&")
+        (load-init))
+      (format t "Skipping init file.~&"))
+  (force-output)
 
   (format t "~&Reading the DB...")
   (force-output)
@@ -80,10 +85,10 @@
   (format t "~&Done. ~a cards found." (length *cards*))
   (force-output)
 
-  (format t "~&Starting the web server on port ~a" *port*)
+  (format t "~&Starting the web server on port ~a" (or port *port*))
   (force-output)
   (setf *server* (make-instance 'easy-routes:routes-acceptor
-                                :port *port*))
+                                :port (or port *port*)))
   (hunchentoot:start *server*)
   (format t "~&Ready. You can access the application!~&")
   (force-output))
