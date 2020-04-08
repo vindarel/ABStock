@@ -4,7 +4,7 @@
 <section class="hero is-info is-fullheight">
 
       <div class="hero-head">
-        
+
       </div>
 
       <div class="hero-body">
@@ -23,12 +23,25 @@
                   <p class="control is-expanded">
                     <input class="input" name="q" id="query" type="text" placeholder="Chercher un titre, un auteur…">
                   </p>
+
+                </div>
+
+                <div class="field is-grouped">
+                  <p class="control is-expanded">
+                    <div class="select is-fullwidth">
+                      <select id="select-shelf" name="rayon">
+                        <option value="-1">-- Explorer un rayon --</option>
+                        {% for shelf in shelves %}
+                        <option value="{{ shelf.id }}"> {{ shelf.name }}</option>
+                        {% endfor %}
+                      </select>
+                    </div>
+                  </p>
                   <p class="control">
-                    <a class="button is-info" type="submit">
-                      Chercher
-                    </a>
+                    <button class="button is-link"> Chercher </button>
                   </p>
                 </div>
+
               </form>
             </div>
           </div>

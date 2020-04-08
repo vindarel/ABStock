@@ -100,7 +100,8 @@
            :search_card.date_publication
            :search_card.summary
            (:as :search_author.name :author)
-           (:as :search_shelf.name :shelf))
+           (:as :search_shelf.name :shelf)
+           (:as :search_shelf.id :shelf_id)) ;; cannot use a -
     (from :search_card
           :search_author)
     (join :search_card_authors
@@ -114,18 +115,11 @@
 
 (defun get-all-cards ()
   "Get all the ids of the cards in the DB."
-  ;; (setf *cards*
-  ;;       (dbi:fetch-all (dbi:execute (dbi:prepare *connection* (yield (all-cards))))))
   (let* ((query (dbi:prepare *connection* (yield (all-cards))))
          (query (dbi:execute query)))
     ;; caution: what's long is printing all the cards.
-    (setf *cards* (dbi:fetch-all query))
-    ;; (loop for row = (dbi:fetch query)
-    ;;    while row
-    ;;    do (print row))
-    )
-  t
-  )
+    (setf *cards* (dbi:fetch-all query)))
+  t)
 
 ;;
 ;; Shelves
@@ -141,8 +135,22 @@
   "Get shelves."
   (let* ((query (dbi:prepare *connection* (yield (all-shelves))))
          (query (dbi:execute query)))
-    (setf *shelves* (dbi:fetch-all query)))
+    (setf *shelves* (dbi:fetch-all query))
+    (setf *shelves* (normalize-shelves *shelves*)))
   t)
+
+(defun normalize-shelves (shelves)
+  "Sort shelves.
+  A shelf name shouldn't start with an accentued letter, or it won't be sorted correctly..."
+  ;; A poor man's text normalizer…
+  (loop for elt in shelves
+     when (str:starts-with? "É" (getf elt :|name|))
+     do (setf (getf elt :|name|)
+              (str:replace-all "É" "E" (getf elt :|name|))))
+  (sort shelves (lambda (x y)
+                      (string-lessp
+                       (getf x :|name|)
+                       (getf y :|name|)))))
 
 ;;
 ;; Search cards
@@ -150,13 +158,27 @@
 (defparameter *result* nil
   "search-cards results. Avoid printing thousands of cards in the REPL.")
 
-(defun search-cards (cards query)
-  (let ((result (loop for card in cards
-                   for repr = (str:concat (getf card :|title|)
-                                          (getf card :|author|))
-                   when (str:contains? (str:downcase query)
-                                       (str:downcase repr))
-                   collect card)))
+(defun search-cards (cards query &key shelf)
+  "cards: plist,
+   query: string,
+   shelf (optional): id (int)."
+  (let* ((cards (if (and shelf
+                         (plusp shelf))
+                    ;; Filter by shelf.
+                    (remove-if-not (lambda (card)
+                                     (= (getf card :|shelf_id|)
+                                        shelf))
+                                   cards)
+                    cards))
+         ;; Filter by title and author(s).
+         (result (if (not (str:blank? query))
+                     (loop for card in cards
+                        for repr = (str:concat (getf card :|title|)
+                                               (getf card :|author|))
+                        when (str:contains? (str:downcase query)
+                                            (str:downcase repr))
+                        collect card)
+                     cards)))
     (format t "Found: ~a~&" (length result))
     (setf *result* result)
     (values result

@@ -40,15 +40,18 @@
 (easy-routes:defroute root ("/" :method :get) ()
   (print :hello-root)
   (djula:render-template* +welcome.html+ nil
-                          :title "La Palpitante en ligne"))
+                          :title "La Palpitante en ligne"
+                          :shelves *shelves*))
 
-(easy-routes:defroute search-route ("/search" :method :get) (q)
-  (format t "~& /search ~&")
-  (let ((cards (search-cards (get-cards) q)))
+(easy-routes:defroute search-route ("/search" :method :get) (q rayon)
+  (format t "~& /search ~a, rayon: ~a~&" q rayon)
+  (let ((cards (search-cards (get-cards) q :shelf (parse-integer rayon))))
     (djula:render-template* +cards.html+ nil
                             :title (format nil "La Palpitante - ~a" q)
                             :query q
+                            :shelf rayon
                             :cards cards
+                            :shelves *shelves*
                             :no-results (zerop (length cards)))))
 
 (easy-routes:defroute panier-route ("/panier" :method :get) (ids)
@@ -61,6 +64,7 @@
                                                                (getf card :|id|)))
                    when position
                    collect  (elt *cards* position))))
+    (format t "~&basket ids: ~a, cards found: ~a~&" ids-list (length cards))
     (djula:render-template* +panier.html+ nil
                             :title (format nil "La Palpitante - Mon Panier")
                             :cards cards
@@ -82,6 +86,7 @@
   (format t "~&Reading the DB...")
   (force-output)
   (get-all-cards)
+  (get-all-shelves)
   (format t "~&Done. ~a cards found." (length *cards*))
   (force-output)
 

@@ -12,12 +12,24 @@
             <p class="control is-expanded">
               <input class="input" name="q" id="query" type="text" placeholder="Chercher un titre, un auteur…">
             </p>
+          </div>
+
+          <div class="field is-grouped">
+            <p class="control is-expanded">
+              <div class="select is-fullwidth">
+                <select id="select-shelf" name="rayon">
+                  <option value="-1">-- Explorer un rayon --</option>
+                  {% for shelf in shelves %}
+                  <option value="{{ shelf.id }}"> {{ shelf.name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </p>
             <p class="control">
-              <a class="button is-info" type="submit">
-                Chercher
-              </a>
+              <button class="button is-info is-link"> Chercher </button>
             </p>
           </div>
+
         </form>
       </div>
 
@@ -39,7 +51,9 @@
                 <h4> {{ card.title }} </h4>
 		<p>
                   <span> {{ card.author }} </span>
-		  <span class="tag"> {{ card.shelf }} </span>
+		  <a href="/search?rayon={{ card.shelf_id }}">
+                    <span class="tag"> {{ card.shelf }} </span>
+                  </a>
 		</p>
 	      </div>
 	    </div>
