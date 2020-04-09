@@ -45,7 +45,7 @@
 
 (easy-routes:defroute search-route ("/search" :method :get) (q rayon)
   (format t "~& /search ~a, rayon: ~a~&" q rayon)
-  (let* ((rayon (parse-integer rayon))
+  (let* ((rayon (when rayon (parse-integer rayon)))
          (cards (search-cards (get-cards) q :shelf rayon)))
     (format t "~& rayon type: ~a~&" (type-of rayon))
     (djula:render-template* +cards.html+ nil
