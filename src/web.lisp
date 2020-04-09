@@ -72,6 +72,7 @@
                             :cards cards
                             :contact *contact-infos*)))
 
+(export 'start)
 (defun start (&key port (load-init t))
   (format t "Abelujo visible stock v~a~&" *version*)
   (force-output)

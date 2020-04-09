@@ -40,6 +40,20 @@ Example `~/.abstock.lisp`:
     :|email| "me@test.fr"))
 ~~~
 
+## Run
+
+Two possibilities:
+
+    sbcl --load run.lisp
+
+note that in that case, we are dropped into the Lisp REPL, so we can
+interact with the running application (useful to reload settings and
+such).
+
+or download/build the binary and run it:
+
+    ./abstock
+
 ## Develop
 
 Install SBCL:
