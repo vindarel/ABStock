@@ -20,7 +20,7 @@
                 <select id="select-shelf" name="rayon">
                   <option value="-1">-- Explorer un rayon --</option>
                   {% for shelf in shelves %}
-                  <option value="{{ shelf.id }}"> {{ shelf.name }}</option>
+                  <option id="shelf{{ shelf.id }}" value="{{ shelf.id }}" {% if shelf.id == shelf_id %} selected {% endif %}> {{ shelf.name }}</option>
                   {% endfor %}
                 </select>
               </div>

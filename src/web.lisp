@@ -45,11 +45,13 @@
 
 (easy-routes:defroute search-route ("/search" :method :get) (q rayon)
   (format t "~& /search ~a, rayon: ~a~&" q rayon)
-  (let ((cards (search-cards (get-cards) q :shelf (parse-integer rayon))))
+  (let* ((rayon (parse-integer rayon))
+         (cards (search-cards (get-cards) q :shelf rayon)))
+    (format t "~& rayon type: ~a~&" (type-of rayon))
     (djula:render-template* +cards.html+ nil
                             :title (format nil "La Palpitante - ~a" q)
                             :query q
-                            :shelf rayon
+                            :shelf_id rayon
                             :cards cards
                             :shelves *shelves*
                             :no-results (zerop (length cards)))))
