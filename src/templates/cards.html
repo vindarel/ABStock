@@ -7,30 +7,7 @@
     <div class="column is-8 is-offset-2">
 
       <div class="box">
-        <form action="search">
-          <div class="field is-grouped">
-            <p class="control is-expanded">
-              <input class="input" name="q" id="query" type="text" placeholder="Chercher un titre, un auteur…">
-            </p>
-          </div>
-
-          <div class="field is-grouped">
-            <p class="control is-expanded">
-              <div class="select is-fullwidth">
-                <select id="select-shelf" name="rayon">
-                  <option value="-1">-- Explorer un rayon --</option>
-                  {% for shelf in shelves %}
-                  <option id="shelf{{ shelf.id }}" value="{{ shelf.id }}" {% if shelf.id == shelf_id %} selected {% endif %}> {{ shelf.name }}</option>
-                  {% endfor %}
-                </select>
-              </div>
-            </p>
-            <p class="control">
-              <button class="button is-info is-link"> Chercher </button>
-            </p>
-          </div>
-
-        </form>
+       {% include "search-form.html" %}
       </div>
 
       {% if no-results %}
