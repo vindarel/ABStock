@@ -119,6 +119,16 @@
          (query (dbi:execute query)))
     ;; caution: what's long is printing all the cards.
     (setf *cards* (dbi:fetch-all query)))
+  (setf *cards* (normalise-cards *cards*)))
+
+(defun normalise-cards (cards)
+  "Add a repr key that joins title and author and removes accents."
+  (loop for card in cards
+     for ascii-title = (slug:asciify (getf card :|title|))
+     for ascii-author = (slug:asciify (getf card :|author|))
+     do (setf (getf card :|repr|)
+              (str:concat ascii-title " " ascii-author))
+     collect card)
   t)
 
 ;;
@@ -173,8 +183,7 @@
          ;; Filter by title and author(s).
          (result (if (not (str:blank? query))
                      (loop for card in cards
-                        for repr = (str:concat (getf card :|title|)
-                                               (getf card :|author|))
+                        for repr = (getf card :|repr|)
                         when (str:contains? (str:downcase query)
                                             (str:downcase repr))
                         collect card)

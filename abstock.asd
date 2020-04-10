@@ -8,6 +8,7 @@
                ;; :dexador
                :mito
                :str
+               :cl-slug
                ;; :local-time
                ;; :local-time-duration
                :cl-ppcre

@@ -38,7 +38,6 @@
 ;; Routes.
 ;;
 (easy-routes:defroute root ("/" :method :get) ()
-  (print :hello-root)
   (djula:render-template* +welcome.html+ nil
                           :title "La Palpitante en ligne"
                           :shelves *shelves*))
@@ -46,8 +45,9 @@
 (easy-routes:defroute search-route ("/search" :method :get) (q rayon)
   (format t "~& /search ~a, rayon: ~a~&" q rayon)
   (let* ((rayon (when rayon (parse-integer rayon)))
-         (cards (search-cards (get-cards) q :shelf rayon)))
-    (format t "~& rayon type: ~a~&" (type-of rayon))
+         (cards (search-cards (get-cards)
+                              (slug:asciify q)
+                              :shelf rayon)))
     (djula:render-template* +cards.html+ nil
                             :title (format nil "La Palpitante - ~a" q)
                             :query q
