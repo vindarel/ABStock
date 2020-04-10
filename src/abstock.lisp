@@ -122,7 +122,8 @@
          (query (dbi:execute query 0)))
     ;; caution: what's long is printing all the cards.
     (setf *cards* (normalise-cards
-                   (dbi:fetch-all query)))))
+                   (dbi:fetch-all query)))
+    t))
 
 (defun normalise-cards (cards)
   "Add a repr key that joins title and author and removes accents."
