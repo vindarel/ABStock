@@ -56,6 +56,7 @@
            :search_card.isbn
            :search_card.details_url
            :search_card.cover
+           :search_card.quantity
            (:as :search_author.name :author)
            (:as :search_shelf.name :shelf))
     (from :search_card
@@ -99,6 +100,7 @@
            :search_card.details_url
            :search_card.date_publication
            :search_card.summary
+           :search_card.quantity
            (:as :search_author.name :author)
            (:as :search_shelf.name :shelf)
            (:as :search_shelf.id :shelf_id)) ;; cannot use a -
@@ -108,7 +110,8 @@
           :on (:and (:= :search_card.id :search_card_authors.card_id)
                     (:= :search_author.id :search_card_authors.author_id)))
     (join :search_shelf
-          :on (:= :search_card.shelf_id :search_shelf.id))))
+          :on (:= :search_card.shelf_id :search_shelf.id))
+    (where (:> :search_card.quantity 0))))
 
 (defparameter *cards* nil
   "List of all books.")
@@ -116,10 +119,10 @@
 (defun get-all-cards ()
   "Get all the ids of the cards in the DB."
   (let* ((query (dbi:prepare *connection* (yield (all-cards))))
-         (query (dbi:execute query)))
+         (query (dbi:execute query 0)))
     ;; caution: what's long is printing all the cards.
-    (setf *cards* (dbi:fetch-all query)))
-  (setf *cards* (normalise-cards *cards*)))
+    (setf *cards* (normalise-cards
+                   (dbi:fetch-all query)))))
 
 (defun normalise-cards (cards)
   "Add a repr key that joins title and author and removes accents."
@@ -128,8 +131,7 @@
      for ascii-author = (slug:asciify (getf card :|author|))
      do (setf (getf card :|repr|)
               (str:concat ascii-title " " ascii-author))
-     collect card)
-  t)
+     collect card))
 
 ;;
 ;; Shelves
