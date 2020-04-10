@@ -119,7 +119,7 @@
 (defun get-all-cards ()
   "Get all the ids of the cards in the DB."
   (let* ((query (dbi:prepare *connection* (yield (all-cards))))
-         (query (dbi:execute query 0)))
+         (query (dbi:execute query (list 0))))
     ;; caution: what's long is printing all the cards.
     (setf *cards* (normalise-cards
                    (dbi:fetch-all query)))
