@@ -185,11 +185,14 @@
                     cards))
          ;; Filter by title and author(s).
          (result (if (not (str:blank? query))
-                     (loop for card in cards
-                        for repr = (getf card :|repr|)
-                        when (str:contains? (str:downcase query)
-                                            (str:downcase repr))
-                        collect card)
+                     ;; no-case: strips internal contiguous whitespace, removes accents
+                     ;; and punctuation.
+                     (let* ((query (slug:asciify query))
+                            (query (str:replace-all " " ".*" query)))
+                       (loop for card in cards
+                          for repr = (getf card :|repr|)
+                          when (ppcre:scan query (str:downcase repr))
+                          collect card))
                      cards)))
     (format t "Found: ~a~&" (length result))
     (setf *result* result)
