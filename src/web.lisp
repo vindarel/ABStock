@@ -51,6 +51,7 @@
     (djula:render-template* +cards.html+ nil
                             :title (format nil "La Palpitante - ~a" q)
                             :query q
+                            :query-length (length (str:words q))
                             :shelf_id rayon
                             :cards cards
                             :shelves *shelves*

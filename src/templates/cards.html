@@ -12,6 +12,9 @@
 
       {% if no-results %}
       <div> Aucun résultat !</div>
+      {% if query-length >= 2 %}
+      <div> Essayez avec moins de termes de recherche ou dans un ordre différent.</div>
+      {% endif %}
       {% endif %}
 
       {% for card in cards %}
