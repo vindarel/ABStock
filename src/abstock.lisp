@@ -131,7 +131,9 @@
      for ascii-title = (slug:asciify (getf card :|title|))
      for ascii-author = (slug:asciify (getf card :|author|))
      do (setf (getf card :|repr|)
-              (str:concat ascii-title " " ascii-author))
+              (str:downcase (str:concat ascii-title " " ascii-author)))
+     do  (setf (getf card :|repr2|)
+               (str:downcase (str:concat ascii-author " " ascii-title)))
      collect card))
 
 ;;
@@ -191,7 +193,9 @@
                             (query (str:replace-all " " ".*" query)))
                        (loop for card in cards
                           for repr = (getf card :|repr|)
-                          when (ppcre:scan query (str:downcase repr))
+                          for repr2 = (getf card :|repr2|)
+                          when (or (ppcre:scan query repr)
+                                   (ppcre:scan query repr2))
                           collect card))
                      cards)))
     (format t "Found: ~a~&" (length result))
