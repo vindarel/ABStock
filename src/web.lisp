@@ -141,11 +141,13 @@
       ;; Send email.
       (t
        (handler-case
-           (email-send :to (getf *email-config* :|to|)
-                       :subject (format nil "[abstock] Nouvelle commande de ~a" name)
-                       :content (email-content name email phone message cards))
+           (progn
+             (email-send :to (getf *email-config* :|to|)
+                         :subject (format nil "[abstock] Nouvelle commande de ~a" name)
+                         :content (email-content name email phone message cards))
+             (log:info "email sent for client " name email))
          (error (c)
-           (format *error-output* (format nil "email error: sending to '~a' with ids '~a' (cards found: '~a' failed with the following error: ~a" email ids (length cards) c))
+           (log:error "email error: sending to '~a' with ids '~a' (cards found: '~a' failed with the following error: ~a" email ids (length cards) c)
 
            ;; Try again to the admin, maybe it works.
            (ignore-errors
