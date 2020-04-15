@@ -33,6 +33,9 @@
 (defparameter *config* #P"~/.abstock.lisp")
 (defparameter *contact-infos* nil
   "Private contact information, read from the config file `*config*'.")
+(defparameter *secret-question* ""
+  "A question for the most simple anti-spam system when the user validates his basket.")
+(defparameter *secret-answer* "")
 
 (defparameter *connection* nil)
 

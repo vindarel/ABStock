@@ -9,7 +9,7 @@
                :mito
                :str
                :cl-slug
-               ;; :local-time
+               :local-time
                ;; :local-time-duration
                :cl-ppcre
                :parse-float

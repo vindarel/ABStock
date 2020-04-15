@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<div class="container">
+<div class="container" style="margin-bottom: 5em">
   <div class="columns">
     <div class="column is-8 is-offset-2">
 
@@ -10,16 +10,116 @@
         <h3>Votre panier </h3>
 
         <div>
-          Merci de nous commander des livres. Pour l'instant,
-          nous faisons simple: vous pouvez nous appeler ou nous envoyer un courriel pour valider votre commande. <br/>
-          Nos coordonnées: <br/>
-          <ul>
-            <li>Téléphone: {{ contact.phone }}</li>
-            <li>Courriel: <a href="mailto:{{ contact.email }}"> {{ contact.email }} </a></li>
-          </ul>
+          Merci de nous commander des livres. Pour l'instant, nous
+          faisons simple: vous pouvez nous envoyer un courriel pour
+          valider votre commande, ou utiliser le formulaire
+          ci-dessous. Nous vous contacterons en retour pour les
+          modalités de livraison et de règlement. <br/>
+          <details>
+            <summary> Nos coordonnées </summary>
+            <ul>
+              <li>Courriel: <a href="mailto:{{ contact.email }}"> {{ contact.email }} </a></li>
+            </ul>
+            <!-- Idée de message:
+                 <pre>
+                 Bonjour,
+
+                 Je souhaiterais vous commander les livres suivants:
+                 </pre>
+                 <pre id="bookstxt">
+                 </pre> -->
+          </details>
         </div>
+
+        <details {% if open-form %} open="true" {% endif %}>
+          <summary> Formulaire de validation </summary>
+          Merci de renseigner au moins un courriel valide.
+
+          <form action="panier" method="POST">
+
+            {% for error in form-errors %}
+            <div class="notification is-warning">
+              <button class="delete"></button>
+              {{ error }}
+            </div>
+            {% endfor %}
+
+            <div class="field">
+              <div class="field">
+                <label class="label"> Votre nom et prénom </label>
+                <div class="control">
+                  <input class="input" type="text" required="" name="name" {% if form-data.name %} value="{{ form-data.name }}" {% endif %}>
+                </div>
+              </div>
+
+              <div class="field">
+                <label class="label">Votre courriel</label>
+                <div class="control has-icons-left has-icons-right">
+                  <input class="input" type="email" placeholder="Courriel" name="email" {% if form-data.email %} value="{{ form-data.email }}" {% endif %}>
+                  <span class="icon is-small is-left">
+                    <i class="fas fa-envelope"></i>
+                  </span>
+                </div>
+              </div>
+
+              <div class="field">
+                <label class="label"> Téléphone</label>
+                <div class="control has-icons-left has-icons-right">
+                  <input class="input" type="tel" placeholder="Téléphone" name="phone" {% if form-data.phone %} value="{{ form-data.phone }}" {% endif %}>
+                  <span class="icon is-small is-left">
+                    <i class="fas fa-phone"></i>
+                  </span>
+                </div>
+              </div>
+
+              <div class="field">
+                <label class="label"> Vérification anti-spam: {{ secret-question }}</label>
+                <div class="control has-icons-left has-icons-right">
+                  <input class="input" type="text" required="" placeholder="M…" name="antispam">
+                  <span class="icon is-small is-left">
+                    <i class="fas fa-home"></i>
+                  </span>
+                </div>
+              </div>
+
+              <div class="field">
+                <div class="control has-icons-left has-icons-right">
+                  <input id="formids" class="input" type="hidden" name="ids">
+                </div>
+              </div>
+
+              <!-- <p class="control">
+                   <div class="select">
+                   <label class="label">Comment allez-vous ?</label>
+                   <select id="mentalstate" name="mentalstate">
+                   <option value="1" selected> Je vais bien merci </option>
+                   <option value="2"> Je vais bientôt craquer il me faut des livres ! </option>
+                   <option value="3"> Rooogntudju </option>
+                   </select>
+                   </div>
+                   </p>
+              -->
+              <div class="field">
+                <label class="label"> Message (optionnel) </label>
+                <div class="control">
+                  <textarea class="textarea" placeholder="Message" name="message" maxlengt="300" {% if form-data.message %} value="{{ form-data.message }}" {% endif %}></textarea>
+                </div>
+              </div>
+
+              <div class="field is-grouped">
+                <div class="control">
+                  <button class="button is-link">Envoyer</button>
+                </div>
+              </div>
+            </div>
+
+          </form>
+        </details>
+
         <br/>
-        Total de votre commande: <span id="total"> 0</span> <span>€</span>
+        <div style="text-align: right; margin-top: 2em">
+          Total de votre commande: <strong id="total"> 0</strong> <strong>€</strong>
+        </div>
       </div>
 
       {% for card in cards %}
@@ -55,28 +155,29 @@
 </div>
 
 <script>
-function totalprice () {
+  function totalprice () {
     let prices = document.getElementsByName("price");
     let total = 0.0;
     for (var i = 0; i < prices.length; i++) {
-        let val = prices[i].dataset.price;
-        if (val) {
-            val = parseFloat(val);
-            total += val;
-        }
+      let val = prices[i].dataset.price;
+      if (val) {
+        val = parseFloat(val);
+        total += val;
+      }
     }
     let elt_total = document.getElementById("total");
     elt_total.innerText = total;
-}
-totalprice();
+  }
 
-function basketremove (id) {
+  totalprice();
+
+  function basketremove (id) {
     let idtag = "card" + id;
     let elt = document.getElementById(idtag);
     // Remove element.
     if (elt) {
-        elt.remove();
-        console.log("-- card removed.");
+      elt.remove();
+      console.log("-- card removed.");
     }
 
     // Update the total price.
@@ -86,13 +187,25 @@ function basketremove (id) {
     let idelts = document.getElementsByName("cardid");
     let ids_string = "";
     for (var i = 0; i < idelts.length; i++) {
-        let id = idelts[i].dataset.id;
-        ids_string = ids_string + id + ",";
+      let id = idelts[i].dataset.id;
+      ids_string = ids_string + id + ",";
     }
     window.localStorage.setItem("savedcardids", ids_string);
     console.log("-- saved ids are now: ", window.localStorage.getItem("savedcardids"));
 
-}
+    // update hidden form field.
+    insert_hidden_ids();
+  }
+
+  function insert_hidden_ids () {
+    let ids = window.localStorage.getItem("savedcardids");
+    if (ids) {
+      let elt = document.getElementById("formids");
+      elt.value = ids;
+    }
+  }
+
+  insert_hidden_ids();
 </script>
 
 {% endblock %}

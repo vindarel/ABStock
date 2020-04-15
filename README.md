@@ -50,6 +50,10 @@ Example `~/.abstock.lisp`:
 (setf *email-config*
    '(:|sender-api-key| "api-key"
      :|from| "your@mail.com"))
+
+;; Simple anti-script-kiddy question for the validation form:
+(setf *secret-question* "stupid question")
+(setf *secret-answer* "answer")
 ~~~
 
 ## Run

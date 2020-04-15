@@ -25,6 +25,7 @@
 (defparameter +cards.html+ (djula:compile-template* "cards.html"))
 
 (defparameter +panier.html+ (djula:compile-template* "panier.html"))
+(defparameter +command-confirmed.html+ (djula:compile-template* "command-confirmed.html"))
 
 ;;
 ;; Custom Djula filter to format prices.
@@ -71,7 +72,93 @@
     (djula:render-template* +panier.html+ nil
                             :title (format nil "La Palpitante - Mon Panier")
                             :cards cards
+                            :secret-question *secret-question*
                             :contact *contact-infos*)))
+
+;;
+;; Validate the basket: send an email, show a success message.
+;;
+
+(defun cards-to-txt (cards)
+  "Return a string with the list of books to command."
+  (with-output-to-string (s)
+    (loop for card in cards
+       do (format s
+                  "- ~a; ~a; ~,2f€; ~a~&"
+                  (getf card :|title|)
+                  (getf card :|author|)
+                  (getf card :|price|)
+                  (getf card :|isbn|)))))
+
+(defun email-content (name email phone message cards)
+  (with-output-to-string (s)
+    (format s "Bonjour cher libraire,~&~%¡¡¡Ceci est un message de test !!!~&Un nouveau client a commandé des livres.~&~%")
+    (format s "Ses coordonnées sont: ~&- ~a~&- mail: ~a ~&- tél: ~a ~%"
+            name email phone)
+    (format s "~%Il/elle a commandé:~&~%~a~&~%" (cards-to-txt cards))
+    (format s "Le total de la commande est de: ~,2F €.~&~%"
+            (reduce #'+ cards :key (lambda (it) (getf it :|price|))))
+    (when (not (str:blankp message))
+      (format s "Et il/elle a ajouté ce petit mot:~%~%«~a»~%~%" (str:shorten 300 message)))
+    (format s "Nous sommes le: ~a~&~%" (local-time:format-timestring nil (local-time:now) :format local-time:+rfc-1123-format+))
+    (format s "À bientôt !~&")))
+
+(easy-routes:defroute panier-validate-route ("/panier" :method :post) (&post name email phone antispam ids message)
+  (let* ((ids-list (str:split "," ids :omit-nulls t))
+         (ids-list (mapcar (lambda (it)
+                             (parse-integer it))
+                           ids-list))
+         (cards (loop for id in ids-list
+                   for position = (position id (get-cards) :key (lambda (card)
+                                                                  (getf card :|id|)))
+                   when position
+                   collect  (elt *cards* position))))
+
+    (cond
+      ;; Validate the "antispam".
+      ((not (string-equal *secret-answer* (str:downcase antispam)))
+       (djula:render-template* +panier.html+ nil
+                               :title (format nil "La Palpitante - Mon Panier")
+                               :cards cards
+                               :form-errors (list "La réponse à la question \"anti spam\" n'est pas bonne !")
+                               :open-form t
+                               :secret-question *secret-question*
+                               :form-data `(:name ,name :email ,email :phone ,phone :message ,message)
+                               :contact *contact-infos*))
+
+      ;; Give one email or a phone.
+      ((and (str:blankp phone)
+            (str:blankp email))
+       (djula:render-template* +panier.html+ nil
+                               :title (format nil "La Palpitante - Mon Panier")
+                               :form-errors (list "Veuillez renseigner un email ou un numéro de téléphone.")
+                               :open-form t
+                               :cards cards
+                               :form-data `(:name ,name :email ,email :phone ,phone :message ,message)
+                               :secret-question *secret-question*
+                               :contact *contact-infos*))
+
+      ;; Send email.
+      (t
+       (handler-case
+           (email-send :to (getf *email-config* :|to|)
+                       :subject (format nil "[abstock] Nouvelle commande de ~a" name)
+                       :content (email-content name email phone message cards))
+         (error (c)
+           (format *error-output* (format nil "email error: sending to '~a' with ids '~a' (cards found: '~a' failed with the following error: ~a" email ids (length cards) c))
+
+           ;; Try again to the admin, maybe it works.
+           (ignore-errors
+             (bt:make-thread
+              (lambda ()
+                (email-send :to (getf *email-config* :|from|)
+                            :subject "Sending email failed"
+                            :content (format nil "Sending an email failed, maybe this one passes. We tried sending to the addresse '~a', with ids '~a'.~%~%The error is:~&~a" name ids c)))
+              :name :email-sender))))
+
+       (djula:render-template* +command-confirmed.html+ nil
+                               :title (format nil "La Palpitante - Commande envoyée")
+                               :success-messages (list "Votre demande a bien été envoyée."))))))
 
 (export 'start)
 (defun start (&key port (load-init t))
