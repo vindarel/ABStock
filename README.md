@@ -25,7 +25,14 @@ Seeing one's shopping basket:
 
 ![](basket.png)
 
-Interested? Please get in touch. We can host it for you and develop more features.
+Current features:
+
+- show the catalogue
+- search it
+- the user adds books in his basket
+- and he sends an **email** from the app to the shop owner to pass command.
+
+Interested? Please get in touch.
 
 
 ## Config
@@ -38,6 +45,11 @@ Example `~/.abstock.lisp`:
 (setf *contact-infos*
   '(:|phone| "06 09 09 09 09"
     :|email| "me@test.fr"))
+
+;; SendGrid config:
+(setf *email-config*
+   '(:|sender-api-key| "api-key"
+     :|from| "your@mail.com"))
 ~~~
 
 ## Run

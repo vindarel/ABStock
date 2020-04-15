@@ -29,6 +29,7 @@
 
 (defparameter *version* "0.1")
 
+(defparameter *verbose* nil)
 (defparameter *config* #P"~/.abstock.lisp")
 (defparameter *contact-infos* nil
   "Private contact information, read from the config file `*config*'.")

@@ -5,7 +5,7 @@
   :depends-on (
                :bordeaux-threads
                ;; web client
-               ;; :dexador
+               :dexador
                :mito
                :str
                :cl-slug
@@ -13,6 +13,7 @@
                ;; :local-time-duration
                :cl-ppcre
                :parse-float
+               :jonathan
 
                ;; web app
                :hunchentoot
@@ -25,7 +26,8 @@
   :components ((:module "src"
                 :components
                 ((:file "abstock")
-                 (:file "web"))))
+                 (:file "web")
+                 (:file "email"))))
 
   :build-operation "program-op"
   :build-pathname "abstock"
