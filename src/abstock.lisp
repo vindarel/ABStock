@@ -152,11 +152,19 @@
 
 (defun get-all-shelves ()
   "Get shelves."
+  (assert *connection*)
   (let* ((query (dbi:prepare *connection* (yield (all-shelves))))
          (query (dbi:execute query)))
     (setf *shelves* (dbi:fetch-all query))
-    (setf *shelves* (normalize-shelves *shelves*)))
+    (setf *shelves* (sort-shelves *shelves*)))
   t)
+
+(defun sort-shelves (shelves)
+  #+sbcl
+  (sort shelves #'sb-unicode:unicode< :key (lambda (it)
+                                               (getf it :|name|)))
+  #-sbcl
+  (normalize-shelves shelves))
 
 (defun normalize-shelves (shelves)
   "Sort shelves.
