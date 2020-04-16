@@ -143,7 +143,7 @@
        (handler-case
            (progn
              (email-send :to (getf *email-config* :|to|)
-                         :subject (format nil "[abstock] Nouvelle commande de ~a" name)
+                         :subject "Commande site"
                          :content (email-content name email phone message cards))
              (log:info "email sent for client " name email))
          (error (c)
