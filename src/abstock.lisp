@@ -62,14 +62,19 @@
            :search_card.cover
            :search_card.quantity
            (:as :search_author.name :author)
-           (:as :search_shelf.name :shelf))
+           (:as :search_shelf.name :shelf)
+           (:as :search_publisher.name :publisher))
     (from :search_card
           :search_author
+          :search_publisher
           :search_shelf)
     (join :search_card_authors
           :on (:and (:= :search_card.id :search_card_authors.card_id)
                     (:= :search_author.id :search_card_authors.author_id))
           :on (:= :search_card.shelf :search_shelf.id))
+    (join :search_card_publishers
+          :on (:and (:= :search_card.id :search_card_publishers.card_id)
+                    (:= :search_publisher.id :search_card_publishers.publisher_id)))
     (where (:= :search_card.id id))))
 
 (defun search-card (id)
@@ -107,14 +112,19 @@
            :search_card.quantity
            (:as :search_author.name :author)
            (:as :search_shelf.name :shelf)
-           (:as :search_shelf.id :shelf_id)) ;; cannot use a -
+           (:as :search_shelf.id :shelf_id) ;; cannot use a -
+           (:as :search_publisher.name :publisher))
     (from :search_card
-          :search_author)
+          :search_author
+          :search_publisher)
     (join :search_card_authors
           :on (:and (:= :search_card.id :search_card_authors.card_id)
                     (:= :search_author.id :search_card_authors.author_id)))
     (join :search_shelf
           :on (:= :search_card.shelf_id :search_shelf.id))
+    (join :search_card_publishers
+          :on (:and (:= :search_card.id :search_card_publishers.card_id)
+                    (:= :search_publisher.id :search_card_publishers.publisher_id)))
     (where (:> :search_card.quantity 0))))
 
 (defparameter *cards* nil
