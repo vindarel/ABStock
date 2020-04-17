@@ -76,7 +76,7 @@
   "\o/"
   ;; also fetch-all
   (dbi:fetch (dbi:execute (dbi:prepare *connection* (yield (card-by-id id)))
-                          id)))
+                          (list id))))
 
 ;;
 ;; Get all ids.
