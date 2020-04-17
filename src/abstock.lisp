@@ -144,10 +144,11 @@
   (loop for card in cards
      for ascii-title = (slug:asciify (getf card :|title|))
      for ascii-author = (slug:asciify (getf card :|author|))
+     for ascii-publisher = (slug:asciify (getf card :|publisher|))
      do (setf (getf card :|repr|)
-              (str:downcase (str:concat ascii-title " " ascii-author)))
+              (str:downcase (str:concat ascii-title " " ascii-publisher)))
      do  (setf (getf card :|repr2|)
-               (str:downcase (str:concat ascii-author " " ascii-title)))
+               (str:downcase (str:concat ascii-author " " ascii-title ascii-publisher)))
      collect card))
 
 ;;
