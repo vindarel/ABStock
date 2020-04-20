@@ -91,20 +91,21 @@
                   (getf card :|price|)
                   (getf card :|isbn|)))))
 
-(defun email-content (name email phone message cards)
+(defun email-content (name email phone payment message cards)
   (with-output-to-string (s)
-    (format s "Bonjour cher libraire,~&~%¡¡¡Ceci est un message de test !!!~&Un nouveau client a commandé des livres.~&~%")
+    (format s "Bonjour cher libraire,~&~%~&Un nouveau client a commandé des livres.~&~%")
     (format s "Ses coordonnées sont: ~&- ~a~&- mail: ~a ~&- tél: ~a ~%"
             name email phone)
     (format s "~%Il/elle a commandé:~&~%~a~&~%" (cards-to-txt cards))
     (format s "Le total de la commande est de: ~,2F €.~&~%"
             (reduce #'+ cards :key (lambda (it) (getf it :|price|))))
+    (format s "Moyen de paiement: ~a~&~%" payment)
     (when (not (str:blankp message))
       (format s "Et il/elle a ajouté ce petit mot:~%~%«~a»~%~%" (str:shorten 300 message)))
     (format s "Nous sommes le: ~a~&~%" (local-time:format-timestring nil (local-time:now) :format local-time:+rfc-1123-format+))
     (format s "À bientôt !~&")))
 
-(easy-routes:defroute panier-validate-route ("/panier" :method :post) (&post name email phone antispam ids message)
+(easy-routes:defroute panier-validate-route ("/panier" :method :post) (&post name email phone payment antispam ids message)
   (let* ((ids-list (str:split "," ids :omit-nulls t))
          (ids-list (mapcar (lambda (it)
                              (parse-integer it))
@@ -145,7 +146,7 @@
            (progn
              (email-send :to (getf *email-config* :|to|)
                          :subject "Commande site"
-                         :content (email-content name email phone message cards))
+                         :content (email-content name email phone payment message cards))
              (log:info "email sent for client " name email))
          (error (c)
            (log:error "email error: sending to '~a' with ids '~a' (cards found: '~a' failed with the following error: ~a" email ids (length cards) c)
