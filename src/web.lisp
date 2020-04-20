@@ -1,6 +1,7 @@
 (in-package :abstock)
 
-(defparameter *server* nil)
+(defvar *server* nil
+  "Server instance (Hunchentoot acceptor).")
 
 (defparameter *port* 8899
   "We can override it in the config file.")
