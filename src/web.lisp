@@ -48,7 +48,7 @@
   (format t "~& /search ~a, rayon: ~a~&" q rayon)
   (let* ((rayon (when rayon (parse-integer rayon)))
          (cards (search-cards (get-cards)
-                              (slug:asciify q)
+                              (slug:asciify (str:downcase q))
                               :shelf rayon)))
     (djula:render-template* +cards.html+ nil
                             :title (format nil "La Palpitante - ~a" q)
