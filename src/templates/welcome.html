@@ -11,18 +11,78 @@
         <div class="container has-text-centered">
           <div class="column is-6 is-offset-3">
             <h1 class="title">
-              Coming Soon
+              3615 lapalp
             </h1>
             <h2 class="subtitle">
-              On vous prépare une interface pour commander nos livres à partir de chez vous ! <br>
-              Vous regardez nos livres puis vous nous passez un coup de fil pour passer commande, et on prend des nouvelles au passage.
+              Bonjour, bienvenue sur le site de réservation informatique du world wide web de la librairie ! <br/>
+
+              Toute notre équipe se mobilise pour vous servir en temps de confinement. <br/>
+
+              Vous pouvez chercher par titre, auteur.e ou même fouiner par rayon. <br/>
+
             </h2>
             <div class="box">
               {% include "search-form.html" %}
             </div>
+
+
           </div>
         </div>
       </div>
 
+    </section>
+
+    <section class="hero is-fullheight">
+
+      <div class="hero-body">
+        <div class="container">
+          <div class="column is-6 is-offset-3">
+            <div class="content is-medium">
+
+            <p>
+            Vous pouvez toujours contacter le libraire pour des renseignements plus poussés les mardis, mercredi, jeudi de 14h30 à 16h30. <br/>
+
+            <ul>
+              <li> {{ contact.phone }} </li>
+              {% if contact.phone2 %}
+              <li> ou {{ contact.phone2 }} </li>
+              {% endif %}
+            </ul>
+
+            N'hésitez pas à laisser un message, je vous rappelle. <br/>
+            </p>
+
+            <p>
+              Ou par mail, à <a href="mailto:{{ contact.email }}"> {{ contact.email }} </a>.
+            </p>
+
+            <p>
+              Vous pouvez réserver vos livres grâce au panier, il vous
+              suffit de cliquer l'icône <i class="fas fa-plus"></i> dans la rangée du livre (ça peut
+              toujours être annulé, hein, pas de panique, en cochant la
+              x dans le panier).
+            </p>
+
+            <p>
+              Un fois vos emplettes faites, cliquez sur le panier
+              là-haut à droite.
+            </p>
+
+            <p>
+              Bonne balade virtuelle dans les rayons…
+            </p>
+
+            <p>
+              Pour l'occasion, c'est plus compliqué, mais si vous avez
+              un titre en tête, ou un.e auteur, posez toujours la
+              question par mail. Les prix de l'occase varient entre 2 et
+              5 pour les poches et entre 5 et 8 pour les grands formats,
+              avec des exceptions.
+            </p>
+
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
 {% endblock %}

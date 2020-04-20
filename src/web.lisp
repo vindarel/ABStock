@@ -41,6 +41,7 @@
 (easy-routes:defroute root ("/" :method :get) ()
   (djula:render-template* +welcome.html+ nil
                           :title "La Palpitante en ligne"
+                          :contact *contact-infos*
                           :shelves *shelves*))
 
 (easy-routes:defroute search-route ("/search" :method :get) (q rayon)
