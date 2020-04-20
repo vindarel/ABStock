@@ -28,9 +28,10 @@ Seeing one's shopping basket:
 Current features:
 
 - show the catalogue
-- search it
-- the user adds books in his basket
-- and he sends an **email** from the app to the shop owner to pass command.
+- search it (by title, authors, publisher, shelf…)
+- the user adds books in his or her basket
+- (s)he fills a confirmation form which sends an **email** to the shop owner to pass command
+- the DB is synced every night.
 
 Interested? Please get in touch.
 
