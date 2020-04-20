@@ -138,6 +138,7 @@
   (let* ((query (dbi:prepare *connection* (yield (all-cards))))
          (query (dbi:execute query (list 0))))
     ;; caution: what's long is printing all the cards.
+    (log:info "(re)loading the DB")
     (setf *cards* (normalise-cards
                    (dbi:fetch-all query)))
     t))
@@ -229,11 +230,20 @@
     (values result
             (length result))))
 
+(defun schedule-db-reload ()
+  "Reload the DB regularly. By default, each night at 4am."
+  (cl-cron:make-cron-job #'get-all-cards
+                         :minute 30
+                         :hour 4)
+  (log:info "Scheduled a DB reload.")
+  (cl-cron:start-cron))
+
 (defun main ()
   "Entry point of the executable."
   (handler-case
       (progn
         (start)
+        (schedule-db-reload)
         (bt:join-thread
          (find-if (lambda (th)
                     (search "hunchentoot" (bt:thread-name th)))
