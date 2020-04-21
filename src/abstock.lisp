@@ -42,6 +42,12 @@
 
 (defvar *connection* nil)
 
+(defvar *cards* nil
+  "List of all books.")
+
+(defvar *shelves* nil)
+
+
 (defun connect ()
   ;TODO: needs to be run inside the directory of db.db
   (setf *connection*
@@ -130,9 +136,6 @@
                     (:= :search_publisher.id :search_card_publishers.publisher_id)))
     (where (:> :search_card.quantity 0))))
 
-(defparameter *cards* nil
-  "List of all books.")
-
 (defun get-all-cards ()
   "Get all the ids of the cards in the DB."
   (let* ((query (dbi:prepare *connection* (yield (all-cards))))
@@ -162,8 +165,6 @@
   (select (:search_shelf.name
            :search_shelf.id)
     (from :search_shelf)))
-
-(defparameter *shelves* nil)
 
 (defun get-all-shelves ()
   "Get shelves."
@@ -197,9 +198,6 @@
 ;;
 ;; Search cards
 ;;
-(defparameter *result* nil
-  "search-cards results. Avoid printing thousands of cards in the REPL.")
-
 (defun search-cards (cards query &key shelf)
   "cards: plist,
    query: string,
@@ -226,7 +224,6 @@
                           collect card))
                      cards)))
     (format t "Found: ~a~&" (length result))
-    (setf *result* result)
     (values result
             (length result))))
 
