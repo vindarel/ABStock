@@ -2,7 +2,7 @@
 
 ;;; Send an email with SendGrid's API.
 
-(defparameter *email-config*
+(defvar *email-config*
   '(:|sender-api-key| ""
     :|from| ""))
 

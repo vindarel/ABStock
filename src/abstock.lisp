@@ -31,16 +31,16 @@
 
 (defparameter *verbose* nil)
 (defparameter *config* #P"~/.abstock.lisp")
-(defparameter *contact-infos* '(:|email| "me@test.fr"
+(defvar *contact-infos* '(:|email| "me@test.fr"
                                 :|phone| ""
                                 :|phone2| "")
 
   "Private contact information, read from the config file `*config*'.")
-(defparameter *secret-question* ""
+(defvar *secret-question* ""
   "A question for the most simple anti-spam system when the user validates his basket.")
-(defparameter *secret-answer* "")
+(defvar *secret-answer* "")
 
-(defparameter *connection* nil)
+(defvar *connection* nil)
 
 (defun connect ()
   ;TODO: needs to be run inside the directory of db.db
