@@ -166,8 +166,15 @@
                                :title (format nil "La Palpitante - Commande envoyée")
                                :success-messages (list "Votre demande a bien été envoyée."))))))
 
+(defun start-server (&key (port *port*))
+  (format t "~&Starting the web server on port ~a" port)
+  (force-output)
+  (setf *server* (make-instance 'easy-routes:routes-acceptor
+                                :port (or port *port*)))
+  (hunchentoot:start *server*))
+
 (export 'start)
-(defun start (&key port (load-init t))
+(defun start (&key (port *port*) (load-init t))
   (format t "Abelujo visible stock v~a~&" *version*)
   (force-output)
 
@@ -187,10 +194,6 @@
   (format t "~&Done. ~a cards found." (length *cards*))
   (force-output)
 
-  (format t "~&Starting the web server on port ~a" (or port *port*))
-  (force-output)
-  (setf *server* (make-instance 'easy-routes:routes-acceptor
-                                :port (or port *port*)))
-  (hunchentoot:start *server*)
+  (start-server :port port)
   (format t "~&Ready. You can access the application!~&")
   (force-output))
