@@ -3,12 +3,12 @@
 
 {% block content %}
 <div class="container" style="margin-bottom: 5em">
-  <div class="columns">
-    <div class="column is-8 is-offset-2">
+  <div class="section">
+    <div class="box">
+      {% include "search-form.html" %}
+    </div>
 
-      <div class="box">
-       {% include "search-form.html" %}
-      </div>
+    <div class="row columns is-multiline">
 
       {% if no-results %}
       <div> Aucun résultat !</div>
@@ -18,37 +18,77 @@
       {% endif %}
 
       {% for card in cards %}
-      <div id="{{ card.id }}" class="box content">
-	<article class="post">
-	  <div class="media">
-	    <div class="media-left">
-	      <p class="image is-64x64">
-		<img src="{{ card.cover }}">
-	      </p>
-	    </div>
-	    <div class="media-content">
-	      <div class="content">
-                <h4> {{ card.title }} </h4>
-		<p>
-                  <span> {{ card.author }} </span>
-		  <a href="/search?rayon={{ card.shelf_id }}">
+      <div class="column is-one-fifth">
+        <div class="card" id="{{ card.id }}">
+          <div class="card-image">
+            <figure class="image">
+              <!-- <img src="https://images.unsplash.com/photo-1475778057357-d35f37fa89dd?dpr=1&auto=compress,format&fit=crop&w=1920&h=&q=80&cs=tinysrgb&crop=" alt="Image"> -->
+              <img src="{{ card.cover }}" alt="Couverture de {{ card.title }}"/>
+            </figure>
+          </div>
+          <div class="card-content">
+            <div class="media">
+              <div class="media-content">
+                <p class="title is-5 no-padding">{{ card.title }}</p>
+                <p><span class="title is-6"><a href="/search?q={{ card.author }}">{{ card.author }}</a></span></p>
+                <!-- <p class="subtitle is-6">{{ card.author }}</p> -->
+                <p class="">{{ card.publisher | capfirst }}</p>
+                <p>
+                  <a href="/search?rayon={{ card.shelf_id }}">
                     <span class="tag"> {{ card.shelf }} </span>
                   </a>
-                  <span> {{ card.publisher | capfirst }} </span>
-		</p>
-	      </div>
-	    </div>
-	    <div class="media-right">
-	      <span class="has-text-grey-light"> {{ card.price | price }} €</span>
-              <span  class="icon is-medium" style="cursor: pointer;" title="Ajouter au panier" onclick="add_to_cart({{ card.id }})">
-                <i class="fas fa-lg fa-plus-circle"></i>
-              </span>
-	    </div>
-	  </div>
-	</article>
+                </p>
+
+	        <span class="has-text-grey-light"> {{ card.price | price }} €</span>
+                <span  class="icon is-medium" style="cursor: pointer;" title="Ajouter au panier" onclick="add_to_cart({{ card.id }})">
+                  <i class="fas fa-lg fa-plus-circle"></i>
+                </span>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
       </div>
+
       {% endfor %}
     </div>
+
+    <!-- <div class="row columns is-multiline">
+          {% for card in cards %}
+          <div class="column is-half">
+          <div id="{{ card.id }}" class="box content">
+          <article class="post">
+	  <div class="media">
+	  <div class="media-left">
+	  <p class="image is-128x128">
+	  <img src="{{ card.cover }}">
+	  </p>
+	  </div>
+	  <div class="media-content">
+	  <div class="content">
+          <h4> {{ card.title }} </h4>
+	  <p>
+          <span> {{ card.author }} </span>
+          <span> {{ card.publisher | capfirst }} </span>
+	  </p>
+          <a href="/search?rayon={{ card.shelf_id }}">
+          <span class="tag"> {{ card.shelf }} </span>
+          </a>
+	  </div>
+	  </div>
+	  <div class="media-right">
+	  <span class="has-text-grey-light"> {{ card.price | price }} €</span>
+          <span  class="icon is-medium" style="cursor: pointer;" title="Ajouter au panier" onclick="add_to_cart({{ card.id }})">
+          <i class="fas fa-lg fa-plus-circle"></i>
+          </span>
+	  </div>
+	  </div>
+          </article>
+          </div>
+          </div>
+          {% endfor %}
+          </div> -->
   </div>
 </div>
 
