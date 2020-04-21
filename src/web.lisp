@@ -194,6 +194,6 @@
   (format t "~&Done. ~a cards found." (length *cards*))
   (force-output)
 
-  (start-server :port port)
+  (start-server :port (or port *port*))
   (format t "~&Ready. You can access the application!~&")
   (force-output))

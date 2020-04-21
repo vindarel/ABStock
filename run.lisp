@@ -17,7 +17,7 @@ Another solution to run the app is to run the executable (see README).
 
 (in-package :abstock)
 (handler-case
-    (abstock:start)
+    (abstock:start :port (uiop:getenv "AB_PORT"))
   (error (c)
     (format *error-output* "~&An error occured: ~a~&" c)
     (uiop:quit 1)))
