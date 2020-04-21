@@ -146,6 +146,7 @@
        (handler-case
            (progn
              (email-send :to (getf *email-config* :|to|)
+                         :reply-to (list email name)
                          :subject "Commande site"
                          :content (email-content name email phone payment message cards))
              (log:info "email sent for client " name email))
