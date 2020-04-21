@@ -12,9 +12,8 @@
       <nav class="navbar is-info">
         <div class="container">
           <div class="navbar-brand">
-            <a class="navbar-item" href="../">
-              <!-- <img src="http://bulma.io/images/bulma-type-white.png" alt="Logo"> -->
-              <div> 3615 La Palpitante </div>
+            <a class="navbar-item" href="{% if domain %} {{ domain }} {% else %} ../ {% endif %}">
+              3615 La Palpitante
             </a>
             <span class="navbar-burger burger" data-target="navbarMenu">
               <span></span>
@@ -22,16 +21,17 @@
               <span></span>
             </span>
           </div>
+          <span class="navbar-item">
+            <a class="button is-white is-outlined" href="http://www.lapalpitante.fr/">
+              <span class="icon">
+                <i class="fa fa-home"></i>
+              </span>
+              <span>La Palpitante.fr</span>
+            </a>
+          </span>
           <div id="navbarMenu" class="navbar-menu">
             <div class="navbar-end">
-              <span class="navbar-item">
-                <a class="button is-white is-outlined" href="http://www.lapalpitante.fr/">
-                  <span class="icon">
-                    <i class="fa fa-home"></i>
-                  </span>
-                  <span>La Palpitante.fr</span>
-                </a>
-              </span>
+
               <span class="navbar-item">
                 <a class="button is-white is-outlined" href="#" onclick="gotobasket()">
                   <span class="icon">
