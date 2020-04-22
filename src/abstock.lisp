@@ -217,9 +217,12 @@
                      (let* ((query (slug:asciify query))
                             (query (str:replace-all " " ".*" query)))
                        (loop for card in cards
+                          for isbn = (getf card :|isbn|)
                           for repr = (getf card :|repr|)
                           for repr2 = (getf card :|repr2|)
-                          when (or (ppcre:scan query repr)
+                          when (or (string-equal (str:remove-punctuation query :replacement "")
+                                                 isbn)
+                                   (ppcre:scan query repr)
                                    (ppcre:scan query repr2))
                           collect card))
                      cards)))
