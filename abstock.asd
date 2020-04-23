@@ -28,7 +28,8 @@
                 :components
                 ((:file "abstock")
                  (:file "web")
-                 (:file "email"))))
+                 (:file "email")
+                 (:file "utils"))))
 
   :build-operation "program-op"
   :build-pathname "abstock"
