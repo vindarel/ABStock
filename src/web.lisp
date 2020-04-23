@@ -84,6 +84,7 @@
                             :title (format nil "La Palpitante - Mon Panier")
                             :cards cards
                             :secret-question *secret-question*
+                            :open-form t
                             :contact *contact-infos*)))
 
 ;;
