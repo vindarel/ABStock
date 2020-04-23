@@ -200,11 +200,11 @@
       let val = prices[i].dataset.price;
       if (val) {
         val = parseFloat(val);
-        total += val;
+        total += val * 100;
       }
     }
     let elt_total = document.getElementById("total");
-    elt_total.innerText = total;
+    elt_total.innerText = total / 100;
   }
 
   totalprice();
