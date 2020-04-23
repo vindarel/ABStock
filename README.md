@@ -28,7 +28,8 @@ Seeing one's shopping basket:
 Current features:
 
 - show the catalogue
-- search it (by title, authors, publisher, shelf…)
+- search it (by title, authors, publisher, shelf, ISBN…)
+  - search many ISBNs at once in the stock (separated by a space or a comma). Display the ones not found.
 - the user adds books in his or her basket
 - (s)he fills a confirmation form which sends an **email** to the shop owner to pass command
 - the DB is synced every night.

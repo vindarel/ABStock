@@ -27,7 +27,7 @@
 
 (in-package :abstock)
 
-(defparameter *version* "0.1")
+(defparameter *version* "0.4")
 
 (defparameter *verbose* nil)
 (defparameter *config* #P"~/.abstock.lisp")
@@ -198,11 +198,33 @@
 ;;
 ;; Search cards
 ;;
+(defun key-function (it)
+  (getf it :|isbn|))
+
+(defun search-by-isbn (cards isbn)
+  (find isbn cards :key #'key-function :test #'string-equal))
+
+(defun search-by-isbns (cards isbns)
+  "Search many ISBNs.
+  Return two values: the list of cards found, the list of ISBNs not found."
+  (let (result collected-isbns)
+    (loop for card in cards
+       for card-isbn = (getf card :|isbn|)
+       for res-isbn = (when (isbn-p card-isbn)
+                        (find card-isbn isbns :test #'string-equal))
+       when res-isbn
+       do (progn
+            (push res-isbn collected-isbns)
+            (push card result)))
+    (values result
+            (set-difference isbns collected-isbns :test #'string-equal))))
+
 (defun search-cards (cards query &key shelf)
   "cards: plist,
    query: string,
    shelf (optional): id (int)."
-  (let* ((cards (if (and shelf
+  (let* (isbns-not-found
+         (cards (if (and shelf
                          (plusp shelf))
                     ;; Filter by shelf.
                     (remove-if-not (lambda (card)
@@ -210,25 +232,35 @@
                                         shelf))
                                    cards)
                     cards))
+         ;; If the query has ISBNs, search them and ignore a remaining free search.
+         (query-isbns (collect-isbns (split-query query)))
          ;; Filter by title and author(s).
          (result (if (not (str:blank? query))
-                     ;; no-case: strips internal contiguous whitespace, removes accents
-                     ;; and punctuation.
-                     (let* ((query (slug:asciify query))
-                            (query (str:replace-all " " ".*" query)))
-                       (loop for card in cards
-                          for isbn = (getf card :|isbn|)
-                          for repr = (getf card :|repr|)
-                          for repr2 = (getf card :|repr2|)
-                          when (or (string-equal (str:remove-punctuation query :replacement "")
-                                                 isbn)
-                                   (ppcre:scan query repr)
-                                   (ppcre:scan query repr2))
-                          collect card))
+                     (cond
+                       (query-isbns
+                        (multiple-value-bind (res not-found)
+                            (search-by-isbns cards query-isbns)
+                          (setf isbns-not-found not-found)
+                          res))
+                       (t
+                        ;; Strip internal contiguous whitespace,
+                        ;; remove accents and punctuation.
+                        (let* ((query (slug:asciify query))
+                               (query (str:replace-all " " ".*" query)))
+                          (loop for card in cards
+                             for isbn = (getf card :|isbn|)
+                             for repr = (getf card :|repr|)
+                             for repr2 = (getf card :|repr2|)
+                             when (or (string-equal (str:remove-punctuation query :replacement "")
+                                                    isbn)
+                                      (ppcre:scan query repr)
+                                      (ppcre:scan query repr2))
+                             collect card))))
                      cards)))
     (format t "Found: ~a~&" (length result))
     (values result
-            (length result))))
+            (length result)
+            isbns-not-found)))
 
 (defun schedule-db-reload ()
   "Reload the DB regularly. By default, each night at 4am."

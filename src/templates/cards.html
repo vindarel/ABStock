@@ -8,6 +8,17 @@
       {% include "search-form.html" %}
     </div>
 
+    <div class="row">
+      {% if length-isbns-not-found > 0 %}
+      <span> Nous n'avons pas trouvé ces ISBNs en stock: </span>
+      <span>
+        {% for isbn in isbns-not-found %}
+        <p> {{ isbn }}</p>
+        {% endfor %}
+      </span>
+      {% endif %}
+    </div>
+
     <div class="row columns is-multiline is-mobile">
 
       {% if no-results %}

@@ -48,17 +48,26 @@
 (easy-routes:defroute search-route ("/search" :method :get) (q rayon)
   (format t "~& /search ~a, rayon: ~a~&" q rayon)
   (let* ((rayon (when rayon (parse-integer rayon)))
-         (cards (search-cards (get-cards)
-                              (slug:asciify (str:downcase q))
-                              :shelf rayon)))
+         cards
+         result-length
+         isbns-not-found)
+    (multiple-value-bind (res res-length not-found)
+        (search-cards (get-cards)
+                      (slug:asciify (str:downcase q))
+                      :shelf rayon)
+      (setf cards res)
+      (setf result-length res-length)
+      (setf isbns-not-found not-found))
     (djula:render-template* +cards.html+ nil
                             :title (format nil "La Palpitante - ~a" q)
                             :query q
                             :query-length (length (str:words q))
                             :shelf_id rayon
                             :cards cards
+                            :isbns-not-found isbns-not-found
+                            :length-isbns-not-found (length isbns-not-found)
                             :shelves *shelves*
-                            :no-results (zerop (length cards)))))
+                            :no-results (zerop result-length))))
 
 (easy-routes:defroute panier-route ("/panier" :method :get) (ids)
   (let* ((ids-list (str:split "," ids :omit-nulls t))
