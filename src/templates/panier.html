@@ -41,21 +41,6 @@
             Total de votre commande: <strong id="total"> 0</strong> <strong>€</strong>
           </div>
 
-          <details>
-            <summary> Nos coordonnées </summary>
-            <ul>
-              <li> Téléphone: {{ contact.phone }} {% if contact.phone2 %} ou {{ contact.phone2 }} {% endif %}</li>
-              <li>Courriel: <a href="mailto:{{ contact.email }}"> {{ contact.email }} </a></li>
-            </ul>
-            <!-- Idée de message:
-                 <pre>
-                 Bonjour,
-
-                 Je souhaiterais vous commander les livres suivants:
-                 </pre>
-                 <pre id="bookstxt">
-                 </pre> -->
-          </details>
         </div>
 
         <details {% if open-form %} open="true" {% endif %}>
