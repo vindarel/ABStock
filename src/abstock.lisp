@@ -47,6 +47,9 @@
 
 (defvar *shelves* nil)
 
+(defvar *page-length* 50
+  "Page length. Not used much yet.")
+
 
 (defun connect ()
   ;TODO: needs to be run inside the directory of db.db
@@ -224,14 +227,16 @@
    query: string,
    shelf (optional): id (int)."
   (when (stringp shelf)
-    (setf shelf (ignore-errors (parse-integer shelf))))
+    (setf shelf (or (ignore-errors (parse-integer shelf))
+                    -1)))
 
   (when (and (str:blank? query)
              (and shelf
                   (minusp shelf)))
     (return-from search-cards
-      (subseq (get-cards) 0 (min 200
-                                 (length *cards*)))))
+      (values (subseq (get-cards) 0 (min *page-length*
+                                         (length *cards*)))
+              *page-length*)))
 
   (let* (isbns-not-found
          (cards (if (and shelf
