@@ -128,7 +128,8 @@
     (join :search_card_authors
           :on (:and (:= :search_card.id :search_card_authors.card_id)
                     (:= :search_author.id :search_card_authors.author_id)))
-    (join :search_shelf
+    ;; left-join: accept cards without shelf.
+    (left-join :search_shelf
           :on (:= :search_card.shelf_id :search_shelf.id))
     (join :search_card_publishers
           :on (:and (:= :search_card.id :search_card_publishers.card_id)
