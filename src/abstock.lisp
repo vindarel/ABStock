@@ -238,7 +238,7 @@
          ;; If the query has ISBNs, search them and ignore a remaining free search.
          (query-isbns (collect-isbns (split-query query)))
          ;; Filter by title and author(s).
-         (result (when (not (str:blank? query))
+         (result (if (not (str:blank? query))
                      (cond
                        (query-isbns
                         (multiple-value-bind (res not-found)
@@ -258,7 +258,8 @@
                                                     isbn)
                                       (ppcre:scan query repr)
                                       (ppcre:scan query repr2))
-                             collect card)))))))
+                             collect card))))
+                     cards)))
     (format t "Found: ~a~&" (length result))
     (values result
             (length result)
