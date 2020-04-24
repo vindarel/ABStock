@@ -47,7 +47,7 @@
 
 (easy-routes:defroute search-route ("/search" :method :get) (q rayon)
   (format t "~& /search ~a, rayon: ~a~&" q rayon)
-  (let* ((rayon (when rayon (parse-integer rayon)))
+  (let* ((rayon (when rayon (ignore-errors (parse-integer rayon))))
          cards
          result-length
          isbns-not-found)
