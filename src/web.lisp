@@ -52,8 +52,7 @@
          result-length
          isbns-not-found)
     (multiple-value-bind (res res-length not-found)
-        (search-cards (get-cards)
-                      (slug:asciify (str:downcase q))
+        (search-cards (slug:asciify (str:downcase q))
                       :shelf rayon)
       (setf cards res)
       (setf result-length res-length)

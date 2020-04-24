@@ -219,23 +219,26 @@
     (values result
             (set-difference isbns collected-isbns :test #'string-equal))))
 
-(defun search-cards (cards query &key shelf)
+(defun search-cards (query &key shelf)
   "cards: plist,
    query: string,
    shelf (optional): id (int)."
+  (when (stringp shelf)
+    (setf shelf (ignore-errors (parse-integer shelf))))
   (let* (isbns-not-found
          (cards (if (and shelf
                          (plusp shelf))
                     ;; Filter by shelf.
                     (remove-if-not (lambda (card)
-                                     (= (getf card :|shelf_id|)
+                                     (= (or (getf card :|shelf_id|)
+                                            -2)
                                         shelf))
-                                   cards)
-                    cards))
+                                   (get-cards))
+                    (get-cards)))
          ;; If the query has ISBNs, search them and ignore a remaining free search.
          (query-isbns (collect-isbns (split-query query)))
          ;; Filter by title and author(s).
-         (result (if (not (str:blank? query))
+         (result (when (not (str:blank? query))
                      (cond
                        (query-isbns
                         (multiple-value-bind (res not-found)
@@ -255,8 +258,7 @@
                                                     isbn)
                                       (ppcre:scan query repr)
                                       (ppcre:scan query repr2))
-                             collect card))))
-                     cards)))
+                             collect card)))))))
     (format t "Found: ~a~&" (length result))
     (values result
             (length result)
