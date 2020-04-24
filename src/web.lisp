@@ -197,13 +197,13 @@
       (format t "Skipping init file.~&"))
   (force-output)
 
+  (start-server :port (or port *port*))
+  (format t "~&Ready. You can access the application!~&")
+  (force-output)
+
   (format t "~&Reading the DB...")
   (force-output)
   (get-all-cards)
   (get-all-shelves)
   (format t "~&Done. ~a cards found." (length *cards*))
-  (force-output)
-
-  (start-server :port (or port *port*))
-  (format t "~&Ready. You can access the application!~&")
   (force-output))
