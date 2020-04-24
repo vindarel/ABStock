@@ -66,7 +66,8 @@
                             :isbns-not-found isbns-not-found
                             :length-isbns-not-found (length isbns-not-found)
                             :shelves *shelves*
-                            :no-results (zerop result-length))))
+                            :no-results (or (null result-length)
+                                            (zerop result-length)))))
 
 (easy-routes:defroute panier-route ("/panier" :method :get) (ids)
   (let* ((ids-list (str:split "," ids :omit-nulls t))
