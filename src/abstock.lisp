@@ -225,6 +225,14 @@
    shelf (optional): id (int)."
   (when (stringp shelf)
     (setf shelf (ignore-errors (parse-integer shelf))))
+
+  (when (and (str:blank? query)
+             (and shelf
+                  (minusp shelf)))
+    (return-from search-cards
+      (subseq (get-cards) 0 (min 200
+                                 (length *cards*)))))
+
   (let* (isbns-not-found
          (cards (if (and shelf
                          (plusp shelf))
