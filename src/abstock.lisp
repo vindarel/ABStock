@@ -87,7 +87,6 @@
     (where (:= :search_card.id id))))
 
 (defun search-card (id)
-  "\o/"
   ;; also fetch-all
   (dbi:fetch (dbi:execute (dbi:prepare *connection* (yield (card-by-id id)))
                           (list id))))
