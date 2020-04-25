@@ -1,5 +1,8 @@
 (in-package :abstock)
 
+;;
+;; App variables.
+;;
 (defvar *server* nil
   "Server instance (Hunchentoot acceptor).")
 
@@ -8,6 +11,48 @@
 
 (defparameter *dev-mode* nil
   "If t, use a subset of all the cards.")
+
+;;
+;; User variables.
+;;
+(defpackage :abstock-user
+  (:use :cl)
+  (:documentation "The package to write the user configuration in."))
+
+;; user-content-* prefix for class slots.
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (setf defclass-std:*with-prefix* t))
+
+(defclass/std user-content ()
+  ((brand-name
+    :doc "The brand/shop name or this website's name.")
+   (brand-home-title
+    :doc "The title for this website. Defaults to the brand name.")
+   (brand-link
+    :doc "Link to the shop's website.")
+   (brand-link-title
+    :doc "Title for the link.")
+   (brand-contact-link
+    :doc "Direct link to the owner's contact page.")
+   (welcome-image
+    :doc "Banner image on the landing page.")
+   (welcome-text
+    :doc "Text on the hero of the landing page. It can be HTML.")
+   (welcome-second-text
+    :doc "Text on a second section of the landing page. It can be HTML.")
+   (basket-title
+    :doc "The title on the shopping basket's page.")
+   (basket-text
+    :doc "The text at the top of the shopping basket.")
+   (basket-show-validation-form
+    :std t
+    :doc "Show a validation form asking for the user contant and sending an email.")))
+
+(defvar *user-content* (make-instance 'user-content))
+
+;TODO: (reload-config-file)
+
+;; Utils.
 
 (defun get-cards ()
   (if *dev-mode*
@@ -43,6 +88,7 @@
   (djula:render-template* +welcome.html+ nil
                           :title "La Palpitante en ligne"
                           :contact *contact-infos*
+                          :user-content *user-content*
                           :shelves *shelves*))
 
 (easy-routes:defroute search-route ("/search" :method :get) (q rayon)
@@ -85,6 +131,7 @@
                             :cards cards
                             :secret-question *secret-question*
                             :open-form t
+                            :user-content *user-content*
                             :contact *contact-infos*)))
 
 ;;

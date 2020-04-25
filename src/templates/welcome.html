@@ -11,14 +11,21 @@
     <div class="container has-text-justified">
       <div class="column is-6 is-offset-3">
         <h1 class="title">
-          <img src="https://gitlab.com/vindarel/abstock/-/raw/44c9498ea4e56d13f96c38bcdbd5896592e23da6/src/static/img/3615anim.gif"></img>
+          {% if user-content.welcome-image %}
+          <img src="{{ user-content.welcome-image }}"></img>
+          {% endif %}
         </h1>
         <h2 class="subtitle">
-          Bonjour et bienvenue sur le site de réservation informatique du world wide web de la librairie ! <br/>
 
-          Toute notre équipe se mobilise pour vous servir en temps de confinement. <br/>
+          {% if user-content.welcome-text %}
 
-          Vous pouvez chercher par titre, auteur·e, éditeur, ISBN ou même fouiner par rayon. <br/>
+          {{ user-content.welcome-text | safe }}
+
+          {% else %}
+
+          Welcome !
+
+          {% endif %}
 
         </h2>
         <div class="box">
@@ -29,9 +36,9 @@
       </div>
     </div>
   </div>
-
 </section>
 
+{% if user-content.welcome-second-text %}
 <section class="hero is-fullheight">
 
   <div class="hero-body">
@@ -39,65 +46,13 @@
       <div class="column is-6 is-offset-3">
         <div class="content is-medium" style="text-align:justify">
 
-          <p>
-            Vous pouvez contacter le libraire pour des renseignements plus poussés et des conseils les mardi, mercredi, jeudi de 14h30 à 16h30. <br/>
-
-            <ul>
-              <li> {{ contact.phone }} </li>
-              {% if contact.phone2 %}
-              <li> ou {{ contact.phone2 }} </li>
-              {% endif %}
-            </ul>
-
-            Et le vendredi de 15h à 18h au {{ contact.phone }}, à la librairie. <br/>
-
-            N'hésitez pas à laisser un message, je vous rappelle. <br/>
-          </p>
-
-          <p>
-            Ou par mail, à <a href="mailto:{{ contact.email }}"> {{ contact.email }} </a>.
-          </p>
-
-          <p>
-            Vous pouvez réserver vos livres grâce au panier, il vous
-            suffit de cliquer sur l'icône + dans la rangée du livre (ça peut
-            toujours être annulé, hein, pas de panique, en cochant
-            X dans le panier).
-          </p>
-
-          <p>
-            Une fois vos emplettes faites, cliquez sur le panier
-            en haut à droite.
-          </p>
-
-          <p>
-            Bonne balade virtuelle dans les rayons…
-          </p>
-
-          <p>
-            Pour les livres d'occasion, si vous avez un titre en tête,
-            ou un·e auteur, posez toujours la question par mail, je
-            vous dirai ce que j'ai.
-          </p>
-          <p>
-            Les prix de l'occase varient entre 2 et 5 pour les poches
-            et entre 5 et 8 pour les grands formats, avec des
-            exceptions.
-          </p>
-
-          <p>
-            Et si vous voulez aller encore plus loin et nous soutenir,
-            <ul>
-              <li>pour adhérer à l'association, <a href="https://www.helloasso.com/associations/le-jardin-statuaire/adhesions/adhesion-en-tant-que-membre-usager-usagere-ou-bienfaitrice-bienfaiteur">c'est ici</a>,
-              </li>
-              <li>et pour faire un don, <a href="https://www.helloasso.com/associations/le-jardin-statuaire/formulaires/2/widget"> c'est là</a>.
-              </li>
-            </ul>
-          </p>
+          {{ user-content.welcome-second-text | safe }}
 
         </div>
       </div>
     </div>
   </div>
 </section>
+{% endif %}
+
 {% endblock %}

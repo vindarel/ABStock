@@ -39,7 +39,19 @@ Interested? Please get in touch.
 
 ## Config
 
-Example `~/.abstock.lisp`:
+Write your config into `~/.abstock.lisp`.
+
+You can overwrite:
+
+- the contact information (two phone numbers, email…)
+- your SendGrid API key
+- the simple anti-spam validation form question (and answer)
+- the welcome texts
+- the shopping basket top text
+- etc
+
+See all available settings into `config-example.lisp`.
+
 
 ~~~lisp
 (setf *port* 9889)

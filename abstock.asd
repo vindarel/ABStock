@@ -15,6 +15,8 @@
                :cl-ppcre
                :parse-float
                :jonathan
+               :defclass-std
+               :pythonic-string-reader
 
                ;; web app
                :hunchentoot

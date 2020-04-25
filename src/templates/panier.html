@@ -7,42 +7,28 @@
     <div class="column is-8 is-offset-2">
 
       <div class="box content">
-        <h3>Votre panier </h3>
+        <h3>
+          {% if user-content.basket-title %}
+          {{ user-content.basket-title }}
+          {% else %}
+          Votre panier
+          {% endif %}
+        </h3>
 
         <div>
-          <p>
-            Et voilà.
 
-            En remplissant et validant le formulaire ci après, la commande arrive chez moi par voie de courrier électronique, c'est magique !
-          </p>
-
-
-          <p>
-            Il est possible qu'il y ait des errare humanum in la commandum, soit de base, soit parce que le stock n'est actualisé qu'une fois la nuit venue à 04h00. Si jamais c'est le cas, je vous préviendrais !
-          </p>
-
-
-          <p>
-          Ensuite de quoi la marmotte elle mettra vos p'tits livres dans un joli sac kraft qu'elle vous remettra :
-
-            <ul>
-              <li>soit sur RDV</li>
-
-              <li>soit le vendredi de 15h à 18h à la porte de la librairie (parlez dans l'hygiaphone)</li>
-
-              <li>soit par l'intermédiaire d'un camarade du marché du samedi matin (à confirmer)</li>
-            </ul>
-
-
-            En tout cas, dans le respect des gestes barrières et des consignes sanitaires (masque, lavage des mains, gel hydro... etc.) pour ma part et la votre. Et en respectant des distances sociales pour votre part si jamais d'autres lecteurs et lectrices affamé.e.s se trouvent là en même temps...
-          </p>
+          {% if user-content.basket-text %}
+          {{ user-content.basket-text | safe }}
+          {% endif %}
 
           <div style="text-align: right; margin-top: 2em">
             Total de votre commande: <strong id="total"> 0</strong> <strong>€</strong>
           </div>
         </div>
 
+        {% if user-content.basket-show-validation-form %}
         {% include "validation-form.html" %}
+        {% endif %}
 
       </div>
 

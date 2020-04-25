@@ -14,7 +14,12 @@
         <div class="container">
           <div class="navbar-brand">
             <a class="navbar-item" href="{% if domain %} {{ domain }} {% else %} ../ {% endif %}">
-              3615 La Palpitante
+              {% if user-content.brand-home-title %}
+              {{ user-content.brand-home-title }}
+              {% else %}
+              Home
+              {% endif %}
+
             </a>
             <span class="navbar-burger burger" data-target="navbarMenu">
               <span></span>
@@ -23,11 +28,17 @@
             </span>
           </div>
           <span class="navbar-item">
-            <a class="button is-white is-outlined" href="http://www.lapalpitante.fr/">
+            <a class="button is-white is-outlined" href=>
               <span class="icon">
                 <i class="fa fa-home"></i>
               </span>
-              <span>La Palpitante.fr</span>
+              <span>
+                {% if user-content.brand-link-title %}
+                {{ user-content.brand-link-title }}
+                {% else %}
+                {{ user-content.brand-name }}
+                {% endif %}
+              </span>
             </a>
           </span>
           <div id="navbarMenu" class="navbar-menu">
@@ -97,7 +108,9 @@
               <i class="fa fa-pen"></i>
               <strong style="color: lemonchiffon;">Contact</strong></h2>
             <ul>
-              <li><a href="http://www.lapalpitante.fr/?s=contact">La Palpitante</a></li>
+              {% if user-content.brand-contact-link %}
+              <li><a href="http://www.lapalpitante.fr/?s=contact"> {{ user-content.brand-name }}</a></li>
+              {% endif %}
               <li><a href="http://abelujo.cc/#contact">Support technique</a></li>
             </ul>
           </div>

@@ -1,3 +1,12 @@
+(defpackage abstock
+  (:use :cl
+        :sxql
+        :log4cl)
+  (:import-from :defclass-std
+                :defclass/std))
+
+(in-package :abstock)
+
 ;; Read Abelujo's database in memory.
 
 ;; Book objects must have:
@@ -19,13 +28,6 @@
 ;; Notes:
 ;; A "card" is the generic name for a book.
 
-(defpackage abstock
-  (:use :cl
-        ;; :mito
-        :sxql
-        :log4cl))
-
-(in-package :abstock)
 
 (defparameter *version* "0.4")
 
