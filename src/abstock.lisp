@@ -107,6 +107,38 @@
   "Get all the ids of the cards in the DB."
   (dbi:fetch-all (dbi:execute (dbi:prepare *connection* (yield (all-ids))))))
 
+;; same, search one card by isbn (dev only, unused in prod).
+(defun card-by-isbn (isbn)
+  "Generates SxQL query. (yield) generates the SQL. It is not executed."
+  (select (:search_card.title
+           :search_card.price
+           :search_card.id
+           :search_card.isbn
+           :search_card.details_url
+           :search_card.cover
+           :search_card.quantity
+           (:as :search_author.name :author)
+           (:as :search_shelf.name :shelf)
+           (:as :search_publisher.name :publisher))
+    (from :search_card
+          :search_author
+          :search_publisher
+          :search_shelf)
+    ;TODO: needs a left-join for shelves.
+    ; Currently returns a false shelf.
+    (join :search_card_authors
+          :on (:and (:= :search_card.id :search_card_authors.card_id)
+                    (:= :search_author.id :search_card_authors.author_id))
+          :on (:= :search_card.shelf :search_shelf.id))
+    (join :search_card_publishers
+          :on (:and (:= :search_card.id :search_card_publishers.card_id)
+                    (:= :search_publisher.id :search_card_publishers.publisher_id)))
+    (where (:= :search_card.isbn isbn))))
+
+(defun search-isbn (isbn)
+  ;; also fetch-all
+  (dbi:fetch (dbi:execute (dbi:prepare *connection* (yield (card-by-isbn isbn)))
+                          (list isbn))))
 ;;
 ;; Get all cards data.
 ;;
