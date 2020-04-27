@@ -86,7 +86,6 @@
 ;;
 (easy-routes:defroute root ("/" :method :get) ()
   (djula:render-template* +welcome.html+ nil
-                          :title "La Palpitante en ligne"
                           :contact *contact-infos*
                           :user-content *user-content*
                           :shelves *shelves*))
@@ -104,7 +103,10 @@
       (setf result-length res-length)
       (setf isbns-not-found not-found))
     (djula:render-template* +cards.html+ nil
-                            :title (format nil "La Palpitante - ~a" q)
+                            :title (format nil "~a - ~a"
+                                           (user-content-brand-name *user-content*)
+                                           q)
+                            :user-content *user-content*
                             :query q
                             :query-length (length (str:words q))
                             :shelf_id rayon
@@ -127,7 +129,9 @@
                    collect  (elt *cards* position))))
     (format t "~&basket ids: ~a, cards found: ~a~&" ids-list (length cards))
     (djula:render-template* +panier.html+ nil
-                            :title (format nil "La Palpitante - Mon Panier")
+                            :title (format nil "~a - ~a"
+                                           (user-content-brand-name *user-content*)
+                                           "Mon Panier")
                             :cards cards
                             :secret-question *secret-question*
                             :open-form t
@@ -178,7 +182,9 @@
       ;; Validate the "antispam".
       ((not (string-equal *secret-answer* (str:downcase antispam)))
        (djula:render-template* +panier.html+ nil
-                               :title (format nil "La Palpitante - Mon Panier")
+                               :title (format nil "~a - ~a"
+                                              (user-content-brand-name *user-content*)
+                                              "Mon Panier")
                                :cards cards
                                :form-errors (list "La réponse à la question \"anti spam\" n'est pas bonne !")
                                :open-form t
@@ -190,7 +196,9 @@
       ((and (str:blankp phone)
             (str:blankp email))
        (djula:render-template* +panier.html+ nil
-                               :title (format nil "La Palpitante - Mon Panier")
+                               :title (format nil "~a - ~a"
+                                              (user-content-brand-name *user-content*)
+                                              "Mon Panier")
                                :form-errors (list "Veuillez renseigner un email ou un numéro de téléphone.")
                                :open-form t
                                :cards cards
@@ -220,7 +228,9 @@
               :name :email-sender))))
 
        (djula:render-template* +command-confirmed.html+ nil
-                               :title (format nil "La Palpitante - Commande envoyée")
+                               :title (format nil "~a - ~a"
+                                              (user-content-brand-name *user-content*)
+                                              "Command envoyée")
                                :success-messages (list "Votre demande a bien été envoyée."))))))
 
 (defun start-server (&key (port *port*))

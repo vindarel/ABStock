@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/notiflix@2.1.3/dist/AIO/notiflix-aio-2.1.3.min.js"></script>
-    <title>{% block title %} {{ title }} {% endblock %}</title>
+    <title>{% block title %} {{ user-content.brand-name }} {% endblock %}</title>
   </head>
 
   <body>
@@ -109,7 +109,7 @@
               <strong style="color: lemonchiffon;">Contact</strong></h2>
             <ul>
               {% if user-content.brand-contact-link %}
-              <li><a href="http://www.lapalpitante.fr/?s=contact"> {{ user-content.brand-name }}</a></li>
+              <li><a href="{{ user-content.brand-contact-link }}"> {{ user-content.brand-name }}</a></li>
               {% endif %}
               <li><a href="http://abelujo.cc/#contact">Support technique</a></li>
             </ul>
