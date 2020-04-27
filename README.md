@@ -39,7 +39,9 @@ Interested? Please get in touch.
 
 ## Config
 
-Write your config into `~/.abstock.lisp`.
+Write your config either
+* into `config.lisp` at the project root
+* into `~/.abstock.lisp`.
 
 You can overwrite:
 
@@ -78,14 +80,14 @@ Two possibilities:
 
 note that in that case, we are dropped into the Lisp REPL, so we can
 interact with the running application (useful to reload settings and
-such).
+such). You can reload all settings with `(load-init)`.
 
 or download/build the binary and run it:
 
     ./abstock
 
 
-Env variables:
+Environment variables:
 
 * the application port:
 

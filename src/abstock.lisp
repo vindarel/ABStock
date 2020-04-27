@@ -33,6 +33,14 @@
 
 (defparameter *verbose* nil)
 (defparameter *config* #P"~/.abstock.lisp")
+
+(defun find-config ()
+  (cond
+    ((uiop:file-exists-p "config.lisp")
+     "config.lisp")
+    (t
+     *config*)))
+
 (defvar *contact-infos* '(:|email| "me@test.fr"
                                 :|phone| ""
                                 :|phone2| "")
@@ -60,8 +68,9 @@
                      :database-name "db.db")))
 
 (defun load-init ()
-  "Read configuration variables (phone number,…) from `*config*'."
-  (let ((file (uiop:native-namestring *config*)))
+  "Read configuration variables (phone number,…) from the configuration file.
+  Either `config.lisp' at the project's root, or `~/.abstock.lisp'. See `(find-config)'"
+  (let ((file (uiop:native-namestring (find-config))))
     (let ((*package* *package*))
       (in-package abstock)
       (load file))))
