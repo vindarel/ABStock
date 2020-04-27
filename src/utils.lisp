@@ -27,3 +27,27 @@
      when (isbn-p elt)
      collect elt into isbns
      finally (return isbns)))
+
+(defun replace-pairs (pairs str)
+  "Replace all associations in pairs (plist) and return a new string.
+
+  Example:
+  (replace-pairs (list \"{{phone}}\" \"987\") \"call {{phone}}\")
+  =>
+  \"call 987\""
+  (assert (consp pairs))
+  (dotimes (i (- (length pairs)
+                 1))
+    (setf str (str:replace-all (nth i pairs) (nth (incf i) pairs) str)))
+  str)
+
+#+nil
+(progn
+  (assert (string-equal
+           "call 987"
+           (replace-pairs (list "{{phone}}" "987") "call {{phone}}")))
+  (assert (string-equal
+           "Hi Alice call 987"
+           (replace-pairs (list "{{phone}}" "987"
+                                "{{name}}" "Alice")
+                          "Hi {{name}} call {{phone}}"))))
