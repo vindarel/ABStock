@@ -44,10 +44,7 @@
 (setf (user-content-welcome-image *user-content*)
       "path/to/img.png")
 
-(setf (user-content-welcome-text *user-content*)
-""""
-Welcome!
-"""" )
+(setf (user-content-welcome-text *user-content*) " Welcome!")
 
 (setf (user-content-welcome-second-text *user-content*)
       """"
@@ -55,12 +52,8 @@ Welcome!
       You can contact us at:
 
       <ul>
-      <li> {{ contact.phone }} </li>
-      {% if contact.phone2 %}
-      <li> ou {{ contact.phone2 }} </li>
-      {% endif %}
+      <li> 0098 7 8 9 </li>
       </ul>
-
       </p>
       """" )
 
