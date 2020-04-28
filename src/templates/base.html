@@ -12,6 +12,7 @@
     <section>
       <nav class="navbar is-info">
         <div class="container">
+
           <div class="navbar-brand">
             <a class="navbar-item" href="{% if domain %} {{ domain }} {% else %} ../ {% endif %}">
               {% if user-content.brand-home-title %}
@@ -21,12 +22,23 @@
               {% endif %}
 
             </a>
+
             <span class="navbar-burger burger" data-target="navbarMenu">
               <span></span>
               <span></span>
               <span></span>
             </span>
           </div>
+
+          {% if user-content.enable-product-selection %}
+          <div class="navbar-brand">
+            <a class="navbar-item" href="/selection-du-libraire">
+              Sélection du libraire
+            </a>
+
+          </div>
+          {% endif %}
+
           <span class="navbar-item">
             <a class="button is-white is-outlined" href=>
               <span class="icon">
@@ -41,6 +53,7 @@
               </span>
             </a>
           </span>
+
           <div id="navbarMenu" class="navbar-menu">
             <div class="navbar-end">
 

@@ -24,6 +24,7 @@
   (setf defclass-std:*with-prefix* t))
 
 (defclass/std user-content ()
+  ;; Index, brand.
   ((brand-name
     :doc "The brand/shop name or this website's name.")
    (brand-home-title
@@ -40,6 +41,15 @@
     :doc "Text on the hero of the landing page. It can be HTML.")
    (welcome-second-text
     :doc "Text on a second section of the landing page. It can be HTML.")
+
+   ;; Product selection.
+   (enable-product-selection
+    :std nil
+    :doc "Product selection: link on the front page and own page. Cards are grouped by category (shelf).")
+   (product-selection-intro-text
+    :doc "Intro text (HTML) at the top of the product selection page.")
+
+   ;; Shopping basket.
    (basket-title
     :doc "The title on the shopping basket's page.")
    (basket-text
@@ -69,6 +79,7 @@
 (defparameter +base.html+ (djula:compile-template* "base.html"))
 (defparameter +welcome.html+ (djula:compile-template* "welcome.html"))
 (defparameter +cards.html+ (djula:compile-template* "cards.html"))
+(defparameter +selection-page.html+ (djula:compile-template* "selection-page.html"))
 
 (defparameter +panier.html+ (djula:compile-template* "panier.html"))
 (defparameter +command-confirmed.html+ (djula:compile-template* "command-confirmed.html"))
@@ -81,6 +92,9 @@
 (djula:def-filter :price (val)
   (format nil "~,2F" val))
 
+(djula:def-filter :rest (list)
+  (rest list))
+
 ;;
 ;; Routes.
 ;;
@@ -88,6 +102,17 @@
   (djula:render-template* +welcome.html+ nil
                           :contact *contact-infos*
                           :user-content *user-content*
+                          ;TODO: dev
+                          :selection-cards (pick-cards :n 6)
+                          :shelves *shelves*))
+
+#+nil
+(setf *selection-groups* (get-selection))
+(easy-routes:defroute selection-route ("/selection-du-libraire" :method :get) ()
+  (djula:render-template* +selection-page.html+ nil
+                          :user-content *user-content*
+                          ;; :selection *selection-groups* ;; (get-selection)
+                          :selection (get-selection)
                           :shelves *shelves*))
 
 (easy-routes:defroute search-route ("/search" :method :get) (q rayon)

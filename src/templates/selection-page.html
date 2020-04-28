@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ title }}
+{% endblock %}
+
+{% block content %}
+<div class="container" style="margin-bottom: 5em">
+  <div class="section">
+
+    <div class="columns">
+      <div class="column is-8 is-offset-2">
+
+        <div class="box content">
+          <h3> Sélection du libraire </h3>
+
+          {% if user-content.product-selection-intro-text %}
+          {{ user-content.product-selection-intro-text | safe }}
+          {% endif %}
+        </div>
+      </div>
+
+    </div>
+
+    <div class="columns">
+      <div class="column is-12">
+        <div class="box content" id="toc">
+          {% for shelf/cards in selection %}
+          <span class="">
+            #
+            <a href="#{{ shelf/cards | first }}"> {{ shelf/cards | first }} </a>
+          </span>
+          {% endfor %}
+        </div>
+      </div>
+
+    </div>
+
+    {% for shelf/cards in selection %}
+
+    <div class="content">
+      <h3 class="title bd-anchor-title" id="{{ shelf/cards | first }}">
+        <a class="bd-anchor-link" href="#{{ shelf/cards | first }}"> # </a>
+        <span class="bd-anchor-name"> {{ shelf/cards | first }} </span>
+      </h3>
+    </div>
+
+    <div class="row columns is-multiline is-mobile">
+
+      {% for card in shelf/cards.rest %}
+      <div class="column is-one-fifth-desktop is-half-mobile">
+        <div class="card" id="{{ card.id }}">
+          <div class="card-image">
+            <figure class="image">
+              <img src="{{ card.cover }}" alt="Couverture de {{ card.title }}"/>
+            </figure>
+          </div>
+          <div class="card-content">
+            <div class="media">
+              <div class="media-content">
+                <p class="title is-5 no-padding">{{ card.title }}</p>
+                <p><span class="title is-6"><a href="/search?q={{ card.author }}">{{ card.author }}</a></span></p>
+                <p class="">{{ card.publisher | capfirst }}</p>
+                <p>
+                  <a href="/search?rayon={{ card.shelf_id }}">
+                    <span class="tag"> {{ card.shelf }} </span>
+                  </a>
+                </p>
+
+	        <span class="has-text-grey-light"> {{ card.price | price }} €</span>
+                <span  class="icon is-medium" style="cursor: pointer;" title="Ajouter au panier" onclick="add_to_cart({{ card.id }})">
+                  <i class="fas fa-lg fa-plus-circle"></i>
+                </span>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      {% endfor %}
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<script>
+</script>
+{% endblock %}
