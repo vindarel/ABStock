@@ -29,7 +29,7 @@
 ;; A "card" is the generic name for a book.
 
 
-(defparameter *version* "0.4")
+(defparameter *version* "0.5")
 
 (defparameter *verbose* nil)
 (defparameter *config* #P"~/.abstock.lisp")

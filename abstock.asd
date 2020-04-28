@@ -1,5 +1,5 @@
 (asdf:defsystem "abstock"
-  :version "0.1"
+  :version "0.5"
   :author "vindarel"
   :license "GPL3"
   :depends-on (
@@ -17,6 +17,7 @@
                :jonathan
                :defclass-std
                :pythonic-string-reader
+               :group-by
 
                ;; web app
                :hunchentoot
