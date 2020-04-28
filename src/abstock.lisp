@@ -55,6 +55,8 @@
 (defvar *cards* nil
   "List of all books.")
 
+(defvar *old-cards* nil)
+
 (defvar *shelves* nil)
 
 (defvar *page-length* 50
@@ -325,6 +327,26 @@
     (values result
             (length result)
             isbns-not-found)))
+
+(defun save (&key (file "cards.lisp"))
+  "Save cards on file. Re-read with `load-cards'.
+  Simply print the lisp forms."
+  (with-open-file (f file
+                     :direction :output
+                     :if-does-not-exist :create
+                     :if-exists :supersede)
+    (let ((*print-pretty* nil))
+      ;; Pretty printing will insert a line break at around 80 characters,
+      ;; making it un-readable with uiop:read-file-form.
+      (format f "~s~&" *cards*)))
+  (format t "~&Cards saved on ~s.~&" file))
+
+(defun reload-cards (&key (file "cards.lisp"))
+  (if (uiop:file-exists-p file)
+      (progn
+        (setf *old-cards* *cards*)
+        (setf *cards* (uiop:read-file-forms file)))
+      (format t "~&The file ~s doesn't exist.~&" file)))
 
 (defun schedule-db-reload ()
   "Reload the DB regularly. By default, each night at 4am."
