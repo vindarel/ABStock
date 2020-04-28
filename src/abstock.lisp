@@ -60,6 +60,11 @@
 (defvar *page-length* 50
   "Page length. Not used much yet.")
 
+;;
+;; Dev helpers.
+;;
+;; We don't want to print 3000+ strings, it hangs the editor and the server.
+(setf *print-length* 10)
 
 (defun connect ()
   ;TODO: needs to be run inside the directory of db.db
