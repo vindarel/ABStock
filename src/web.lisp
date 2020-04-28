@@ -280,6 +280,12 @@
       (format t "Skipping init file.~&"))
   (force-output)
 
+  (format t "Reloading saved cards, before reading the DB…~&")
+  (force-output)
+  (reload-cards)
+  (format t "~&Done.~&")
+  (force-output)
+
   (start-server :port (or port *port*))
   (format t "~&Ready. You can access the application!~&")
   (force-output)
