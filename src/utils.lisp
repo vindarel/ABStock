@@ -54,22 +54,25 @@
 
 (defun pick-cards (&key (n 20))
   "Pick `n' cards randomly. 20 by default."
-  (loop repeat n
-     with l = (length *cards*)
-     collect (elt *cards* (random l))))
+  (when *cards*
+    ;; Defensive: on startup, reading the DB, the variable can be nil.
+    (loop repeat n
+       with l = (length *cards*)
+       collect (elt *cards* (random l)))))
 
 (defun get-selection (&key (n 20))
-  (let* ((cards (pick-cards :n n))
-         ;; Group by shelf.
-         ;; Returns an alist: (("shelf" (card1) (card2)…) ("shelf 2" (…)))
-         ;; (("BD"
-         ;; (:|repr2| "liv stromquist l'origine du monderackham" :|repr|
-         ;; "l'origine du monde rackham" :|id| 2645 :|title| "L'origine du monde"
-         ;; :|price| 20.0d0 :|isbn| "9782878271973" :|cover|
-         (grouped (group-by:group-by cards
-                                     :key (lambda (it)
-                                            (getf it :|shelf|))
-                                     ;; the value is the whole plist.
-                                     :value #'identity))
-         (sorted (sort grouped  #'sb-unicode:unicode< :key #'first)))
-    sorted))
+  (when *cards*
+    (let* ((cards (pick-cards :n n))
+           ;; Group by shelf.
+           ;; Returns an alist: (("shelf" (card1) (card2)…) ("shelf 2" (…)))
+           ;; (("BD"
+           ;; (:|repr2| "liv stromquist l'origine du monderackham" :|repr|
+           ;; "l'origine du monde rackham" :|id| 2645 :|title| "L'origine du monde"
+           ;; :|price| 20.0d0 :|isbn| "9782878271973" :|cover|
+           (grouped (group-by:group-by cards
+                                       :key (lambda (it)
+                                              (getf it :|shelf|))
+                                       ;; the value is the whole plist.
+                                       :value #'identity))
+           (sorted (sort grouped  #'sb-unicode:unicode< :key #'first)))
+      sorted)))

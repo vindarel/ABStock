@@ -266,7 +266,8 @@
   (hunchentoot:start *server*))
 
 (export 'start)
-(defun start (&key (port *port*) (load-init t))
+(defun start (&key (port *port*) (load-init t) (load-db t))
+  "If `load-db' is non t, do not load the DB, but try to load saved cards on disk."
   (format t "Abelujo visible stock v~a~&" *version*)
   (force-output)
 
@@ -283,9 +284,14 @@
   (format t "~&Ready. You can access the application!~&")
   (force-output)
 
-  (format t "~&Reading the DB...")
-  (force-output)
-  (get-all-cards)
-  (get-all-shelves)
-  (format t "~&Done. ~a cards found." (length *cards*))
-  (force-output))
+  (if load-db
+      (progn
+        (format t "~&Reading the DB...")
+        (force-output)
+        (get-all-cards)
+        (get-all-shelves)
+        (format t "~&Done. ~a cards found." (length *cards*))
+        (force-output))
+      (progn
+        (format t "~&Skipped loading the DB.~&")
+        (force-output))))

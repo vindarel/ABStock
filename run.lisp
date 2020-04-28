@@ -17,7 +17,10 @@ Another solution to run the app is to run the executable (see README).
 
 (in-package :abstock)
 (handler-case
-    (abstock:start :port (ignore-errors (parse-integer (uiop:getenv "AB_PORT"))))
+    (abstock:start :port (ignore-errors (parse-integer (uiop:getenv "AB_PORT")))
+                   :load-db  (if (uiop:getenv "LOAD_DB")
+                                 nil
+                                 t))
   (error (c)
     (format *error-output* "~&An error occured: ~a~&" c)
     (uiop:quit 1)))
