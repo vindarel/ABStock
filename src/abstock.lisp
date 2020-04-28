@@ -335,7 +335,8 @@
                      :direction :output
                      :if-does-not-exist :create
                      :if-exists :supersede)
-    (let ((*print-pretty* nil))
+    (let ((*print-pretty* nil)
+          (*print-length* nil))
       ;; Pretty printing will insert a line break at around 80 characters,
       ;; making it un-readable with uiop:read-file-form.
       (format f "~s~&" *cards*)))
