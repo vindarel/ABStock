@@ -345,7 +345,7 @@
   (if (uiop:file-exists-p file)
       (progn
         (setf *old-cards* *cards*)
-        (setf *cards* (uiop:read-file-forms file)))
+        (setf *cards* (uiop:read-file-form file)))
       (format t "~&The file ~s doesn't exist.~&" file)))
 
 (defun schedule-db-reload ()
