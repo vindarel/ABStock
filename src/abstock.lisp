@@ -349,6 +349,12 @@
         (setf *cards* (uiop:read-file-form file)))
       (format t "~&The file ~s doesn't exist.~&" file)))
 
+(defun quit (&key (save t) (file "cards.lisp"))
+  "Quit and save cards on disk, for faster restarts."
+  (when save
+    (save :file file))
+  (uiop:quit 0))
+
 (defun schedule-db-reload ()
   "Reload the DB regularly. By default, each night at 4am."
   (cl-cron:make-cron-job #'get-all-cards :minute 30
