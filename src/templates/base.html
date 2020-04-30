@@ -142,5 +142,24 @@
             menu.classList.toggle('is-active');
         });
     })();
+
+    function add_to_cart (id) {
+      console.log("-- adding card of id ", id, " into the shopping basket.");
+      let storage = window.localStorage;
+      if (storage.getItem("savedcardids")) {
+        let ids = storage.getItem("savedcardids");
+        ids = ids + "," + id;
+        storage.setItem("savedcardids", ids);
+        console.log("local storage is now: ", ids);
+      } else {
+        console.log("saving card id: ", id);
+        storage.setItem("savedcardids", id);
+      }
+
+      setbasketqty();  // from base.
+
+      Notiflix.Notify.Success('Le livre a été ajouté au panier.');
+    };
+
   </script>
 </html>
