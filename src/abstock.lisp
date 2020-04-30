@@ -38,8 +38,10 @@
   (cond
     ((uiop:file-exists-p "config.lisp")
      "config.lisp")
+    ((uiop:file-exists-p *config*)
+     *config*)
     (t
-     *config*)))
+     nil)))
 
 (defvar *contact-infos* '(:|email| "me@test.fr"
                                 :|phone| ""
@@ -77,10 +79,14 @@
 (defun load-init ()
   "Read configuration variables (phone number,…) from the configuration file.
   Either `config.lisp' at the project's root, or `~/.abstock.lisp'. See `(find-config)'"
-  (let ((file (uiop:native-namestring (find-config))))
-    (let ((*package* *package*))
-      (in-package abstock)
-      (load file))))
+  (let ((file (find-config)))
+    (if file
+     (let ((*package* *package*))
+       (in-package abstock)
+       ;XXX: one case of failure: a symbolic link exists, but
+       ; the target file doesn't.
+       (load (uiop:native-namestring file)))
+     (format t "... no config file found.~&"))))
 
 (defun card-by-id (id)
   "Generates SxQL query. (yield) generates the SQL. It is not executed."
