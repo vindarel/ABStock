@@ -297,7 +297,8 @@
         (get-all-cards)
         (get-all-shelves)
         (format t "~&Done. ~a cards found." (length *cards*))
-        (force-output))
+        (force-output)
+        (save))
       (progn
         (format t "~&Skipped loading the DB.~&")
         (force-output))))
