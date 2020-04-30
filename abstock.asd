@@ -32,6 +32,7 @@
                 ((:file "abstock")
                  (:file "web")
                  (:file "email")
+                 (:file "selection")
                  (:file "utils"))))
 
   :build-operation "program-op"

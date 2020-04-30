@@ -1,0 +1,44 @@
+(in-package :abstock)
+
+;; Read a ;-separated CSV file with two columns, ISBN and quantity.
+;; They will be on the selection page.
+;; File: selection.csv
+;;
+;; main function:
+;; (read-selection)
+;;
+
+(defun read-selection-file (&key (file "selection.csv"))
+  (if (uiop:file-exists-p file)
+      (loop for line in (str:lines (str:from-file file))
+         for isbn = (first (str:split ";" line))
+         collect isbn)
+      (format t "File ~a doesn't exist.~&" file)))
+
+(defun cards-from-isbns (isbns)
+ (loop for isbn in isbns
+    for position = (position isbn (get-cards)
+                             :key (lambda (card)
+                                    (getf card :|isbn|))
+                             :test #'string-equal)
+    when position
+    collect  (elt *cards* position)))
+
+(defun filter-cards-without-shelf (cards)
+  ;; (remove-if-not (lambda (card) (getf card :|shelf|)) cards)
+  (loop for card in cards
+     for shelf = (getf card :|shelf|)
+     for isbn = (getf card :|isbn|)
+     if (str:blankp shelf)
+     do (format t "** NOTICE **: This card has no shelf: it won't be shown in the selection page: ~a~&" isbn)
+     else collect card))
+
+(defun read-cards-selection ()
+  (cards-from-isbns (read-selection-file)))
+
+(defun read-selection ()
+  "Read the csv with the ISBNs selection, exclude cards without a shelf (and print them on stdout)."
+  (handler-case
+      (filter-cards-without-shelf (read-cards-selection))
+    (error (c)
+      (format *error-output* "~&Error reading the selection from ~a: ~a~&" "selection.csv" c))))

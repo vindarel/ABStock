@@ -12,6 +12,9 @@
 (defparameter *dev-mode* nil
   "If t, use a subset of all the cards.")
 
+(defvar *selection* nil
+  "List of cards for the selection page.")
+
 ;;
 ;; User variables.
 ;;
@@ -147,11 +150,7 @@
          (ids-list (mapcar (lambda (it)
                              (parse-integer it))
                            ids-list))
-         (cards (loop for id in ids-list
-                   for position = (position id (get-cards) :key (lambda (card)
-                                                               (getf card :|id|)))
-                   when position
-                   collect  (elt *cards* position))))
+         (cards (filter-cards-by-ids ids-list)))
     (format t "~&basket ids: ~a, cards found: ~a~&" ids-list (length cards))
     (djula:render-template* +panier.html+ nil
                             :title (format nil "~a - ~a"
@@ -285,6 +284,13 @@
   (reload-cards)
   (format t "~&Done.~&")
   (force-output)
+
+  (when (uiop:file-exists-p "selection.csv")
+    (format t "Loading cards selection…~&")
+    (force-output)
+    (setf *selection* (read-selection))
+    (format t "~&Done.~&")
+    (force-output))
 
   (start-server :port (or port *port*))
   (format t "~&Ready. You can access the application!~&")

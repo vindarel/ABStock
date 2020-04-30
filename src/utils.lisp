@@ -28,6 +28,13 @@
      collect elt into isbns
      finally (return isbns)))
 
+(defun filter-cards-by-ids (ids-list)
+  (loop for id in ids-list
+     for position = (position id (get-cards) :key (lambda (card)
+                                                    (getf card :|id|)))
+     when position
+     collect  (elt *cards* position)))
+
 (defun replace-pairs (pairs str)
   "Replace all associations in pairs (plist) and return a new string.
 
@@ -60,19 +67,19 @@
        with l = (length *cards*)
        collect (elt *cards* (random l)))))
 
-(defun get-selection (&key (n 20))
+(defun get-selection (&key (n 20) (random nil))
   (when *cards*
-    (let* ((cards (pick-cards :n n))
+    (let* ((cards (if random
+                      (pick-cards :n n)
+                      (read-selection)))
            ;; Group by shelf.
            ;; Returns an alist: (("shelf" (card1) (card2)…) ("shelf 2" (…)))
            ;; (("BD"
-           ;; (:|repr2| "liv stromquist l'origine du monderackham" :|repr|
-           ;; "l'origine du monde rackham" :|id| 2645 :|title| "L'origine du monde"
-           ;; :|price| 20.0d0 :|isbn| "9782878271973" :|cover|
+           ;; (:|repr2| "liv stromquist l'origine du monderackham" :|repr|…
            (grouped (group-by:group-by cards
                                        :key (lambda (it)
                                               (getf it :|shelf|))
                                        ;; the value is the whole plist.
                                        :value #'identity))
-           (sorted (sort grouped  #'sb-unicode:unicode< :key #'first)))
+           (sorted (sort grouped #'sb-unicode:unicode< :key #'first)))
       sorted)))
