@@ -122,6 +122,12 @@ The UI uses the [Bulma](https://bulma.io) CSS framework.
 
 Issue tracker: https://gitlab.com/vindarel/abstock/-/issues
 
+## Deploy
+
+Use a user's configuration file:
+
+    ln -s ../path/to/user/config-user.lisp config.lisp
+
 ## Licence
 
 GPLv3
