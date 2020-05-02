@@ -14,4 +14,17 @@
   </div>
 </div>
 
+<script>
+  // Delete shopping basket.
+
+(function delete_basket () {
+ let storage = window.localStorage;
+ if (storage.getItem("savedcardids")) {
+     storage.setItem("savedcardids", "");
+     console.log("local storage was deleted: ");
+     setbasketqty();  // from base.
+ }
+})()
+</script>
+
 {% endblock %}
