@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container" style="margin-bottom: 5em">
+  <div class="columns">
+    <div class="column is-8 is-offset-2">
+
+      <div class="box content">
+        <h3> Une erreur est survenue :/ </h3>
+        <ul>
+          {% for msg in messages %}
+          <li>
+            {{ msg }}
+          </li>
+        </ul>
+        {% endfor %}
+        <a href="/">Retour </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

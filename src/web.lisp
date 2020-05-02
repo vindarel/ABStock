@@ -86,6 +86,7 @@
 
 (defparameter +panier.html+ (djula:compile-template* "panier.html"))
 (defparameter +command-confirmed.html+ (djula:compile-template* "command-confirmed.html"))
+(defparameter +error-messages.html+ (djula:compile-template* "error-messages.html"))
 
 ;;
 ;; Custom Djula filter to format prices.
@@ -238,7 +239,15 @@
                          :reply-to (list email name)
                          :subject "Commande site"
                          :content (email-content name email phone payment message cards))
-             (log:info "email sent for client " name email))
+             (log:info "email sent for client " name email)
+
+             ;; Return success.
+             (djula:render-template* +command-confirmed.html+ nil
+                                     :title (format nil "~a - ~a"
+                                                    (user-content-brand-name *user-content*)
+                                                    "Command envoyée")
+                                     :success-messages (list "Votre demande a bien été envoyée."))
+             )
          (error (c)
            (log:error "email error: sending to '~a' with ids '~a' (cards found: '~a' failed with the following error: ~a" email ids (length cards) c)
 
@@ -249,13 +258,12 @@
                 (email-send :to (getf *email-config* :|from|)
                             :subject "Sending email failed"
                             :content (format nil "Sending an email failed, maybe this one passes. We tried sending to the addresse '~a', with ids '~a'.~%~%The error is:~&~a" name ids c)))
-              :name :email-sender))))
+              :name :email-sender))
 
-       (djula:render-template* +command-confirmed.html+ nil
-                               :title (format nil "~a - ~a"
-                                              (user-content-brand-name *user-content*)
-                                              "Command envoyée")
-                               :success-messages (list "Votre demande a bien été envoyée."))))))
+           ;; Return error message.
+           (djula:render-template* +error-messages.html+ nil
+                                   :messages (list "Votre demande n'a pas pu être envoyée. Merci de ré-essayer un peu plus tard."))
+           ))))))
 
 (defun start-server (&key (port *port*))
   (format t "~&Starting the web server on port ~a" port)
