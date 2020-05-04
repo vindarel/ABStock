@@ -59,16 +59,6 @@
                                 "{{name}}" "Alice")
                           "Hi {{name}} call {{phone}}"))))
 
-(defun random-uniq-list (length range)
-  "Gerenate a list of the given length composed of *unique* integers between 0 and `range'.
-  `length' must be inferior or equal to `range'."
-  (assert (<= length range))
-  (loop with res = '()
-     for x = (random range)
-     when (not (find x res))
-     do (push x res)
-     while (< (length res) length)
-     finally (return res)))
 
 (defun pick-cards (&key (n 20) (cards *cards*) (ensure-cover nil))
   "Pick `n' cards randomly. 20 by default."
@@ -77,6 +67,7 @@
     (loop with collected-ids = '()
        with res = '()
        with l = (length cards)
+       for attempts from 0
        for i = (random l)
        for card = (elt cards i)
        when (and (not (find i collected-ids))
@@ -87,6 +78,7 @@
                      t))
        do (progn (push i collected-ids)
                  (push card res))
-       while (< (length res)
-                n)
+       while (and (< (length res)
+                     n)
+                  (< attempts 1000))
        finally (return res))))
