@@ -53,7 +53,7 @@
       <div class="column is-6 is-offset-3">
         <div class="content is-medium" style="text-align:justify">
 
-          <p> Voici un aperçu de notre <a href="/selection-du-libraire"> sélection du libraire</a>, à retrouver en intégralité sur sa page spéciale: </p>
+          <p> Voici un aperçu de notre <a href="/selection-du-libraire"> sélection du libraire</a>, à retrouver en intégralité sur sa page dédiée: </p>
 
         </div>
       </div>
@@ -69,8 +69,9 @@
   <div class="hero-body">
     <div class="container">
       <div class="row columns is-multiline is-mobile">
+
         {% for card in selection-cards %}
-        <div class="column is-one-sixth-desktop is-half-mobile">
+        <div class="column is-2 is-half-mobile">
           <div class="card" id="{{ card.id }}">
             <div class="card-image">
               <figure class="image">
@@ -90,6 +91,7 @@
           </div>
         </div>
         {% endfor %}
+
       </div>
     </div>
   </div>

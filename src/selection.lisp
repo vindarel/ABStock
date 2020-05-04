@@ -43,7 +43,7 @@
     (error (c)
       (format *error-output* "~&Error reading the selection from ~a: ~a~&" "selection.csv" c))))
 
-(defun get-selection-subset (&key (n 10) ensure-cover)
+(defun get-selection-subset (&key (n 12) ensure-cover)
   (unless *selection*
     (setf *selection* (read-selection)))
   (pick-cards :n n :cards *selection* :ensure-cover ensure-cover))
