@@ -3,7 +3,9 @@
         :sxql
         :log4cl)
   (:import-from :defclass-std
-                :defclass/std))
+                :defclass/std)
+  (:export :main
+           :start))
 
 (in-package :abstock)
 

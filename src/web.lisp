@@ -9,6 +9,8 @@
 (defparameter *port* 8899
   "We can override it in the config file.")
 
+(defvar *sentry-dsn-file* "~/.config/abstock/sentry-dsn.txt")
+
 (defparameter *dev-mode* nil
   "If t, use a subset of all the cards.")
 
@@ -18,9 +20,9 @@
 ;;
 ;; User variables.
 ;;
-(defpackage :abstock-user
-  (:use :cl)
-  (:documentation "The package to write the user configuration in."))
+;; (defpackage :abstock-user
+;;   (:use :cl)
+;;   (:documentation "The package to write the user configuration in."))
 
 ;; user-content-* prefix for class slots.
 (eval-when (:compile-toplevel :load-toplevel :execute)
@@ -278,14 +280,26 @@
                                 :port (or port *port*)))
   (hunchentoot:start *server*))
 
-(export 'start)
 (defun start (&key (port *port*) (load-init t) (load-db t))
   "If `load-db' is non t, do not load the DB, but try to load saved cards on disk."
   (format t "Abelujo visible stock v~a~&" *version*)
   (force-output)
 
-  (unless *connection*
-    (setf *connection* (connect)))
+  ;; Enable Sentry client.
+  (unless *dev-mode*
+    (handler-case
+        (progn
+          ;; sentry-client is not in Quicklisp.
+          (when (uiop:file-exists-p *sentry-dsn-file*)
+            (sentry-client:initialize-sentry-client
+             (str:trim (str:from-file (uiop:native-namestring *sentry-dsn-file*)))
+             :client-class 'sentry-client:async-sentry-client)
+            (format t "~&Sentry client iniitiazied.~&")))
+      (error (c)
+        ;; it actually can hardly fail here since the dependency is in the .asd.
+        (format *error-output* "~&*** Starting Sentry client failed: ~a~& ***" c))))
+
+  ;; Load init file.
   (if load-init
       (progn
         (format t "Loading init file...~&")
@@ -293,12 +307,14 @@
       (format t "Skipping init file.~&"))
   (force-output)
 
+  ;; Reload DB saved on disk.
   (format t "Reloading saved cards, before reading the DB…~&")
   (force-output)
   (reload-cards)
   (format t "~&Done.~&")
   (force-output)
 
+  ;; Read the csv of cards to highlight in the selection page.
   (when (uiop:file-exists-p "selection.csv")
     (format t "Loading cards selection…~&")
     (force-output)
@@ -306,12 +322,17 @@
     (format t "~&Done.~&")
     (force-output))
 
+  ;; Start the web server.
   (start-server :port (or port *port*))
   (format t "~&Ready. You can access the application!~&")
   (force-output)
 
+  ;; Load data from the DB.
   (if load-db
       (progn
+        (unless *connection*
+          (setf *connection* (connect)))
+
         (format t "~&Reading the DB...")
         (force-output)
         (get-all-cards)

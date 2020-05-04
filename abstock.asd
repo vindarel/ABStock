@@ -24,7 +24,10 @@
                :easy-routes
                :djula
 
+               ;; dev
                :log4cl
+               :sentry-client.async           ;; ! not in Quicklisp
+               :sentry-client.hunchentoot
                ;; :cl-i18n
                )
   :components ((:module "src"

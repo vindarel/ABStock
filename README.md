@@ -101,22 +101,16 @@ Install SBCL:
 
 install Quicklisp (see [Cookbook: getting started](https://lispcookbook.github.io/cl-cookbook/getting-started.html))
 
-build the binary:
+There is one missing dependency in Quicklisp that you have to clone in ~/quicklisp/local-projects:
+
+- https://github.com/mmontone/cl-sentry-client (it is actually optional, I accept a PR to make it optional in the .asd)
+
+And you can run the app as showed above.
+
+To build the binary, do:
 
     make build
 
-then simply run it:
-
-```
-./abstock
-
-Reading the DB...
-Done. 3517 cards found.
-Starting the web server on port 9889
-Ready. You can access the application!
-
-86.210.212.58 - [2020-04-07 19:56:28] "GET / HTTP/1.1" 200 3903 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:69.0) Gecko/20100101 Firefox/69.0"
-```
 
 The UI uses the [Bulma](https://bulma.io) CSS framework.
 
@@ -127,6 +121,8 @@ Issue tracker: https://gitlab.com/vindarel/abstock/-/issues
 Use a user's configuration file:
 
     ln -s ../path/to/user/config-user.lisp config.lisp
+
+Use **Sentry**: copy your DSN in ~/.config/abstock/sentry-dsn.txt. (currently, use the "deprecated" DSN).
 
 ## Licence
 
