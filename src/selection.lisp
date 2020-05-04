@@ -42,3 +42,25 @@
       (filter-cards-without-shelf (read-cards-selection))
     (error (c)
       (format *error-output* "~&Error reading the selection from ~a: ~a~&" "selection.csv" c))))
+
+(defun get-selection-subset (&key (n 10))
+  (unless *selection*
+    (setf *selection* (read-selection)))
+  (pick-cards :n n :cards *selection*))
+
+(defun get-selection (&key (n 20) (random nil))
+  (when *cards*
+    (let* ((cards (if random
+                      (pick-cards :n n)
+                      (read-selection)))
+           ;; Group by shelf.
+           ;; Returns an alist: (("shelf" (card1) (card2)…) ("shelf 2" (…)))
+           ;; (("BD"
+           ;; (:|repr2| "liv stromquist l'origine du monderackham" :|repr|…
+           (grouped (group-by:group-by cards
+                                       :key (lambda (it)
+                                              (getf it :|shelf|))
+                                       ;; the value is the whole plist.
+                                       :value #'identity))
+           (sorted (sort grouped #'sb-unicode:unicode< :key #'first)))
+      sorted)))

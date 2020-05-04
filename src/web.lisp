@@ -107,7 +107,8 @@
                           :contact *contact-infos*
                           :user-content *user-content*
                           ;TODO: dev
-                          :selection-cards (pick-cards :n 6)
+                          ;; :selection-cards (pick-cards :n 6) ;; random
+                          :selection-cards (get-selection-subset)
                           :shelves *shelves*))
 
 #+nil

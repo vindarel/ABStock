@@ -59,27 +59,21 @@
                                 "{{name}}" "Alice")
                           "Hi {{name}} call {{phone}}"))))
 
-(defun pick-cards (&key (n 20))
-  "Pick `n' cards randomly. 20 by default."
-  (when *cards*
-    ;; Defensive: on startup, reading the DB, the variable can be nil.
-    (loop repeat n
-       with l = (length *cards*)
-       collect (elt *cards* (random l)))))
+(defun random-uniq-list (length range)
+  "Gerenate a list of the given length composed of *unique* integers between 0 and `range'.
+  `length' must be inferior or equal to `range'."
+  (assert (<= length range))
+  (loop with res = '()
+     for x = (random range)
+     when (not (find x res))
+     do (push x res)
+     while (< (length res) length)
+     finally (return res)))
 
-(defun get-selection (&key (n 20) (random nil))
-  (when *cards*
-    (let* ((cards (if random
-                      (pick-cards :n n)
-                      (read-selection)))
-           ;; Group by shelf.
-           ;; Returns an alist: (("shelf" (card1) (card2)…) ("shelf 2" (…)))
-           ;; (("BD"
-           ;; (:|repr2| "liv stromquist l'origine du monderackham" :|repr|…
-           (grouped (group-by:group-by cards
-                                       :key (lambda (it)
-                                              (getf it :|shelf|))
-                                       ;; the value is the whole plist.
-                                       :value #'identity))
-           (sorted (sort grouped #'sb-unicode:unicode< :key #'first)))
-      sorted)))
+(defun pick-cards (&key (n 20) (cards *cards*))
+  "Pick `n' cards randomly. 20 by default."
+  (when cards
+    ;; Defensive: on startup, reading the DB, the variable can be nil.
+    (let ((random-ints (random-uniq-list n (length cards))))
+      (loop for i in random-ints
+         collect (elt cards i)))))
