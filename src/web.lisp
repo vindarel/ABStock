@@ -318,6 +318,9 @@
         (get-all-shelves)
         (format t "~&Done. ~a cards found." (length *cards*))
         (force-output)
+        (schedule-db-reload)
+        (format t "~&Scheduled a DB reload every night.~&")
+        (force-output)
         (save))
       (progn
         (format t "~&Skipped loading the DB.~&")
