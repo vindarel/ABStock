@@ -39,7 +39,8 @@
 (defun read-selection ()
   "Read the csv with the ISBNs selection, exclude cards without a shelf (and print them on stdout)."
   (handler-case
-      (filter-cards-without-shelf (read-cards-selection))
+      (setf *selection*
+            (filter-cards-without-shelf (read-cards-selection)))
     (error (c)
       (format *error-output* "~&Error reading the selection from ~a: ~a~&" "selection.csv" c))))
 
@@ -52,7 +53,9 @@
   (when *cards*
     (let* ((cards (if random
                       (pick-cards :n n)
-                      (read-selection)))
+                      (if *selection*
+                          *selection*
+                          (read-selection))))
            ;; Group by shelf.
            ;; Returns an alist: (("shelf" (card1) (card2)…) ("shelf 2" (…)))
            ;; (("BD"
