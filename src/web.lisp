@@ -99,6 +99,11 @@
 (djula:def-filter :rest (list)
   (rest list))
 
+;; the truncatechars filter fails with a short shelf name like "BD",
+;; because it is shorter than "...".
+;; A PR was sent upstream. 4/4/2020
+(setf djula::*elision-string* "…")
+
 ;;
 ;; Routes.
 ;;

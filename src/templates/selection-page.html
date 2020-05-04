@@ -61,7 +61,7 @@
                 <p class="">{{ card.publisher | capfirst }}</p>
                 <p>
                   <a href="/search?rayon={{ card.shelf_id }}">
-                    <span class="tag"> {{ card.shelf }} </span>
+                    <span class="tag" title="{{ card.shelf }}"> {{ card.shelf | truncatechars:27 }} </span>
                   </a>
                 </p>
 
