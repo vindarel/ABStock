@@ -108,7 +108,7 @@
                           :user-content *user-content*
                           ;TODO: dev
                           ;; :selection-cards (pick-cards :n 6) ;; random
-                          :selection-cards (get-selection-subset)
+                          :selection-cards (get-selection-subset :ensure-cover t)
                           :shelves *shelves*))
 
 #+nil

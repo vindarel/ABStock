@@ -70,10 +70,23 @@
      while (< (length res) length)
      finally (return res)))
 
-(defun pick-cards (&key (n 20) (cards *cards*))
+(defun pick-cards (&key (n 20) (cards *cards*) (ensure-cover nil))
   "Pick `n' cards randomly. 20 by default."
   (when cards
     ;; Defensive: on startup, reading the DB, the variable can be nil.
-    (let ((random-ints (random-uniq-list n (length cards))))
-      (loop for i in random-ints
-         collect (elt cards i)))))
+    (loop with collected-ids = '()
+       with res = '()
+       with l = (length cards)
+       for i = (random l)
+       for card = (elt cards i)
+       when (and (not (find i collected-ids))
+                 ;; "temporary": some cards have no cover yet, until we re-run
+                 ;; a script on Abelujo side.
+                 (if ensure-cover
+                     (getf card :|cover|)
+                     t))
+       do (progn (push i collected-ids)
+                 (push card res))
+       while (< (length res)
+                n)
+       finally (return res))))
