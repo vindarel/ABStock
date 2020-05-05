@@ -87,11 +87,15 @@ or download/build the binary and run it:
     ./abstock
 
 
-Environment variables:
+Accepted environment variables:
 
 * the application port:
 
     AB_PORT=9999 sbcl --load run.lisp
+
+* the config file location:
+
+    CONFIG=../path/to/config.lisp make run
 
 ## Develop
 

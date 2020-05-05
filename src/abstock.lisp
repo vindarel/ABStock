@@ -81,7 +81,8 @@
 (defun load-init ()
   "Read configuration variables (phone number,…) from the configuration file.
   Either `config.lisp' at the project's root, or `~/.abstock.lisp'. See `(find-config)'"
-  (let ((file (find-config)))
+  (let ((file (or (uiop:getenv "CONFIG")
+                  (find-config))))
     (if file
      (let ((*package* *package*))
        (in-package abstock)
