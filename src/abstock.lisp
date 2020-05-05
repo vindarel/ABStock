@@ -60,6 +60,7 @@
   "List of all books.")
 
 (defvar *old-cards* nil)
+(defvar *old-shelves* nil)
 
 (defvar *shelves* nil)
 
@@ -338,25 +339,44 @@
             isbns-not-found)))
 
 (defun save (&key (file "cards.lisp"))
-  "Save cards on file. Re-read with `load-cards'.
+  "Save cards and shelves on file. Re-read with `load-cards'.
   Simply print the lisp forms."
-  (with-open-file (f file
-                     :direction :output
-                     :if-does-not-exist :create
-                     :if-exists :supersede)
-    (let ((*print-pretty* nil)
-          (*print-length* nil))
-      ;; Pretty printing will insert a line break at around 80 characters,
-      ;; making it un-readable with uiop:read-file-form.
-      (format f "~s~&" *cards*)))
-  (format t "~&Cards saved on ~s.~&" file))
+  (when *cards*
+    (with-open-file (f file
+                       :direction :output
+                       :if-does-not-exist :create
+                       :if-exists :supersede)
+      (let ((*print-pretty* nil)
+            (*print-length* nil))
+        ;; Pretty printing will insert a line break at around 80 characters,
+        ;; making it un-readable with uiop:read-file-form.
+        (format f "~s~&" *cards*)))
+    (format t "~&Cards saved on ~s.~&" file))
 
-(defun reload-cards (&key (file "cards.lisp"))
+  (when *shelves*
+    (with-open-file (f "shelves.lisp"
+                       :direction :output
+                       :if-does-not-exist :create
+                       :if-exists :supersede)
+      (let ((*print-pretty* nil)
+            (*print-length* nil))
+        ;; Pretty printing will insert a line break at around 80 characters,
+        ;; making it un-readable with uiop:read-file-form.
+        (format f "~s~&" *shelves*)
+        (format t "~&Shelves saved on ~s.~&" "shelves.lisp")))))
+
+(defun reload-cards (&key (file "cards.lisp") (file-shelves "shelves.lisp"))
   (if (uiop:file-exists-p file)
       (progn
         (setf *old-cards* *cards*)
         (setf *cards* (uiop:read-file-form file)))
-      (format t "~&The file ~s doesn't exist.~&" file)))
+      (format t "~&The file ~s doesn't exist.~&" file))
+
+  (if (uiop:file-exists-p file-shelves)
+      (progn
+        (setf *old-shelves* *shelves*)
+        (setf *shelves* (uiop:read-file-form file-shelves)))
+      (format t "~&The file ~s doesn't exist.~&" file-shelves)))
 
 (defun quit (&key (save t) (file "cards.lisp"))
   "Quit and save cards on disk, for faster restarts."
