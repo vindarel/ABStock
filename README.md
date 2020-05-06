@@ -1,6 +1,10 @@
 
+<p>
+  <h3 align="center"> ABStock </h3>
+  <h2 align="center"> Your catalogue online </h2>
+</p>
+
 <p align="center">
-  <h2> Your books catalogue online </h2>
   <a href="https://gitlab.com/vindarel/abstock"><b>Homepage</b></a> |
   <a href="https://gitlab.com/vindarel/abstock#install"><b>Install</b></a> |
   <a href="https://framasphere.org/people/4ac5fae0bed90133a3ed2a0000053625"><b>Blog</b></a> |
@@ -12,35 +16,38 @@
 
 </p>
 
-
-ABStock connects to the [Abelujo](http://abelujo.cc/) database.
-
-The welcome screen:
-
-![](welcome.png)
-
-Searching the stock:
+Here's how searching the stock looks like:
 
 ![welcome screen](search.png "welcome screen")
 
-Seeing one's shopping basket:
-
-![](basket.png)
 
 The website features:
 
-- a welcome screen, with the bookshop's information, and
+- a welcome screen, with:
+  - the bookshop's information,
+  - a search form,
+  - a pre-selection of the books to showcase,
 - a form to start searching books. A visitor can search by title, authors, publisher, shelf and ISBN(s).
 - a shopping basket, for visitors to add books in
-- a confirmation form, which sends the command by email to the shop owner.
+- a confirmation form, which sends the command by email to the shop owner,
+- a special page to showcase a selection.
+
+ABStock connects by default to the [Abelujo](http://abelujo.cc/)
+database. Abelujo is a free software for bookshops, that manages
+inventories, sells, and the like.
 
 The database is loaded in memory at startup, doesn't access it
-afterwards, and is synced every night.
+afterwards, and is synced several times a day.
 
 Interested? Please get in touch.
 
 
 ## Install
+
+ABStock is *libre* software, you can download it, use it, modify it
+and redistribute for free. We can also host it for you. Get in touch!
+
+Here's how to install it on your server.
 
 Install SBCL:
 
@@ -105,10 +112,7 @@ You can overwrite various parameters and texts:
 
 See all available settings in `config-example.lisp`.
 
-Write your config either
-
-* into `config.lisp` at the project root
-* into `~/.abstock.lisp`.
+Write your in `config.lisp` at the project root.
 
 
 ~~~lisp
