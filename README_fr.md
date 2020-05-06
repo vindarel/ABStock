@@ -45,7 +45,7 @@ Le site se compose de plusieurs pages, toutes configurables:
 
 Le site fonctionne par défaut avec le logiciel libre de gestion de
 librairies [Abelujo](http://abelujo.cc/), et se synchronise avec sa
-base de données toutes les nuits. Abelujo est l'outil pour le
+base de données à intervalles réguliers. Abelujo est l'outil pour le
 libraire: Abelujo gère les inventaires, la vente, etc, et sait se
 connecter au FEL à la demande de Dilicom.
 
