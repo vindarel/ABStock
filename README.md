@@ -1,17 +1,19 @@
-## ABStock: view your books online
 
-Clients can see your books online, search your stock, and select them
-in a basket.
+<p align="center">
+  <h2> Your books catalogue online </h2>
+  <a href="https://gitlab.com/vindarel/abstock"><b>Homepage</b></a> |
+  <a href="https://gitlab.com/vindarel/abstock#install"><b>Install</b></a> |
+  <a href="https://framasphere.org/people/4ac5fae0bed90133a3ed2a0000053625"><b>Blog</b></a> |
+  <a href="https://framavox.org/g/V6oiDr8Y/abelujo"><b>Forum</b></a> |
+  <a href="https://liberapay.com/vindarel/donate"><b>Support us</b></a> |
+  <a href="/README_fr.md">Français</a>
 
-It uses the [Abelujo](http://abelujo.cc/) database (or a copy of
-it). You must have done an inventory with Abelujo before (or, we can
-override a couple functions that are supposed to query the DB).
+  Clients can now see your books and pass command.
 
-The database is loaded in memory at startup and doesn't access it
-afterwards.
+</p>
 
-**disclaimer**: this is an alpha project done in haste to help an
-actual bookshop and many things are missing.
+
+ABStock connects to the [Abelujo](http://abelujo.cc/) database.
 
 The welcome screen:
 
@@ -25,25 +27,74 @@ Seeing one's shopping basket:
 
 ![](basket.png)
 
-Current features:
+The website features:
 
-- show the catalogue
-- search it (by title, authors, publisher, shelf, ISBN…)
-  - search many ISBNs at once in the stock (separated by a space or a comma). Display the ones not found.
-- the user adds books in his or her basket
-- (s)he fills a confirmation form which sends an **email** to the shop owner to pass command
-- the DB is synced every night.
+- a welcome screen, with the bookshop's information, and
+- a form to start searching books. A visitor can search by title, authors, publisher, shelf and ISBN(s).
+- a shopping basket, for visitors to add books in
+- a confirmation form, which sends the command by email to the shop owner.
+
+The database is loaded in memory at startup, doesn't access it
+afterwards, and is synced every night.
 
 Interested? Please get in touch.
 
 
-## Config
+## Install
 
-Write your config either
-* into `config.lisp` at the project root
-* into `~/.abstock.lisp`.
+Install SBCL:
 
-You can overwrite:
+    apt install sbcl rlwrap
+
+Install Quicklisp, as explained here: https://lispcookbook.github.io/cl-cookbook/getting-started.html#install-quicklisp
+
+There is one missing dependency in Quicklisp that you have to clone in ~/quicklisp/local-projects:
+
+- https://github.com/mmontone/cl-sentry-client (it is actually optional, I accept a PR to make it optional in the .asd)
+
+Clone the reposity:
+
+    git clone https://gitlab.com/vindarel/abstock
+
+## Run
+
+There are two possibilities.
+
+The first one is to run the app like this:
+
+    make run
+    # aka:
+    # rlwrap sbcl --load run.lisp
+
+When it is run for the first time, it will install missing
+dependencies. Finally, it will print that the webserver was started
+and is listening on a given port.
+
+With that method, we are dropped into the Lisp interactive REPL, so we can
+interact with the running application. This is useful to reload settings and
+such. You can reload all settings with `(load-init)`.
+
+The second method is to use an executable.
+
+Download/build the binary (see below) and run it:
+
+    ./abstock
+
+
+You can change setings with those environment variables:
+
+* the application port:
+
+    AB_PORT=9999 sbcl --load run.lisp
+
+* the location of the configuration file:
+
+    CONFIG=../path/to/config.lisp make run
+
+
+## Configure
+
+You can overwrite various parameters and texts:
 
 - the contact information (two phone numbers, email…)
 - your SendGrid API key
@@ -52,7 +103,12 @@ You can overwrite:
 - the shopping basket top text
 - etc
 
-See all available settings into `config-example.lisp`.
+See all available settings in `config-example.lisp`.
+
+Write your config either
+
+* into `config.lisp` at the project root
+* into `~/.abstock.lisp`.
 
 
 ~~~lisp
@@ -72,53 +128,24 @@ See all available settings into `config-example.lisp`.
 (setf *secret-answer* "answer")
 ~~~
 
-## Run
-
-Two possibilities:
-
-    sbcl --load run.lisp
-
-note that in that case, we are dropped into the Lisp REPL, so we can
-interact with the running application (useful to reload settings and
-such). You can reload all settings with `(load-init)`.
-
-or download/build the binary and run it:
-
-    ./abstock
-
-
-Accepted environment variables:
-
-* the application port:
-
-    AB_PORT=9999 sbcl --load run.lisp
-
-* the config file location:
-
-    CONFIG=../path/to/config.lisp make run
-
 ## Develop
 
-Install SBCL:
-
-    apt install sbcl
-
-install Quicklisp (see [Cookbook: getting started](https://lispcookbook.github.io/cl-cookbook/getting-started.html))
-
-There is one missing dependency in Quicklisp that you have to clone in ~/quicklisp/local-projects:
-
-- https://github.com/mmontone/cl-sentry-client (it is actually optional, I accept a PR to make it optional in the .asd)
-
-And you can run the app as showed above.
+Install as shown above.
 
 To build the binary, do:
 
     make build
 
+To develop in Slime, `load` the .asd (C-c C-k) and quickload the application with
+
+    (ql:quickload :abstock)
+
+Start the app:
+
+    (in-package :abstock)
+    (start)  ; optional :port 9999 argument.
 
 The UI uses the [Bulma](https://bulma.io) CSS framework.
-
-Issue tracker: https://gitlab.com/vindarel/abstock/-/issues
 
 ## Deploy
 
@@ -127,6 +154,10 @@ Use a user's configuration file:
     ln -s ../path/to/user/config-user.lisp config.lisp
 
 Use **Sentry**: copy your DSN in ~/.config/abstock/sentry-dsn.txt. (currently, use the "deprecated" DSN).
+
+## Issues and feature requests
+
+Issue tracker: https://gitlab.com/vindarel/abstock/-/issues
 
 ## Licence
 
