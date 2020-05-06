@@ -163,6 +163,13 @@ Use **Sentry**: copy your DSN in ~/.config/abstock/sentry-dsn.txt. (currently, u
 
 Issue tracker: https://gitlab.com/vindarel/abstock/-/issues
 
+Known TODOs:
+
+* online Stripe payments
+* admin panel
+* read another DB / read products data from a CSV or a JSON file
+* i18n / remove a few still hardcoded words
+
 ## Licence
 
 GPLv3
