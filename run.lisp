@@ -23,4 +23,7 @@ Another solution to run the app is to run the executable (see README).
                                  t))
   (error (c)
     (format *error-output* "~&An error occured: ~a~&" c)
-    (uiop:quit 1)))
+    (unless *dev-mode*
+      ;; Quit is painful in REPL, it will quit after an error on C-c C-c.
+      (uiop:quit 1))
+    ))
