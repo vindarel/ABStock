@@ -56,8 +56,8 @@
           <div class="card-content">
             <div class="media">
               <div class="media-content">
-                <p class="title is-5 no-padding">{{ card.title }}</p>
-                <p><span class="title is-6"><a href="/search?q={{ card.author }}">{{ card.author | capfirst }}</a></span></p>
+                <p class="title is-6 no-padding">{{ card.title }}</p>
+                <p><span><a href="/search?q={{ card.author }}">{{ card.author | capfirst }}</a></span></p>
                 <p class="">{{ card.publisher | capfirst }}</p>
                 <p>
                   <a href="/search?rayon={{ card.shelf_id }}">

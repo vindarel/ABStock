@@ -82,8 +82,8 @@
             <div class="card-content">
               <div class="media">
                 <div class="media-content">
-                  <p class="title is-5 no-padding">{{ card.title }}</p>
-                  <p><span class="title is-6"><a href="/search?q={{ card.author }}">{{ card.author }}</a></span></p>
+                  <p class="title is-6 no-padding">{{ card.title }}</p>
+                  <p><span><a href="/search?q={{ card.author }}">{{ card.author }}</a></span></p>
 
 	        <span class="has-text-grey-light"> {{ card.price | price }} €</span>
                 <span  class="icon is-medium" style="cursor: pointer;" title="Ajouter au panier" onclick="add_to_cart({{ card.id }})">
