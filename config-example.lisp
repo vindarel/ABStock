@@ -74,3 +74,10 @@
 (setf (user-content-basket-show-validation-form *user-content*)
       ;; Show the validation form: already true by default.
       t)
+
+;;; Additional headers.
+(setf (user-content-additional-headers *user-content*)
+      """"
+      HTML.
+      you can put here Matomo code.
+      """")

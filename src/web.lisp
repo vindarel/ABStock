@@ -47,6 +47,10 @@
    (welcome-second-text
     :doc "Text on a second section of the landing page. It can be HTML.")
 
+   ;; Headers.
+   (additional-headers
+    :doc "Additional header tags to include in the base template. HTML. Include CSS or JS, such as a Matomo script.")
+
    ;; Product selection.
    (enable-product-selection
     :std nil
