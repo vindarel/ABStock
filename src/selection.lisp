@@ -40,7 +40,9 @@
   "Read the csv with the ISBNs selection, exclude cards without a shelf (and print them on stdout)."
   (handler-case
       (setf *selection*
-            (filter-cards-without-shelf (read-cards-selection)))
+            (filter-cards-without-shelf
+             (remove-duplicated-cards
+              (read-cards-selection))))
     (error (c)
       (format *error-output* "~&Error reading the selection from ~a: ~a~&" "selection.csv" c))))
 

@@ -82,3 +82,7 @@
                      n)
                   (< attempts 1000))
        finally (return res))))
+
+(defun remove-duplicated-cards (cards)
+  (remove-duplicates cards :key (lambda (card)
+                                  (getf card :|isbn|))))
