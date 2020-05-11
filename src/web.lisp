@@ -62,6 +62,9 @@
 (djula:def-filter :rest (list)
   (rest list))
 
+(djula:def-filter :slugify (title)
+  (slug:slugify title))
+
 ;; The truncatechars filter fails with a short shelf name like "BD",
 ;; because it is shorter than "...".
 ;; A PR was sent upstream. 4/4/2020
@@ -237,9 +240,11 @@
 (defvar *card-url-name* "/livre/:id"
   "Name for the url that links to a book/a single product. It must contain a `:card' wildcard.")
 
-(easy-routes:defroute card-page ("/livre/:id" :method :get) ()
+(easy-routes:defroute card-page ("/livre/:slug" :method :get) ()
+  "Show a card.
+  The slug must start with an id. The rest of the slug, the title, is not important."
   (let* ((card-id (ignore-errors
-                    (parse-integer id)))
+                    (parse-integer (first (str:split "-" slug)))))
          (res (when card-id
                 (filter-cards-by-ids (list card-id))))
          (card (when res

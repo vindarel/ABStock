@@ -1,7 +1,7 @@
 <div class="column is-2-desktop is-one-quarter-tablet is-half-mobile">
   <div class="card" id="{{ card.id }}">
     <div class="card-image">
-      <a href="/livre/{{ card.id }}" style="color: black;">
+      <a href="/livre/{{ card.id }}-{{ card.title | slugify }}" style="color: black;">
 
         <figure class="image">
           <img src="{{ card.cover }}" alt="Couverture de {{ card.title }}"/>
@@ -12,7 +12,7 @@
       <div class="media">
         <div class="media-content">
           <p class="title is-6 no-padding">
-            <a href="/livre/{{ card.id }}" style="color: black;">
+            <a href="/livre/{{ card.id }}-{{ card.title | slugify }}" style="color: black;">
               {{ card.title }}
             </a>
           </p>
