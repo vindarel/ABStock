@@ -19,7 +19,11 @@
       <div class="card-content">
         <div class="media">
           <span class="media-content">
-            <p class="title is-3 no-padding">{{ card.title }}</p>
+            <p class="title is-3 no-padding">
+              <a href="/livre/{{ card.id }}-{{ card.title | slugify }}" style="color: black;">
+                {{ card.title }}
+              </a>
+            </p>
             {% if card.author %}
             <p><span><a href="/search?q={{ card.author }}">{{ card.author | capfirst }}</a></span></p>
             {% endif %}

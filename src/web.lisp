@@ -240,6 +240,20 @@
 (defvar *card-url-name* "/livre/:id"
   "Name for the url that links to a book/a single product. It must contain a `:card' wildcard.")
 
+(defun get-cards-same-author (card)
+  (when card
+    (sort
+     (filter-cards-by-author (getf card :|author|)
+                             :exclude-id (getf card :|id|))
+     #+sbcl
+     #'sb-unicode:unicode<
+     #-sbcl
+     (progn
+       (log:warn "sorting by unicode string is only supported on SBCL.")
+       #'string-lessp)
+     :key (lambda (card)
+            (getf card :|title|)))))
+
 (easy-routes:defroute card-page ("/livre/:slug" :method :get) ()
   "Show a card.
   The slug must start with an id. The rest of the slug, the title, is not important."
@@ -250,17 +264,7 @@
          (card (when res
                  (first res)))
          (same-author (when card
-                        (sort
-                         (filter-cards-by-author (getf card :|author|)
-                                                 :exclude-id card-id)
-                         #+sbcl
-                         #'sb-unicode:unicode<
-                         #-sbcl
-                         (progn
-                           (log:warn "sorting by unicode string is only supported on SBCL.")
-                           #'string-lessp)
-                         :key (lambda (card)
-                                (getf card :|title|))))))
+                        (get-cards-same-author card))))
     (cond
       ((null card-id)
        (djula:render-template* +404.html+ nil))
@@ -270,6 +274,13 @@
                                :same-author same-author))
       (t
        (djula:render-template* +404.html+ nil)))))
+
+(easy-routes:defroute random-card ("/au-pif") ()
+  (let* ((card (first (pick-cards :n 1)))
+         (same-author (get-cards-same-author card)))
+    (djula:render-template* +card-page.html+ nil
+                            :card card
+                            :same-author same-author)))
 
 ;; (easy-routes:defroute card-page (*card-url-name* :method :get) ()
 ;;   (djula:render-template* +card-page.html+ nil
