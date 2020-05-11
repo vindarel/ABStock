@@ -46,36 +46,8 @@
     <div class="row columns is-multiline is-mobile">
 
       {% for card in shelf/cards.rest %}
-      <div class="column is-2-desktop is-one-quarter-tablet is-half-mobile">
-        <div class="card" id="{{ card.id }}">
-          <div class="card-image">
-            <figure class="image">
-              <img src="{{ card.cover }}" alt="Couverture de {{ card.title }}"/>
-            </figure>
-          </div>
-          <div class="card-content">
-            <div class="media">
-              <div class="media-content">
-                <p class="title is-6 no-padding">{{ card.title }}</p>
-                <p><span><a href="/search?q={{ card.author }}">{{ card.author | capfirst }}</a></span></p>
-                <p class="">{{ card.publisher | capfirst }}</p>
-                <p>
-                  <a href="/search?rayon={{ card.shelf_id }}">
-                    <span class="tag" title="{{ card.shelf }}"> {{ card.shelf | truncatechars:27 }} </span>
-                  </a>
-                </p>
 
-	        <span class="has-text-grey-light"> {{ card.price | price }} €</span>
-                <span  class="icon is-medium" style="cursor: pointer;" title="Ajouter au panier" onclick="add_to_cart({{ card.id }})">
-                  <i class="fas fa-lg fa-plus-circle"></i>
-                </span>
-
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </div>
+      {% include "component-card.html" %}
 
       {% endfor %}
     </div>

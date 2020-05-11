@@ -71,31 +71,9 @@
       <div class="row columns is-multiline is-mobile">
 
         {% for card in selection-cards %}
-        <div class="column is-2-desktop is-one-quarter-tablet is-half-mobile">
-          <div class="card" id="{{ card.id }}">
-            <div class="card-image">
-              <figure class="image">
-                <img src="{{ card.cover }}" alt="Couverture de {{ card.title }}" style="max-width: 128px"/>
-              </figure>
-            </div>
 
-            <div class="card-content">
-              <div class="media">
-                <div class="media-content">
-                  <p class="title is-6 no-padding">{{ card.title }}</p>
-                  <p><span><a href="/search?q={{ card.author }}">{{ card.author }}</a></span></p>
+        {% include "component-card.html" %}
 
-	        <span class="has-text-grey-light"> {{ card.price | price }} €</span>
-                <span  class="icon is-medium" style="cursor: pointer;" title="Ajouter au panier" onclick="add_to_cart({{ card.id }})">
-                  <i class="fas fa-lg fa-plus-circle"></i>
-                </span>
-
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
         {% endfor %}
 
       </div>
