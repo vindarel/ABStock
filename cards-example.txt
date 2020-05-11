@@ -1,0 +1,59 @@
+title: Practical Common Lisp
+author: Peter Seibel
+cover: http://www.gigamonkeys.com/book/small-cover.gif
+details-url: http://www.gigamonkeys.com/book/
+shelf: programming
+shelf_id: 99
+price: 29
+publisher: Apress
+likes: 4
+
+title: Common Lisp Recipes
+author: Edmund Weitz
+cover: https://images.springer.com/sgw/books/medium/9781484211779.jpg
+details-url: http://weitz.de/cl-recipes/
+shelf: programming
+shelf_id: 99
+price: 30
+publisher: Apress
+likes: 5
+
+title: Common Lisp Cookbook
+author: Collective
+cover: https://lispcookbook.github.io/cl-cookbook/orly-cover.png
+details-url: https://lispcookbook.github.io/cl-cookbook/
+shelf: programming
+shelf_id: 99
+publisher: O'Rly
+price: 0
+likes: 5
+
+title: Programming Algorithms
+author: Vsevolod Domkin
+cover: https://d2sofvawe08yqg.cloudfront.net/progalgs/hero?1586867024
+details-url: https://leanpub.com/progalgs
+shelf: programming
+shelf_id: 99
+publisher: Leanpub
+price: 15
+likes: 5
+
+title: Cats
+author: mother cat
+cover: https://gitlab.com/abstock/abstock.gitlab.io/-/raw/master/logo.png
+details-url: https://gitlab.com/abstock/abstock.gitlab.io/-/blob/master/logo.png
+shelf: nature
+shelf_id: 98
+publisher: nature
+price: 5
+likes: 100
+
+title: Screwdriver
+author:
+cover: https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%3Fid%3DOIP.jGOb7dVL1oA9VDzNVPDPpwAAAA%26pid%3DApi&f=1
+details-url:
+shelf: craftmanship
+shelf_id: 97
+publisher:
+price: 10
+likes: 1

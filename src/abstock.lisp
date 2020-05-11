@@ -4,12 +4,15 @@
         :log4cl)
   (:import-from :defclass-std
                 :defclass/std)
+  (:import-from :access
+                :access)
   (:export :main
            :start))
 
 (in-package :abstock)
 
 ;; Read Abelujo's database in memory.
+;; XXX: in-memory SQLite.
 
 ;; Book objects must have:
 ;; - title
@@ -211,10 +214,15 @@
 
 (defun normalise-cards (cards)
   "Add a repr key that joins title and author and removes accents."
+  ;XXX: with make-symbol, we get #:|title| and not just :|title|
+  ; thus getf fails, but access is ok.
   (loop for card in cards
-     for ascii-title = (slug:asciify (getf card :|title|))
-     for ascii-author = (slug:asciify (getf card :|author|))
-     for ascii-publisher = (slug:asciify (getf card :|publisher|))
+     ;; Creating a plist key with make-symbol creates an un-interned symbol,
+     ;; like #:|key|.
+     ;; getf fails in accessing the key but access is ok.
+     for ascii-title = (slug:asciify (access card :|title|))
+     for ascii-author = (slug:asciify (access card :|author|))
+     for ascii-publisher = (slug:asciify (access card :|publisher|))
      do (setf (getf card :|repr|)
               (str:downcase (str:concat ascii-title " " ascii-publisher)))
      do  (setf (getf card :|repr2|)
@@ -366,6 +374,7 @@
         (format t "~&Shelves saved on ~s.~&" "shelves.lisp")))))
 
 (defun reload-cards (&key (file "cards.lisp") (file-shelves "shelves.lisp"))
+  "Reload saved cards from file."
   (if (uiop:file-exists-p file)
       (progn
         (setf *old-cards* *cards*)

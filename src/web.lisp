@@ -69,7 +69,6 @@
 
 (defvar *user-content* (make-instance 'user-content))
 
-;TODO: (reload-config-file)
 
 ;; Utils.
 
@@ -311,9 +310,15 @@
       (format t "Skipping init file.~&"))
   (force-output)
 
+  ;; Load cards.txt if it exists.
+  (uiop:format! t "Loading data from cards.txt~&")
+  (setf *cards* (normalise-cards
+                 (abstock/loaders:load-txt-data)))
+
   ;; Reload DB saved on disk.
   (format t "Reloading saved cards, before reading the DB…~&")
   (force-output)
+  ;; This overwrites the previous cards from the txt loader.
   (reload-cards)
   (format t "~&Done.~&")
   (force-output)

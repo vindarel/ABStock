@@ -30,7 +30,12 @@
                :sentry-client.hunchentoot
                ;; :cl-i18n
                )
-  :components ((:module "src"
+  :components ((:module "src/loaders"
+                :components
+                ((:file "package")
+                 (:file "conditions")
+                 (:file "txt-loader")))
+               (:module "src"
                 :components
                 ((:file "abstock")
                  (:file "web")

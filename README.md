@@ -38,12 +38,17 @@ Here's how searching the stock looks like:
 ![welcome screen](search.png "welcome screen")
 
 
-ABStock connects by default to the [Abelujo](http://abelujo.cc/)
-database. Abelujo is a free software for bookshops, that manages
-inventories, sells, and the like.
+ABStock can load data from several places:
 
-The database is loaded in memory at startup, doesn't access it
-afterwards, and is synced several times a day.
+- by default, it connects to the [Abelujo](http://abelujo.cc/)
+database. Abelujo is a free software for bookshops, that manages
+inventories, sells, and the like. The database is loaded in memory at
+startup, doesn't access it afterwards, and is synced several times a
+day.
+- it can load data stored in a simple txt format (see
+  `cards-example.txt`). You can define books, or other products:
+
+![](other-data.png)
 
 Interested? Please get in touch.
 
@@ -57,9 +62,9 @@ GitHub mirror: https://github.com/vindarel/ABStock
 Known TODOs:
 
 * admin panel
-* read another DB / read products data from a CSV or a JSON file
+* [X] read products data from a TXT, CSV or a JSON file
 * i18n / remove a few still hardcoded words
-* online Stripe payments (low priority)
+* online Stripe payments
 * simple stats
 
 ## Licence
