@@ -38,6 +38,7 @@
                (:module "src"
                 :components
                 ((:file "abstock")
+                 (:file "user-content")
                  (:file "web")
                  (:file "email")
                  (:file "selection")
