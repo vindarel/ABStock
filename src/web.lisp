@@ -245,8 +245,17 @@
          (card (when res
                  (first res)))
          (same-author (when card
-                        (filter-cards-by-author (getf card :|author|)
-                                                :exclude-id card-id))))
+                        (sort
+                         (filter-cards-by-author (getf card :|author|)
+                                                 :exclude-id card-id)
+                         #+sbcl
+                         #'sb-unicode:unicode<
+                         #-sbcl
+                         (progn
+                           (log:warn "sorting by unicode string is only supported on SBCL.")
+                           #'string-lessp)
+                         :key (lambda (card)
+                                (getf card :|title|))))))
     (cond
       ((null card-id)
        (djula:render-template* +404.html+ nil))
