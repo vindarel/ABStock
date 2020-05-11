@@ -46,7 +46,9 @@
 
 (defparameter +panier.html+ (djula:compile-template* "panier.html"))
 (defparameter +command-confirmed.html+ (djula:compile-template* "command-confirmed.html"))
+
 (defparameter +error-messages.html+ (djula:compile-template* "error-messages.html"))
+(defparameter +404.html+ (djula:compile-template* "404.html"))
 
 ;;
 ;; Custom Djula filter to format prices.
