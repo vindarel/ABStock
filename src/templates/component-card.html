@@ -1,14 +1,21 @@
 <div class="column is-2-desktop is-one-quarter-tablet is-half-mobile">
   <div class="card" id="{{ card.id }}">
     <div class="card-image">
-      <figure class="image">
-        <img src="{{ card.cover }}" alt="Couverture de {{ card.title }}"/>
-      </figure>
+      <a href="/livre/{{ card.id }}" style="color: black;">
+
+        <figure class="image">
+          <img src="{{ card.cover }}" alt="Couverture de {{ card.title }}"/>
+        </figure>
+      </a>
     </div>
     <div class="card-content">
       <div class="media">
         <div class="media-content">
-          <p class="title is-6 no-padding">{{ card.title }}</p>
+          <p class="title is-6 no-padding">
+            <a href="/livre/{{ card.id }}" style="color: black;">
+              {{ card.title }}
+            </a>
+          </p>
           {% if card.author %}
           <p><span><a href="/search?q={{ card.author }}">{{ card.author | capfirst }}</a></span></p>
           {% endif %}

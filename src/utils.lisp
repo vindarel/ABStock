@@ -35,6 +35,16 @@
      when position
      collect  (elt *cards* position)))
 
+(defun filter-cards-by-author (author &key exclude-id)
+  (remove-if-not (lambda (card)
+                   (unless (or (= (getf card :|id|)
+                                  exclude-id)
+                               (string= (str:downcase author)
+                                        "collectif"))
+                     (string= (str:downcase author)
+                              (str:downcase (getf card :|author|)))))
+                 (get-cards)))
+
 (defun replace-pairs (pairs str)
   "Replace all associations in pairs (plist) and return a new string.
 

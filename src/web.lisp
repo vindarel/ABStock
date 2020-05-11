@@ -43,6 +43,7 @@
 (defparameter +welcome.html+ (djula:compile-template* "welcome.html"))
 (defparameter +cards.html+ (djula:compile-template* "cards.html"))
 (defparameter +selection-page.html+ (djula:compile-template* "selection-page.html"))
+(defparameter +card-page.html+ (djula:compile-template* "card-page.html"))
 
 (defparameter +panier.html+ (djula:compile-template* "panier.html"))
 (defparameter +command-confirmed.html+ (djula:compile-template* "command-confirmed.html"))
@@ -61,7 +62,7 @@
 (djula:def-filter :rest (list)
   (rest list))
 
-;; the truncatechars filter fails with a short shelf name like "BD",
+;; The truncatechars filter fails with a short shelf name like "BD",
 ;; because it is shorter than "...".
 ;; A PR was sent upstream. 4/4/2020
 (setf djula::*elision-string* "…")
@@ -233,6 +234,36 @@
                                    :messages (list "Votre demande n'a pas pu être envoyée. Merci de ré-essayer un peu plus tard."))
            ))))))
 
+(defvar *card-url-name* "/livre/:id"
+  "Name for the url that links to a book/a single product. It must contain a `:card' wildcard.")
+
+(easy-routes:defroute card-page ("/livre/:id" :method :get) ()
+  (let* ((card-id (ignore-errors
+                    (parse-integer id)))
+         (res (when card-id
+                (filter-cards-by-ids (list card-id))))
+         (card (when res
+                 (first res)))
+         (same-author (when card
+                        (filter-cards-by-author (getf card :|author|)
+                                                :exclude-id card-id))))
+    (cond
+      ((null card-id)
+       (djula:render-template* +404.html+ nil))
+      (card
+       (djula:render-template* +card-page.html+ nil
+                               :card card
+                               :same-author same-author))
+      (t
+       (djula:render-template* +404.html+ nil)))))
+
+;; (easy-routes:defroute card-page (*card-url-name* :method :get) ()
+;;   (djula:render-template* +card-page.html+ nil
+;;                           :card card))
+
+;;
+;; Start.
+;;
 (defun start-server (&key (port *port*))
   (format t "~&Starting the web server on port ~a" port)
   (force-output)
