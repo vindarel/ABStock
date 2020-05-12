@@ -395,8 +395,8 @@
 
 (defun schedule-db-reload ()
   "Reload the DB regularly. By default, each night at 4am."
-  (cl-cron:make-cron-job #'get-all-cards :minute 30
-                         :hour 4)
+  (cl-cron:make-cron-job #'get-all-cards :minute 30 :hour 4)
+  (cl-cron:make-cron-job #'get-all-shelves :minute 30 :hour 4)
   (log:info "Scheduled a DB reload.")
   (cl-cron:start-cron))
 
