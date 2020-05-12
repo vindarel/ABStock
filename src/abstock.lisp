@@ -37,7 +37,8 @@
 (defparameter *version* "0.5")
 
 (defparameter *verbose* nil)
-(defparameter *config* #P"~/.abstock.lisp")
+(defparameter *config* #P"config.lisp")
+(defparameter *post-config* #P"post-config.lisp")
 
 (defun find-config ()
   (cond
@@ -45,6 +46,13 @@
      "config.lisp")
     ((uiop:file-exists-p *config*)
      *config*)
+    (t
+     nil)))
+
+(defun find-post-config ()
+  (cond
+    ((uiop:file-exists-p *post-config*)
+     *post-config*)
     (t
      nil)))
 
@@ -84,16 +92,30 @@
 
 (defun load-init ()
   "Read configuration variables (phone number,…) from the configuration file.
-  Either `config.lisp' at the project's root, or `~/.abstock.lisp'. See `(find-config)'"
+  Either `config.lisp' at the project's root, or the CONFIG environment variable. See `(find-config)'"
   (let ((file (or (uiop:getenv "CONFIG")
                   (find-config))))
     (if file
      (let ((*package* *package*))
        (in-package abstock)
-       ;XXX: one case of failure: a symbolic link exists, but
-       ; the target file doesn't.
+       ;; XXX: one case of failure: a symbolic link exists, but
+       ;; the target file doesn't.
        (load (uiop:native-namestring file)))
      (format t "... no config file found.~&"))))
+
+(defun load-post-init ()
+  "Overwrite code.
+  Load the file denoted by either `post-init.lisp' at the project's root (see `*post-config*'), or the POST_CONFIG environment variable."
+  (let ((file (or (uiop:getenv "POST_CONFIG")
+                  (find-post-config))))
+    (if file
+        (let ((*package* *package*))
+          (in-package abstock)
+          ;; XXX: one case of failure: a symbolic link exists, but
+          ;; the target file doesn't.
+          (uiop:format! t "~&Loading post-init file ~a~&" (uiop:native-namestring file))
+          (load (uiop:native-namestring file)))
+        (format t "... no post-config file found.~&"))))
 
 (defun card-by-id (id)
   "Generates SxQL query. (yield) generates the SQL. It is not executed."

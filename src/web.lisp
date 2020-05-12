@@ -298,7 +298,7 @@
                                 :port (or port *port*)))
   (hunchentoot:start *server*))
 
-(defun start (&key (port *port*) (load-init t) (load-db t))
+(defun start (&key (port *port*) (load-init t) (load-db t) (post-init t))
   "If `load-db' is non t, do not load the DB, but try to load saved cards on disk."
   (format t "Abelujo visible stock v~a~&" *version*)
   (force-output)
@@ -369,4 +369,10 @@
         (save))
       (progn
         (format t "~&Skipped loading the DB.~&")
-        (force-output))))
+        (force-output)))
+
+  ;; Post-init: overwrite code.
+  (if post-init
+      (progn
+        (load-post-init))
+      (uiop:format! t "Skipping post-init file.~&")))
