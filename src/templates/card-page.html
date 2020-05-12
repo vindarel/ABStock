@@ -3,7 +3,7 @@
 
 {% block content %}
 
-<div class="container" style="margin-bottom: 5em">
+<div class="container is-fullheight" style="margin-bottom: 10em">
   <div class="section">
     <div class="columns is-centered">
       <div class="column is-2">
@@ -16,10 +16,10 @@
         </div>
       </div>
 
-      <div class="card-content">
+      <div class="card-content column is-4">
         <div class="media">
           <span class="media-content">
-            <p class="title is-3 no-padding">
+            <p class="title is-4 no-padding">
               <a href="/livre/{{ card.id }}-{{ card.title | slugify }}" style="color: black;">
                 {{ card.title }}
               </a>
@@ -45,7 +45,7 @@
             {% endif %}
 
             {% if card.price %}
-	    <span class="title is-6" style="padding-top: 2em"> {{ card.price | price }} €</span>
+	    <div class="title is-6"> {{ card.price | price }} €</div>
             {% endif %}
 
             <button class="button is-medium is-fullwidth is-outlined is-rounded" style="cursor: pointer;" title="Ajouter au panier" onclick="add_to_cart({{ card.id }})"> Ajouter au panier 
@@ -57,15 +57,17 @@
       </div>
     </div>
 
-    {% if same-author %}
-    <h4 class="title is-4">Du même auteur</h4>
+    <div>
+      {% if same-author %}
+      <h4 class="title is-4">Du même auteur</h4>
 
-    <div class="row columns is-multiline is-mobile">
-      {% for card in same-author %}
-      {% include "component-card.html" %}
-      {% endfor %}
+      <div class="row columns is-multiline is-mobile">
+        {% for card in same-author %}
+        {% include "component-card.html" %}
+        {% endfor %}
+      </div>
+      {% endif %}
     </div>
-    {% endif %}
 
   </div>
 </div>
