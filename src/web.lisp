@@ -217,7 +217,7 @@
              (djula:render-template* +command-confirmed.html+ nil
                                      :title (format nil "~a - ~a"
                                                     (user-content-brand-name *user-content*)
-                                                    "Command envoyée")
+                                                    "Commande envoyée")
                                      :success-messages (list "Votre demande a bien été envoyée."))
              )
          (error (c)
@@ -271,6 +271,7 @@
       (card
        (djula:render-template* +card-page.html+ nil
                                :card card
+                               :user-content *user-content*
                                :same-author same-author))
       (t
        (djula:render-template* +404.html+ nil)))))
@@ -280,6 +281,7 @@
          (same-author (get-cards-same-author card)))
     (djula:render-template* +card-page.html+ nil
                             :card card
+                               :user-content *user-content*
                             :same-author same-author)))
 
 ;; (easy-routes:defroute card-page (*card-url-name* :method :get) ()
