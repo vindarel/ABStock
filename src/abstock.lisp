@@ -236,12 +236,9 @@
 
 (defun normalise-cards (cards)
   "Add a repr key that joins title and author and removes accents."
-  ;XXX: with make-symbol, we get #:|title| and not just :|title|
-  ; thus getf fails, but access is ok.
   (loop for card in cards
-     ;; Creating a plist key with make-symbol creates an un-interned symbol,
-     ;; like #:|key|.
-     ;; getf fails in accessing the key but access is ok.
+     ;; access is more generic than getf, it also works with uninterned symbols
+     ;; (but we don't have such anymore).
      for ascii-title = (slug:asciify (access card :|title|))
      for ascii-author = (slug:asciify (access card :|author|))
      for ascii-publisher = (slug:asciify (access card :|publisher|))

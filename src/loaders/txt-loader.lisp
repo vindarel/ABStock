@@ -60,7 +60,8 @@
       (when (not (find key *known-fields* :test #'string-equal))
                                         ;TODO: keys as symbols or strings
         (signal 'unknown-key-warning :key key))
-      (list (make-symbol key) val))))
+      ;; (eq (intern "key" "KEYWORD") :|key|) -> T
+      (list (intern key "KEYWORD") val))))
 
 (defun collect-item (lines)
   (when (new-item-p (first lines))
