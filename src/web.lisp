@@ -237,9 +237,6 @@
                                    :messages (list "Votre demande n'a pas pu être envoyée. Merci de ré-essayer un peu plus tard."))
            ))))))
 
-(defvar *card-url-name* "/livre/:id"
-  "Name for the url that links to a book/a single product. It must contain a `:card' wildcard.")
-
 (defun get-cards-same-author (card)
   (when card
     (sort
@@ -254,7 +251,7 @@
      :key (lambda (card)
             (getf card :|title|)))))
 
-(easy-routes:defroute card-page ("/livre/:slug" :method :get) ()
+(easy-routes:defroute card-page (#.*card-page-url* :method :get) ()
   "Show a card.
   The slug must start with an id. The rest of the slug, the title, is not important."
   (let* ((card-id (ignore-errors

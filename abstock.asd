@@ -39,6 +39,7 @@
                 :components
                 ((:file "abstock")
                  (:file "user-content")
+                 (:file "parameters")
                  (:file "web")
                  (:file "email")
                  (:file "selection")

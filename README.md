@@ -52,6 +52,11 @@ day.
 
 Interested? Please get in touch.
 
+### Other features
+
+- translate URLs ("/book/<slug>" or "/livre/<slug>")
+- redefine anything with the pre- and post-config files, written in the programming language of the application (Lisp)
+
 
 ## Issues and feature requests
 
