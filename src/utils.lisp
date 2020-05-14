@@ -70,8 +70,11 @@
                           "Hi {{name}} call {{phone}}"))))
 
 
-(defun pick-cards (&key (n 20) (cards *cards*) (ensure-cover nil))
+(defun pick-cards (&key (n 20) (cards (get-cards)) ensure-cover shelf-id)
   "Pick `n' cards randomly. 20 by default."
+  (when (stringp shelf-id)
+    (setf shelf-id (ignore-errors
+                     (parse-integer shelf-id))))
   (when cards
     ;; Defensive: on startup, reading the DB, the variable can be nil.
     (loop with collected-ids = '()
@@ -80,11 +83,17 @@
        for attempts from 0
        for i = (random l)
        for card = (elt cards i)
+       for card-shelf-id = (getf card :|shelf_id|)
        when (and (not (find i collected-ids))
                  ;; "temporary": some cards have no cover yet, until we re-run
                  ;; a script on Abelujo side.
                  (if ensure-cover
                      (getf card :|cover|)
+                     t)
+                 (if (and shelf-id
+                          card-shelf-id)
+                     (= card-shelf-id
+                        shelf-id)
                      t))
        do (progn (push i collected-ids)
                  (push card res))

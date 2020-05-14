@@ -261,7 +261,9 @@
          (card (when res
                  (first res)))
          (same-author (when card
-                        (get-cards-same-author card))))
+                        (get-cards-same-author card)))
+         (same-shelf (when card
+                       (pick-cards :n 6 :shelf-id (getf card :|shelf_id|)))))
     (cond
       ((null card-id)
        (djula:render-template* +404.html+ nil))
@@ -269,7 +271,8 @@
        (djula:render-template* +card-page.html+ nil
                                :card card
                                :user-content *user-content*
-                               :same-author same-author))
+                               :same-author same-author
+                               :same-shelf same-shelf))
       (t
        (djula:render-template* +404.html+ nil)))))
 

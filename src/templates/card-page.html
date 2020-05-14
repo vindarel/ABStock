@@ -69,6 +69,18 @@
       {% endif %}
     </div>
 
+    {% if same-shelf %}
+    <div style="padding-top: 30px">
+      <h4 class="title is-4">Dans le même rayon</h4>
+
+      <div class="row columns is-multiline is-mobile">
+        {% for card in same-shelf %}
+        {% include "component-card.html" %}
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
   </div>
 </div>
 

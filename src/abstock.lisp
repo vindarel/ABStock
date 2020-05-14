@@ -82,7 +82,7 @@
 ;; Dev helpers.
 ;;
 ;; We don't want to print 3000+ strings, it hangs the editor and the server.
-(setf *print-length* 10)
+(setf *print-length* 100)
 
 (defun connect ()
   ;TODO: needs to be run inside the directory of db.db

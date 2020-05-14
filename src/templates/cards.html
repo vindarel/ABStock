@@ -38,41 +38,6 @@
       {% endfor %}
     </div>
 
-    <!-- <div class="row columns is-multiline">
-          {% for card in cards %}
-          <div class="column is-half">
-          <div id="{{ card.id }}" class="box content">
-          <article class="post">
-	  <div class="media">
-	  <div class="media-left">
-	  <p class="image is-128x128">
-	  <img src="{{ card.cover }}">
-	  </p>
-	  </div>
-	  <div class="media-content">
-	  <div class="content">
-          <h4> {{ card.title }} </h4>
-	  <p>
-          <span> {{ card.author }} </span>
-          <span> {{ card.publisher | capfirst }} </span>
-	  </p>
-          <a href="/search?rayon={{ card.shelf_id }}">
-          <span class="tag"> {{ card.shelf }} </span>
-          </a>
-	  </div>
-	  </div>
-	  <div class="media-right">
-	  <span class="has-text-grey-light"> {{ card.price | price }} €</span>
-          <span  class="icon is-medium" style="cursor: pointer;" title="Ajouter au panier" onclick="add_to_cart({{ card.id }})">
-          <i class="fas fa-lg fa-plus-circle"></i>
-          </span>
-	  </div>
-	  </div>
-          </article>
-          </div>
-          </div>
-          {% endfor %}
-          </div> -->
   </div>
 </div>
 
