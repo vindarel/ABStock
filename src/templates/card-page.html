@@ -20,7 +20,7 @@
         <div class="media">
           <span class="media-content">
             <p class="title is-4 no-padding">
-              <a href="/livre/{{ card.id }}-{{ card.title | slugify }}" style="color: black;">
+              <a href="{{ card | url }}" style="color: black;">
                 {{ card.title }}
               </a>
             </p>

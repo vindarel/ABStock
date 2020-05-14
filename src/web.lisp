@@ -65,6 +65,14 @@
 (djula:def-filter :slugify (title)
   (slug:slugify title))
 
+(djula:def-filter :url (card)
+  "Create a full URL to uniquely identify this card."
+  (format nil "/~a/~a-~a"
+          *card-page-url-name*
+          (getf card :|id|)
+          ;; the slug won't actually be read back, only the id.
+          (slug:slugify (getf card :|title|))))
+
 ;; The truncatechars filter fails with a short shelf name like "BD",
 ;; because it is shorter than "...".
 ;; A PR was sent upstream. 4/4/2020
