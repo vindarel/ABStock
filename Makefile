@@ -1,4 +1,7 @@
 
+deps:
+	git clone https://github.com/mmontone/cl-sentry-client/ ~/quicklisp/local-projects/cl-sentry-client
+
 build:
 	sbcl --load abstock.asd \
 	     --eval '(ql:quickload :abstock)' \
