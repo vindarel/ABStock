@@ -384,3 +384,6 @@
       (progn
         (load-post-init))
       (uiop:format! t "Skipping post-init file.~&")))
+
+(defun stop ()
+  (hunchentoot:stop *server*))
