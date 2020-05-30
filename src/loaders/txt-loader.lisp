@@ -12,7 +12,7 @@
 ;; - ISBN
 ;; - price
 ;; - author(s) (single string)
-;; - etc
+;; - etc. See +known-fields/types+
 
 (defparameter +known-fields/types+ '((:|id| integer)
                                      "title"

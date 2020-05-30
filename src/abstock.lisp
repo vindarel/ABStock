@@ -67,6 +67,8 @@
 
 (defvar *connection* nil)
 
+(defvar *db-name* "db.db" "The DB name.")
+
 (defvar *cards* nil
   "List of all books.")
 
@@ -86,9 +88,11 @@
 
 (defun connect ()
   ;TODO: needs to be run inside the directory of db.db
-  (setf *connection*
-        (dbi:connect :sqlite3
-                     :database-name "db.db")))
+  (if (uiop:file-exists-p *db-name*)
+      (setf *connection*
+            (dbi:connect :sqlite3
+                         :database-name *db-name*))
+      (error "The DB file ~a does not exist." *db-name*)))
 
 (defun load-init ()
   "Read configuration variables (phone number,…) from the configuration file.
@@ -226,13 +230,15 @@
 
 (defun get-all-cards ()
   "Get all the ids of the cards in the DB."
-  (let* ((query (dbi:prepare *connection* (yield (all-cards))))
-         (query (dbi:execute query (list 0))))
-    ;; caution: what's long is printing all the cards.
-    (log:info "(re)loading the DB")
-    (setf *cards* (normalise-cards
-                   (dbi:fetch-all query)))
-    t))
+  (if (uiop:file-exists-p *db-name*)
+      (let* ((query (dbi:prepare *connection* (yield (all-cards))))
+             (query (dbi:execute query (list 0))))
+        ;; caution: what's long is printing all the cards.
+        (log:info "(re)loading the DB")
+        (setf *cards* (normalise-cards
+                       (dbi:fetch-all query)))
+        t)
+      (warn "The DB file ~a does not exist. We can't load data from the DB.~&" *db-name*)))
 
 (defun normalise-cards (cards)
   "Add a repr key that joins title and author and removes accents."
