@@ -1,3 +1,4 @@
+(require "asdf")
 (asdf:defsystem "abstock"
   :version "0.5"
   :author "vindarel"

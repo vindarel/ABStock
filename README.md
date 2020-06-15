@@ -58,6 +58,28 @@ Interested? Please get in touch.
 - translate URLs ("/book/<slug>" or "/livre/<slug>")
 - redefine anything with the pre- and post-config files, written in the programming language of the application (Lisp)
 
+## Quick install on debian buster 10
+
+```bash
+# create a user for abstock or reuse the user of abelujo
+apt install rlwrap sbcl cl-quicklisp git
+git clone https://gitlab.com/vindarel/abstock.git
+cd abstock
+# Copy or ln you db.db sqlite from abelujo
+ln -s /home/abelujo/repo/db.db db.db
+
+sbcl --load /usr/share/cl-quicklisp/quicklisp.lisp \
+       --eval '(quicklisp-quickstart:install)'       \
+       --eval '(ql:add-to-init-file)'                \
+       --eval '(quit)'
+make deps
+# install it and run it with
+rlwrap sbcl --load run.lisp --eval '(in-package :abstock)'
+# use ctrl d to exit
+# run it with
+rlwrap sbcl --load run.lisp --eval '(in-package :abstock)'
+```
+
 
 ## Issues and feature requests
 
@@ -86,4 +108,3 @@ Lisp?! Oh yes, Lisp.
 * https://common-lisp.net/
 * https://github.com/CodyReichert/awesome-cl
 * https://lispcookbook.github.io/cl-cookbook/
-
