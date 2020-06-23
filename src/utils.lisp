@@ -37,8 +37,8 @@
 
 (defun filter-cards-by-author (author &key exclude-id)
   (remove-if-not (lambda (card)
-                   (unless (or (= (getf card :|id|)
-                                  exclude-id)
+                   (unless (or (equal (getf card :|id|)
+                                      exclude-id)
                                (string= (str:downcase author)
                                         "collectif"))
                      (string= (str:downcase author)
