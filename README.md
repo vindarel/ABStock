@@ -9,7 +9,7 @@
   <a href="https://abstock.gitlab.io/#/en/install"><b>Install</b></a> |
   <a href="https://framasphere.org/people/4ac5fae0bed90133a3ed2a0000053625"><b>Blog</b></a> |
   <a href="https://framavox.org/g/V6oiDr8Y/abelujo"><b>Forum</b></a> |
-  <a href="https://www.patreon.com/vindarel"><b>Support us on Patreon</b></a> |
+  <a href="https://www.patreon.com/abelujo"><b>Support us on Patreon</b></a> |
   <a href="https://liberapay.com/vindarel/donate"><b>Support us on Liberapay</b></a> |
   <a href="/README_fr.md">Français</a>
 

@@ -81,3 +81,5 @@
       HTML.
       you can put here Matomo code.
       """")
+
+(setf *ignore-shelves-starting-by* '("test-" "TEST"))

@@ -76,6 +76,13 @@
 (defvar *old-shelves* nil)
 
 (defvar *shelves* nil)
+(defvar *ignore-shelves-ids* nil
+  "Ignore (don't show) these shelves. Cards that are only present in
+  these shelves will still be shown. To correctly ignore those cards,
+  we have to use proper lists for returns, which would remove their
+  cards from the stock. This is not yet implemented in Abelujo.")
+(defvar *ignore-shelves-starting-by* nil
+  "List of strings. Ignore the shelves whose name starts by one of them.")
 
 (defvar *page-length* 50
   "Page length. Not used much yet.")
@@ -268,8 +275,23 @@
   (let* ((query (dbi:prepare *connection* (yield (all-shelves))))
          (query (dbi:execute query)))
     (setf *shelves* (dbi:fetch-all query))
+    (setf *shelves* (filter-shelves *shelves*))
     (setf *shelves* (sort-shelves *shelves*)))
   t)
+
+(defun shelf-name-matches-p (list-of-strings name)
+  (loop for string in list-of-strings
+     when (str:starts-with-p string name)
+     return t))
+
+(defun filter-shelves (shelves &key
+                                 (ids *ignore-shelves-ids*)
+                                 (names-starting-by *ignore-shelves-starting-by*))
+  "Return a new list of shelves, without the ones matching the given ids, or whose name starts by the given prefixes."
+  (loop for shelf in shelves
+     unless (or (shelf-name-matches-p names-starting-by (access shelf :name))
+                (find (access shelf :id) ids))
+     collect shelf))
 
 (defun sort-shelves (shelves)
   #+sbcl
