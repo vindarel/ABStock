@@ -276,7 +276,8 @@
          (query (dbi:execute query)))
     (setf *shelves* (dbi:fetch-all query))
     (setf *shelves* (filter-shelves *shelves*))
-    (setf *shelves* (sort-shelves *shelves*)))
+    (setf *shelves* (sort-shelves *shelves*))
+    (setf *shelves* (sort-shelves-by-number-prefix *shelves*)))
   t)
 
 (defun shelf-name-matches-p (list-of-strings name)
@@ -299,6 +300,16 @@
                                                (getf it :|name|)))
   #-sbcl
   (normalize-shelves shelves))
+
+(defun sort-shelves-by-number-prefix (shelves)
+  "A second pass to sort. The first pass sorted alphabetically.
+  A shelf name \"10.1 xyz\" needs to come after \"1.1 abc\"."
+  (sort (copy-seq shelves)
+        #'<
+        :key (lambda (it)
+               (let ((nb-prefix (ppcre:scan-to-strings "[0-9]+.?[0.9]?" (access it :name))))
+                 (when nb-prefix
+                   (ignore-errors (parse-float:parse-float nb-prefix)))))))
 
 (defun normalize-shelves (shelves)
   "Sort shelves.
