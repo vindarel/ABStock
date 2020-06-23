@@ -78,7 +78,7 @@
   "Process FILE line by line, return a list of plists.
 
   If we read a key that is not used by default in the application, we throw an `unknown-key-warning'. A warning is printed on standard output by default.
-  You can choose how to handle these warnings, for example by ignoring them, with the argument `on-unknown-key-warning' or the global parameter `*on-unknown-key-warning' and choosing `#'ignore-condition'."
+  You can choose how to handle these warnings, for example by ignoring them, with the argument `on-unknown-key-warning' or the global parameter `*on-unknown-key-warning' and choosing `#'ignore-condition', `#'print-condition' or `#'raise-condition'."
   (if (uiop:file-exists-p file)
       (handler-bind ((unknown-key-warning on-unknown-key-warning))
         (let ((lines (uiop:read-file-lines (uiop:native-namestring file))))
