@@ -45,6 +45,16 @@
                               (str:downcase (getf card :|author|)))))
                  (get-cards)))
 
+
+(defun filter-cards-by-shelf-id (shelf-id &key exclude-id)
+  (remove-if-not (lambda (card)
+                   ;; use equal, = errors out with nil.
+                   (unless (equal (getf card :|id|)
+                                  exclude-id)
+                     (equal shelf-id
+                            (getf card :|shelf_id|))))
+                 (get-cards)))
+
 (defun replace-pairs (pairs str)
   "Replace all associations in pairs (plist) and return a new string.
 
@@ -70,7 +80,7 @@
                           "Hi {{name}} call {{phone}}"))))
 
 
-(defun pick-cards (&key (n 20) (cards (get-cards)) ensure-cover shelf-id)
+(defun pick-cards (&key (n 20) (cards (get-cards)) ensure-cover shelf-id exclude-id)
   "Pick `n' cards randomly. 20 by default."
   (when (stringp shelf-id)
     (setf shelf-id (ignore-errors
@@ -83,6 +93,7 @@
        for attempts from 0
        for i = (random l)
        for card = (elt cards i)
+       for card-id = (getf card :|id|)
        for card-shelf-id = (getf card :|shelf_id|)
        when (and (not (find i collected-ids))
                  ;; "temporary": some cards have no cover yet, until we re-run
@@ -91,9 +102,11 @@
                      (getf card :|cover|)
                      t)
                  (if (and shelf-id
-                          card-shelf-id)
-                     (= card-shelf-id
-                        shelf-id)
+                          card-shelf-id
+                          (equal card-shelf-id
+                                 shelf-id)
+                          (not (equal card-id exclude-id)))
+
                      t))
        do (progn (push i collected-ids)
                  (push card res))

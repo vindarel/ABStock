@@ -271,7 +271,10 @@
          (same-author (when card
                         (get-cards-same-author card)))
          (same-shelf (when card
-                       (pick-cards :n 6 :shelf-id (getf card :|shelf_id|)))))
+                       (pick-cards :n 6
+                                   :cards (filter-cards-by-shelf-id (getf card :|shelf_id|))
+                                   :shelf-id (getf card :|shelf_id|)
+                                   :exclude-id (getf card :|id|)))))
     (cond
       ((null card-id)
        (djula:render-template* +404.html+ nil))
