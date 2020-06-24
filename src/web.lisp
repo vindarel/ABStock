@@ -371,6 +371,8 @@
         (format t "~&Reading the DB...")
         (force-output)
         (get-all-cards)
+        (format t "~&Reading all shelves...")
+        (force-output)
         (get-all-shelves)
         (format t "~&Done. ~a cards found." (length *cards*))
         (force-output)
