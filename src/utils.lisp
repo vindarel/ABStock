@@ -102,10 +102,11 @@
                      (getf card :|cover|)
                      t)
                  (if (and shelf-id
-                          card-shelf-id
-                          (equal card-shelf-id
-                                 shelf-id)
-                          (not (equal card-id exclude-id)))
+                          card-shelf-id)
+                     (and
+                      (equal card-shelf-id
+                             shelf-id)
+                      (not (equal card-id exclude-id)))
 
                      t))
        do (progn (push i collected-ids)
