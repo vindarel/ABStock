@@ -97,7 +97,7 @@ Known TODOs:
 
 ## Licence
 
-GPLv3
+AGPLv3
 
 ---
 
