@@ -68,16 +68,14 @@ cd abstock
 # Copy or ln you db.db sqlite from abelujo
 ln -s /home/abelujo/repo/db.db db.db
 
-sbcl --load /usr/share/cl-quicklisp/quicklisp.lisp \
-       --eval '(quicklisp-quickstart:install)'       \
-       --eval '(ql:add-to-init-file)'                \
-       --eval '(quit)'
+sbcl --load /usr/share/cl-quicklisp/quicklisp.lisp --eval '(quicklisp-quickstart:install)' --eval '(ql:add-to-init-file)' --eval '(quit)'
+# or /usr/share/common-lisp/source/quicklisp/quicklisp.lisp on Debian 10.
 make deps
 # install it and run it with
-rlwrap sbcl --load run.lisp --eval '(in-package :abstock)'
+make run
+# aka
+# rlwrap sbcl --load run.lisp --eval '(in-package :abstock)'
 # use ctrl d to exit
-# run it with
-rlwrap sbcl --load run.lisp --eval '(in-package :abstock)'
 ```
 
 
