@@ -307,9 +307,8 @@
   (sort (copy-seq shelves)
         #'<
         :key (lambda (it)
-               (let ((nb-prefix (ppcre:scan-to-strings "[0-9]+.?[0.9]?" (access it :name))))
-                 (if nb-prefix
-                     (ignore-errors (parse-float:parse-float nb-prefix))
+               (let* ((str-prefix (ppcre:scan-to-strings "[0-9]+.?[0.9]?" (access it :name))))
+                 (or (ignore-errors (parse-float:parse-float str-prefix))
                      -1)))))
 
 (defun normalize-shelves (shelves)
