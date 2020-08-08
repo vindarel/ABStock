@@ -1,4 +1,3 @@
-
 <p>
   <h3 align="center"> ABStock </h3>
   <h2 align="center"> Catalogue and commands online </h2>
@@ -62,7 +61,7 @@ Interested? Please get in touch.
 
 ```bash
 # create a user for abstock or reuse the user of abelujo
-apt install rlwrap sbcl cl-quicklisp git
+apt install rlwrap sbcl cl-quicklisp git make
 git clone https://gitlab.com/vindarel/abstock.git
 cd abstock
 # Copy or ln you db.db sqlite from abelujo
