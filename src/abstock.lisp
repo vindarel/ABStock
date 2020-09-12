@@ -467,7 +467,11 @@
          (find-if (lambda (th)
                     (search "hunchentoot" (bt:thread-name th)))
                   (bt:all-threads))))
+    #+sbcl
     (sb-sys:interactive-interrupt () (progn
                                        (format *error-output* "User abort. Bye!~&")
                                        (uiop:quit)))
-    (error (c) (format *error-output* "~&An error occured: ~A~&" c))))
+    #+sbcl
+    (error (c) (format *error-output* "~&An error occured: ~A~&" c))
+    #-sbcl
+    (error (c) (format *error-output* "~&Quitting:  ~A~&" c))))
