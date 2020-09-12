@@ -335,7 +335,7 @@
       (uiop:format! t "Skipping init file.~&"))
 
   ;; Load cards.txt if it exists.
-  (uiop:uiop:format!! t "Loading data from cards.txt~&")
+  (uiop:format! t "Loading data from cards.txt~&")
   (setf *cards* (normalise-cards
                  (abstock/loaders:load-txt-data)))
 
