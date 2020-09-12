@@ -303,7 +303,7 @@
 ;; Start.
 ;;
 (defun start-server (&key (port *port*))
-  (format t "~&Starting the web server on port ~a" port)
+  (uiop:format! t "~&Starting the web server on port ~a" port)
   (force-output)
   (setf *server* (make-instance 'easy-routes:routes-acceptor
                                 :port (or port *port*)))
@@ -311,8 +311,7 @@
 
 (defun start (&key (port *port*) (load-init t) (load-db t) (post-init t))
   "If `load-db' is non t, do not load the DB, but try to load saved cards on disk."
-  (format t "Abelujo visible stock v~a~&" *version*)
-  (force-output)
+  (uiop:format! t "Abelujo visible stock v~a~&" *version*)
 
   ;; Enable Sentry client.
   (unless *dev-mode*
@@ -323,44 +322,38 @@
             (sentry-client:initialize-sentry-client
              (str:trim (str:from-file (uiop:native-namestring *sentry-dsn-file*)))
              :client-class 'sentry-client:async-sentry-client)
-            (format t "~&Sentry client iniitiazied.~&")))
+            (uiop:format! t "~&Sentry client iniitiazied.~&")))
       (error (c)
         ;; it actually can hardly fail here since the dependency is in the .asd.
-        (format *error-output* "~&*** Starting Sentry client failed: ~a~& ***" c))))
+        (uiop:format! *error-output* "~&*** Starting Sentry client failed: ~a~& ***" c))))
 
   ;; Load init file.
   (if load-init
       (progn
-        (format t "Loading init file...~&")
+        (uiop:format! t "Loading init file...~&")
         (load-init))
-      (format t "Skipping init file.~&"))
-  (force-output)
+      (uiop:format! t "Skipping init file.~&"))
 
   ;; Load cards.txt if it exists.
-  (uiop:format! t "Loading data from cards.txt~&")
+  (uiop:uiop:format!! t "Loading data from cards.txt~&")
   (setf *cards* (normalise-cards
                  (abstock/loaders:load-txt-data)))
 
   ;; Reload DB saved on disk.
-  (format t "Reloading saved cards, before reading the DB…~&")
-  (force-output)
+  (uiop:format! t "Reloading saved cards, before reading the DB…~&")
   ;; This overwrites the previous cards from the txt loader.
   (reload-cards)
-  (format t "~&Done.~&")
-  (force-output)
+  (uiop:format! t "~&Done.~&")
 
   ;; Read the csv of cards to highlight in the selection page.
   (when (uiop:file-exists-p "selection.csv")
-    (format t "Loading cards selection…~&")
-    (force-output)
+    (uiop:format! t "Loading cards selection…~&")
     (setf *selection* (read-selection))
-    (format t "~&Done.~&")
-    (force-output))
+    (uiop:format! t "~&Done.~&"))
 
   ;; Start the web server.
   (start-server :port (or port *port*))
-  (format t "~&Ready. You can access the application!~&")
-  (force-output)
+  (uiop:format! t "~&Ready. You can access the application!~&")
 
   ;; Load data from the DB.
   (if load-db
@@ -368,21 +361,16 @@
         (unless *connection*
           (setf *connection* (connect)))
 
-        (format t "~&Reading the DB...")
-        (force-output)
+        (uiop:format! t "~&Reading the DB...")
         (get-all-cards)
-        (format t "~&Reading all shelves...")
-        (force-output)
+        (uiop:format! t "~&Reading all shelves...")
         (get-all-shelves)
-        (format t "~&Done. ~a cards found." (length *cards*))
-        (force-output)
+        (uiop:format! t "~&Done. ~a cards found." (length *cards*))
         (schedule-db-reload)
-        (format t "~&Scheduled a DB reload every night.~&")
-        (force-output)
+        (uiop:format! t "~&Scheduled a DB reload every night.~&")
         (save))
       (progn
-        (format t "~&Skipped loading the DB.~&")
-        (force-output)))
+        (uiop:format! t "~&Skipped loading the DB.~&")))
 
   ;; Post-init: overwrite code.
   (if post-init
