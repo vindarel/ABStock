@@ -57,7 +57,14 @@ Interested? Please get in touch.
 - translate URLs ("/book/<slug>" or "/livre/<slug>")
 - redefine anything with the pre- and post-config files, written in the programming language of the application (Lisp)
 
-## Quick install on debian buster 10
+## Install
+
+ABStock is known to work on:
+
+- SBCL
+- CCL
+
+### Quick install on debian buster 10
 
 ```bash
 # create a user for abstock or reuse the user of abelujo
