@@ -67,5 +67,10 @@
                                               (getf it :|shelf|))
                                        ;; the value is the whole plist.
                                        :value #'identity))
-           (sorted (sort grouped #'sb-unicode:unicode< :key #'first)))
+           #+sbcl
+           (sorted (sort grouped #'sb-unicode:unicode< :key #'first))
+           #-sbcl
+           (progn
+             (uiop:format! t "WARN: the cards selection is not sorted by title on this implementation.")
+             (sorted grouped)))
       sorted)))
