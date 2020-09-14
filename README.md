@@ -64,7 +64,7 @@ ABStock is known to work on:
 - SBCL
 - CCL
 
-### Quick install on debian buster 10
+### Quick install on Debian Buster 10
 
 ```bash
 # create a user for abstock or reuse the user of abelujo
@@ -82,6 +82,26 @@ make run
 # aka
 # rlwrap sbcl --load run.lisp --eval '(in-package :abstock)'
 # use ctrl d to exit
+```
+
+### Quick install on a Raspberry Pi
+
+SBCL lacks thread support on ARM 32 bits so we'll use Clozure Common
+Lisp. It's easy to install and its compilation times are stellar.
+
+```bash
+# in root:
+cd /usr/local/src/
+wget https://github.com/Clozure/ccl/releases/download/v1.11.5/ccl-1.11.5-linuxarm.tar.gz
+tar -xvze ccl-1.11.5-linuxarm.tar.gz
+cp ccl/scripts/ccl /usr/local/bin/ccl
+rm ccl-1.11.5-linuxarm.tar.gz
+
+# in normal (abstock) user:
+# ensure Quicklisp is installed:
+ccl -l /usr/share/common-lisp/source/quicklisp/quicklisp.lisp -e '(quicklisp-quickstart:install)(ql:add-to-init-file)(ccl:quit)' -b
+ccl --load run.lisp -e '(in-package :abstock)'
+# to quit: (ccl:quit) or C-d
 ```
 
 
