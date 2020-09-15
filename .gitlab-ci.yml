@@ -1,0 +1,23 @@
+image: daewok/lisp-devel
+
+# stages:
+  # - test
+  # - build
+
+before_script:
+  - apt-get update -qy
+  - apt-get install -y git-core
+  # install missing libraries in quicklisp/local-projects
+  - make deps
+
+build:
+  stage: build
+  only:
+    # Only when a new tag is pushed.
+    - tags
+  script:
+    - make build
+  artifacts:
+    paths:
+      # Include the version number ?
+      - abstock
