@@ -34,7 +34,7 @@
 ;; A "card" is the generic name for a book.
 
 
-(defparameter *version* "0.7")
+(defparameter *version* "0.8")          ; duplicated in .asd
 
 (defparameter *verbose* nil)
 (defparameter *config* #P"config.lisp")
@@ -458,8 +458,9 @@
   (log:info "Scheduled a DB reload.")
   (cl-cron:start-cron))
 
-(defun main ()
-  "Entry point of the executable."
+(defun run-app-from-shell ()
+  "Start the app and ensure the web server keeps running (trick for
+  the command line)."
   (handler-case
       (progn
         (start)
@@ -475,3 +476,33 @@
     (error (c) (format *error-output* "~&An error occured: ~A~&" c))
     #-sbcl
     (error (c) (format *error-output* "~&Quitting:  ~A~&" c))))
+
+(defun main ()
+  "Entry point of the executable."
+  (opts:define-opts
+    (:name :help
+           :description "print this help and exit"
+           :short #\h
+           :long "help")
+    (:name :version
+           :description "print the version and exit"
+           :short #\v
+           :long "version"))
+
+  (multiple-value-bind (options
+                        ;; free-args
+                        )
+      ;; There is no error handling of malformed arguments yet.
+      (opts:get-opts)
+
+    (when (getf options :help)
+      (opts:describe
+       :prefix "ABStock usage:"
+       :args "[keywords]") ;; to replace "ARG" in "--nb ARG"
+          (uiop:quit))
+
+    (when (getf options :version)
+        (format t "ABStock version ~a" *version*)
+        (uiop:quit))
+
+    (run-app-from-shell)))

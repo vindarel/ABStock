@@ -1,6 +1,6 @@
 (require "asdf")
 (asdf:defsystem "abstock"
-  :version "0.5"
+  :version "0.8"                        ; duplicated in src/abstock.lisp
   :author "vindarel"
   :license "GPL3"
   :depends-on (
@@ -24,6 +24,9 @@
                :hunchentoot
                :easy-routes
                :djula
+
+               ;; scripting
+               :unix-opts
 
                ;; dev
                :log4cl
