@@ -64,7 +64,18 @@ ABStock is known to work on:
 - SBCL
 - CCL
 
+
 ### Quick install on Debian Buster 10
+
+update: you can try a self-contained binary for Debian Buster. [Download it here](https://gitlab.com/vindarel/abstock/-/jobs/artifacts/master/raw/abstock?job=build). Download it and run it with
+
+    ./abstock
+
+You do *not* need to install a Lisp implementation.
+If you use it, please give us feedback [here](https://gitlab.com/vindarel/abstock/-/issues/8). Thanks!
+
+
+Here's the universal recipe to run ABStock from sources:
 
 ```bash
 # create a user for abstock or reuse the user of abelujo
