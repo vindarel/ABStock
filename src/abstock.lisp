@@ -36,6 +36,23 @@
 
 (defparameter *version* "0.8")          ; duplicated in .asd
 
+(defparameter *banner* "
+
+
+   ###    ########   ######  ########  #######   ######  ##    ##
+  ## ##   ##     ## ##    ##    ##    ##     ## ##    ## ##   ##
+ ##   ##  ##     ## ##          ##    ##     ## ##       ##  ##
+##     ## ########   ######     ##    ##     ## ##       #####
+######### ##     ##       ##    ##    ##     ## ##       ##  ##
+##     ## ##     ## ##    ##    ##    ##     ## ##    ## ##   ##
+##     ## ########   ######     ##     #######   ######  ##    ##
+
+
+")
+;; banner3 on http://www.patorjk.com/software/taag/#p=display&h=1&v=1&f=Banner3&t=ABStock
+;; also "big"
+
+
 (defparameter *verbose* nil)
 (defparameter *config* #P"config.lisp")
 (defparameter *post-config* #P"post-config.lisp")
@@ -513,6 +530,7 @@
       (opts:get-opts)
 
     (when (getf options :help)
+      (format t *banner*)
       (opts:describe
        :prefix "ABStock usage:"
        :args "[keywords]") ;; to replace "ARG" in "--nb ARG"
@@ -522,6 +540,8 @@
       (format t "ABStock version ~a" *version*)
       (print-system-info)
       (uiop:quit))
+
+    (format t *banner*)
 
     (when (getf options :verbose)
       (print-system-info))

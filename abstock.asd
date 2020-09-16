@@ -27,6 +27,7 @@
 
                ;; scripting
                :unix-opts
+               :cl-ansi-text
 
                ;; dev
                :log4cl

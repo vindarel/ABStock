@@ -311,7 +311,7 @@
 
 (defun start (&key (port *port*) (load-init t) (load-db t) (post-init t))
   "If `load-db' is non t, do not load the DB, but try to load saved cards on disk."
-  (uiop:format! t "Abelujo visible stock v~a~&" *version*)
+  (uiop:format! t "ABStock v~a~&" *version*)
 
   ;; Enable Sentry client.
   (unless *dev-mode*
@@ -340,20 +340,20 @@
                  (abstock/loaders:load-txt-data)))
 
   ;; Reload DB saved on disk.
-  (uiop:format! t "Reloading saved cards, before reading the DB…~&")
+  (uiop:format! t "Reloading saved cards, before reading the DB…")
   ;; This overwrites the previous cards from the txt loader.
   (reload-cards)
   (uiop:format! t "~&Done.~&")
 
   ;; Read the csv of cards to highlight in the selection page.
   (when (uiop:file-exists-p "selection.csv")
-    (uiop:format! t "Loading cards selection…~&")
+    (uiop:format! t "Loading cards selection…")
     (setf *selection* (read-selection))
     (uiop:format! t "~&Done.~&"))
 
   ;; Start the web server.
   (start-server :port (or port *port*))
-  (uiop:format! t "~&Ready. You can access the application!~&")
+  (uiop:format! t "~&~a~&" (cl-ansi-text:green "✔ Ready. You can access the application!"))
 
   ;; Load data from the DB.
   (if load-db
