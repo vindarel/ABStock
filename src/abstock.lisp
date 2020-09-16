@@ -477,6 +477,19 @@
     #-sbcl
     (error (c) (format *error-output* "~&Quitting:  ~A~&" c))))
 
+(defun print-system-info (&optional (stream t))
+  ;; see also https://github.com/40ants/cl-info
+  (format stream "~&OS: ~a ~a~&" (software-type) (software-version))
+  (format stream "~&Lisp: ~a ~a~&" (lisp-implementation-type) (lisp-implementation-version))
+  #+asdf
+  (format stream "~&ASDF: ~a~&" (asdf:asdf-version))
+  #-asdf
+  (format stream "NO ASDF!")
+  #+quicklisp
+  (format stream "~&Quicklisp: ~a~&" (ql-dist:all-dists))
+  #-quicklisp
+  (format stream "!! Quicklisp is not installed !!"))
+
 (defun main ()
   "Entry point of the executable."
   (opts:define-opts
@@ -487,7 +500,11 @@
     (:name :version
            :description "print the version and exit"
            :short #\v
-           :long "version"))
+           :long "version")
+    (:name :verbose
+           :description "print debug logs"
+           :short #\V
+           :long "verbose"))
 
   (multiple-value-bind (options
                         ;; free-args
@@ -499,10 +516,14 @@
       (opts:describe
        :prefix "ABStock usage:"
        :args "[keywords]") ;; to replace "ARG" in "--nb ARG"
-          (uiop:quit))
+      (uiop:quit))
 
     (when (getf options :version)
-        (format t "ABStock version ~a" *version*)
-        (uiop:quit))
+      (format t "ABStock version ~a" *version*)
+      (print-system-info)
+      (uiop:quit))
+
+    (when (getf options :verbose)
+      (print-system-info))
 
     (run-app-from-shell)))
