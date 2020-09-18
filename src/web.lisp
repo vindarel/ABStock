@@ -305,9 +305,16 @@
 (defun start-server (&key (port *port*))
   (uiop:format! t "~&Starting the web server on port ~a" port)
   (force-output)
-  (setf *server* (make-instance 'easy-routes:routes-acceptor
+  (setf *server* (make-instance 'easy-routes:easy-routes-acceptor
                                 :port (or port *port*)))
   (hunchentoot:start *server*))
+
+(defun restart-server (&key (port *port*))
+  (hunchentoot:stop *server*)
+  (start-server :port port))
+
+(defun stop-server ()
+  (hunchentoot:stop *server*))
 
 (defun start (&key (port *port*) (load-init t) (load-db t) (post-init t))
   "If `load-db' is non t, do not load the DB, but try to load saved cards on disk."
