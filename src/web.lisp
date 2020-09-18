@@ -78,6 +78,19 @@
 ;; A PR was sent upstream. 4/4/2020
 (setf djula::*elision-string* "…")
 
+;;;
+;;; Serve static assets
+;;;
+(defparameter *default-static-directory* "src/static/"
+  "The directory where to serve static assets from (STRING). If it starts with a slash, it is an absolute directory. Otherwise, it will be a subdirectory of where the system :abstock is installed.
+  Static assets are reachable under the /static/ prefix.")
+
+(defun serve-static-assets ()
+  (push (hunchentoot:create-folder-dispatcher-and-handler
+         "/static/" (merge-pathnames *default-static-directory*
+                                     (asdf:system-source-directory :abstock)))
+        hunchentoot:*dispatch-table*))
+
 ;;
 ;; Routes.
 ;;
@@ -307,7 +320,8 @@
   (force-output)
   (setf *server* (make-instance 'easy-routes:easy-routes-acceptor
                                 :port (or port *port*)))
-  (hunchentoot:start *server*))
+  (hunchentoot:start *server*)
+  (serve-static-assets))
 
 (defun restart-server (&key (port *port*))
   (hunchentoot:stop *server*)
@@ -329,7 +343,7 @@
             (sentry-client:initialize-sentry-client
              (str:trim (str:from-file (uiop:native-namestring *sentry-dsn-file*)))
              :client-class 'sentry-client:async-sentry-client)
-            (uiop:format! t "~&Sentry client iniitiazied.~&")))
+            (uiop:format! t "~&Sentry client initialized.~&")))
       (error (c)
         ;; it actually can hardly fail here since the dependency is in the .asd.
         (uiop:format! *error-output* "~&*** Starting Sentry client failed: ~a~& ***" c))))
