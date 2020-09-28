@@ -70,7 +70,7 @@
            #+sbcl
            (sorted (sort grouped #'sb-unicode:unicode< :key #'first))
            #-sbcl
-           (progn
-             (uiop:format! t "WARN: the cards selection is not sorted by title on this implementation.")
-             (sorted grouped)))
+           (sorted (progn
+                     (uiop:format! t "INFO: the cards selection is not sorted by title on this implementation.")
+                     grouped)))
       sorted)))
