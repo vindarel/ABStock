@@ -10,6 +10,7 @@
   <a href="https://framavox.org/g/V6oiDr8Y/abelujo"><b>Forum</b></a> |
   <a href="https://www.patreon.com/abelujo"><b>Support us on Patreon</b></a> |
   <a href="https://liberapay.com/vindarel/donate"><b>Support us on Liberapay</b></a> |
+  <a href="https://ko-fi.com/vindarel"><b>Buy me a coffee!</b></a> |
   <a href="/README_fr.md">Français</a>
 
   Clients can now discover your stock and shop online.
@@ -51,6 +52,8 @@ day.
 ![](other-data.png)
 
 Interested? Please get in touch.
+
+<a href='https://ko-fi.com/K3K828W0V' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://cdn.ko-fi.com/cdn/kofi2.png?v=2' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
 
 ### Other features
 
