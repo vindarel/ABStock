@@ -118,6 +118,32 @@ ccl --load run.lisp -e '(in-package :abstock)'
 # to quit: (ccl:quit) or C-d
 ```
 
+### Systemd
+
+```
+[Unit]
+Description=Abstock
+
+[Service]
+Restart=on-failure
+WorkingDirectory=/home/abstock/repo
+ExecStart=/usr/bin/sbcl --load run.lisp --eval '(in-package :abstock)'
+User=abstock  # or an existing user
+
+[Install]
+WantedBy=multi-user.target
+```
+
+then:
+
+    systemctl start abstock
+
+to see the logs:
+
+    journalctl -u abstock.service [--since today] [--no-pager] [-o json-pretty] [-f]
+
+use `-f` to follow the logs as they are written.
+
 
 ## Issues and feature requests
 
