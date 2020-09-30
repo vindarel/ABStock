@@ -462,6 +462,12 @@
         (setf *shelves* (uiop:read-file-form file-shelves)))
       (format t "~&The file ~s doesn't exist.~&" file-shelves)))
 
+(defun help ()
+  "To use in the REPL."
+  (format t "~%Useful functions:~&")
+  (format t "  - (reload-cards)~&  - (load-init): reload the configuration~&  - (connect): when you change the DB during a session.~&  - (load \"src/abstock.lisp\"): to reload a lisp file. HTML files are reloaded automatically.")
+  (values))
+
 (defun quit (&key (save t) (file "cards.lisp"))
   "Quit and save cards on disk, for faster restarts."
   (when save
