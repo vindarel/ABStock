@@ -241,7 +241,8 @@
                                      :title (format nil "~a - ~a"
                                                     (user-content-brand-name *user-content*)
                                                     "Commande envoyée")
-                                     :success-messages (list "Votre demande a bien été envoyée."))
+                                     :success-messages (list "Votre demande a bien été envoyée.")
+                                     :user-content *user-content*)
              )
          (error (c)
            (log:error "email error: sending to '~a' with ids '~a' (cards found: '~a' failed with the following error: ~a" email ids (length cards) c)
@@ -257,7 +258,8 @@
 
            ;; Return error message.
            (djula:render-template* +error-messages.html+ nil
-                                   :messages (list "Votre demande n'a pas pu être envoyée. Merci de ré-essayer un peu plus tard."))
+                                   :messages (list "Votre demande n'a pas pu être envoyée. Merci de ré-essayer un peu plus tard.")
+                                   :user-content *user-content*)
            ))))))
 
 (defun get-cards-same-author (card)
