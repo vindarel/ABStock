@@ -208,6 +208,7 @@
                                :open-form t
                                :secret-question *secret-question*
                                :form-data `(:name ,name :email ,email :phone ,phone :message ,message)
+                               :user-content *user-content*
                                :contact *contact-infos*))
 
       ;; Give one email or a phone.
@@ -222,6 +223,7 @@
                                :cards cards
                                :form-data `(:name ,name :email ,email :phone ,phone :message ,message)
                                :secret-question *secret-question*
+                               :user-content *user-content*
                                :contact *contact-infos*))
 
       ;; Send email.
