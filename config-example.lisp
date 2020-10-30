@@ -18,7 +18,8 @@
 ;; SendGrid config:
 (setf *email-config*
    '(:|sender-api-key| "api-key"
-     :|from| "your@mail.com"))
+     :|from| "your@mail.com"
+     :|to| "bookstore@mail.com"))
 
 ;; Simple anti-script-kiddy question for the validation form:
 (setf *secret-question* "stupid question")
