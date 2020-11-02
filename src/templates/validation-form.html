@@ -40,6 +40,25 @@
        </div>
 
        <div class="field">
+         <label class="label"> Moyen de paiement </label>
+          <div class="control">
+            <label class="radio">
+              <input type="radio" name="payment" value="monnaie" required="required">
+              Monnaie (appoint)
+            </label>
+            <label class="radio">
+              <input type="radio" name="payment" value="cheque">
+              Chèque
+            </label>
+            <label class="radio">
+              <input type="radio" name="payment" value="CB">
+              CB
+            </label>
+
+          </div>
+       </div>
+
+       <div class="field">
          <label class="label"> Vérification anti-spam: {{ secret-question }}</label>
           <div class="control has-icons-left has-icons-right">
             <input class="input" type="text" required="" placeholder="M…" name="antispam">
