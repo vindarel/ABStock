@@ -118,6 +118,26 @@ ccl --load run.lisp -e '(in-package :abstock)'
 # to quit: (ccl:quit) or C-d
 ```
 
+## Deployment
+
+You can run the app as a script:
+
+    rlwrap sbcl --load run.lisp --eval '(in-package :abstock)'
+
+or run the binary:
+
+    ./abstock
+
+If you use the script, you are landed into the Lisp REPL. You can
+inspect and update the application from there. See `(help)`. You can
+actually do anything, including installing new Quicklisp
+libraries. You can connect to the running instance from home through
+SSH.
+
+HTML changes are automatically taken up by the server. (you can switch
+this off, this Djula's documentation).
+
+
 ### Systemd
 
 ```
