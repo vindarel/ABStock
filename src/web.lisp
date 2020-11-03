@@ -175,7 +175,9 @@
   (with-output-to-string (s)
     (format s "Bonjour cher libraire,~&~%~&Un nouveau client a commandé des livres.~&~%")
     (format s "Ses coordonnées sont: ~&- ~a~&- mail: ~a ~&- tél: ~a ~%"
-            name email phone)
+            name
+            email
+            (format-phone-number phone))
     (format s "~%Il/elle a commandé:~&~%~a~&~%" (cards-to-txt cards))
     (format s "Le total de la commande est de: ~,2F €.~&~%"
             (reduce #'+ cards :key (lambda (it) (getf it :|price|))))

@@ -119,3 +119,55 @@
 (defun remove-duplicated-cards (cards)
   (remove-duplicates cards :key (lambda (card)
                                   (getf card :|isbn|))))
+
+(declaim (ftype (function ((or null string))
+                          string)
+                format-phone-number))
+(defun format-phone-number (number)
+  "From 0601020304, print 06 01 02 03 04."
+  (or (ignore-errors
+        (cond
+          ((find #\  number :test #'string-equal)
+           ;; If the number contains a space, it is somewhat formatted already,
+           ;; let's not mess this up.
+           number)
+          ((null number)
+           "")
+          ((str:blankp number)
+           "")
+          (t
+           ;; Now, separate digits by pairs.
+           (let ((digits (ignore-errors
+                           (loop for digit across number
+                              collect digit))))
+             (str:trim
+              (with-output-to-string (s)
+                (loop for (one two) on digits by #'cddr
+                   if two
+                   do (format s "~a~a " one two)
+                   else
+                   do (format s "~a" one))))))))
+      number))
+
+#+(or nil)
+(progn
+  (assert (equalp "06 01 02 03 04"
+                  (format-phone-number "0601020304")))
+  ;; already formatted.
+  (assert (equalp "06 01 020304"
+                  (format-phone-number "06 01 020304")))
+  (assert (equalp ""
+                  (format-phone-number "")))
+  (assert (equalp ""
+                  (format-phone-number nil)))
+  ;; phone number not even:
+  (assert (equalp "06 01 02 03 04 5"
+                  (format-phone-number "06010203045")))
+  (assert (equalp "x@ z"
+                  (format-phone-number "x@z"))))
+
+#+(or nil)
+(progn
+  ;; Throw a type warning:
+  (assert (equalp ""
+                  (format-phone-number 99))))
