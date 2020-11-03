@@ -315,22 +315,28 @@
 ;;
 ;; Start.
 ;;
-(defun start-server (&key (port *port*))
-  (uiop:format! t "~&Starting the web server on port ~a" port)
-  (force-output)
-  (setf *server* (make-instance 'easy-routes:easy-routes-acceptor
-                                :port (or port *port*)))
-  (hunchentoot:start *server*)
-  (serve-static-assets))
+(defun get-port (port)
+  (or port
+      (ignore-errors (parse-integer (uiop:getenv "AB_PORT")))
+      *port*))
 
-(defun restart-server (&key (port *port*))
+(defun start-server (&key port)
+  (let ((port (get-port port)))
+    (uiop:format! t "~&Starting the web server on port ~a" port)
+    (force-output)
+    (setf *server* (make-instance 'easy-routes:easy-routes-acceptor
+                                  :port port))
+    (hunchentoot:start *server*)
+    (serve-static-assets)))
+
+(defun restart-server (&key port)
   (hunchentoot:stop *server*)
-  (start-server :port port))
+  (start-server :port (get-port port)))
 
 (defun stop-server ()
   (hunchentoot:stop *server*))
 
-(defun start (&key (port *port*) (load-init t) (load-db t) (post-init t))
+(defun start (&key port (load-init t) (load-db t) (post-init t))
   "If `load-db' is non t, do not load the DB, but try to load saved cards on disk."
   (uiop:format! t "ABStock v~a~&" *version*)
 
@@ -373,7 +379,7 @@
     (uiop:format! t "~&Done.~&"))
 
   ;; Start the web server.
-  (start-server :port (or port *port*))
+  (start-server :port port)
   (uiop:format! t "~&~a~&" (cl-ansi-text:green "✔ Ready. You can access the application!"))
 
   ;; Load data from the DB.
