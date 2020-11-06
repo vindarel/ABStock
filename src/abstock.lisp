@@ -532,7 +532,12 @@
     (:name :verbose
            :description "print debug logs"
            :short #\V
-           :long "verbose"))
+           :long "verbose")
+    (:name :pid
+           :description "A filename to use to store the PID"
+           :short #\p
+           :arg-parser #'identity
+           :long "pid"))
 
   (multiple-value-bind (options
                         ;; free-args
@@ -556,5 +561,8 @@
 
     (when (getf options :verbose)
       (print-system-info))
+
+    (when (getf options :pid)
+      (save-pid (getf options :pid)))
 
     (run-app-from-shell)))

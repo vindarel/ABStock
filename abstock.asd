@@ -28,6 +28,8 @@
                ;; scripting
                :unix-opts
                :cl-ansi-text
+               #-sbcl
+               osicat
 
                ;; dev
                :log4cl
@@ -48,7 +50,8 @@
                  (:file "web")
                  (:file "email")
                  (:file "selection")
-                 (:file "utils"))))
+                 (:file "utils")
+                 (:file "system-utils"))))
 
   :build-operation "program-op"
   :build-pathname "abstock"
