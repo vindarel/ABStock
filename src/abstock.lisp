@@ -465,7 +465,12 @@
 (defun help ()
   "To use in the REPL."
   (format t "~%Useful functions:~&")
-  (format t "  - (reload-cards)~&  - (load-init): reload the configuration~&  - (connect): when you change the DB during a session.~&  - (load \"src/abstock.lisp\"): to reload a lisp file. HTML files are reloaded automatically.")
+  (format t "  - (reload-cards)~& ~
+  - (load-init): reload the configuration~& ~
+  - (load-post-init)~& ~
+  - (read-selection): to re-read the csv selection
+  - (connect): when you change the DB during a session.~&
+  - (load \"src/abstock.lisp\"): to reload a lisp file. HTML files are reloaded automatically.")
   (values))
 
 (defun quit (&key (save t) (file "cards.lisp"))
