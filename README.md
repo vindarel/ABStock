@@ -137,6 +137,18 @@ SSH.
 HTML changes are automatically taken up by the server. (you can switch
 this off, this Djula's documentation).
 
+### Reloading the shelves and the cards in the Lisp shell
+
+When you are in lisp shell and Abstock is runing you can reload the shelves or the cards:
+
+#### Reload cards
+```lisp
+(get-all-cards)
+```
+#### Reload shelves
+```lisp
+(get-all-shelves)
+```
 
 ### Systemd
 
