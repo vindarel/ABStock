@@ -9,7 +9,7 @@
     <p class="control is-expanded">
       <div class="select is-fullwidth">
         <select id="select-shelf" name="rayon">
-          <option value="-1">-- Explorer un rayon --</option>
+          <option value="-1">-- Tous les rayons --</option>
           {% for shelf in shelves %}
           <option id="shelf{{ shelf.id }}" value="{{ shelf.id }}" {% if shelf.id == shelf_id %} selected {% endif %}> {{ shelf.name }}</option>
           {% endfor %}
