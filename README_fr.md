@@ -1,3 +1,4 @@
+[![Gitter](https://badges.gitter.im/openbookstore-developers/community.svg)](https://gitter.im/openbookstore-developers/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 <p>
   <h2 align="center"> ABStock </h2>
@@ -7,7 +8,7 @@
 <p align="center">
   <a href="https://gitlab.com/vindarel/abstock"><b>Accueil</b></a> |
   <a href="https://gitlab.com/vindarel/abstock#install"><b>Installation</b></a> |
-  <a href="https://framasphere.org/people/4ac5fae0bed90133a3ed2a0000053625"><b>Blog</b></a> |
+  <a href="https://gitter.im/openbookstore-developers/community?utm_source=share-link&utm_medium=link&utm_campaign=share-link"><b>Gitter chat</b></a> |
   <a href="https://framavox.org/g/V6oiDr8Y/abelujo"><b>Forum</b></a> |
   <a href="https://liberapay.com/vindarel/donate"><b>Nous soutenir</b></a> |
   <a href="/README.md">English</a>

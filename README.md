@@ -1,3 +1,5 @@
+[![Gitter](https://badges.gitter.im/openbookstore-developers/community.svg)](https://gitter.im/openbookstore-developers/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+
 <p>
   <h3 align="center"> ABStock </h3>
   <h2 align="center"> Catalogue and commands online </h2>
@@ -7,7 +9,7 @@
   <a href="http://abstock.gitlab.io"><b>Homepage</b></a> |
   <a href="https://abstock.gitlab.io/#/en/install"><b>Install</b></a> |
   <a href="https://framasphere.org/people/4ac5fae0bed90133a3ed2a0000053625"><b>Blog</b></a> |
-  <a href="https://framavox.org/g/V6oiDr8Y/abelujo"><b>Forum</b></a> |
+  <a href="https://gitter.im/openbookstore-developers/community?utm_source=share-link&utm_medium=link&utm_campaign=share-link"><b>Gitter chat</b></a> |
   <a href="https://www.patreon.com/abelujo"><b>Support us on Patreon</b></a> |
   <a href="https://liberapay.com/vindarel/donate"><b>Support us on Liberapay</b></a> |
   <a href="https://ko-fi.com/vindarel"><b>Buy me a coffee!</b></a> |
@@ -20,6 +22,7 @@
 ABStock was developed during the global lock-down to help a bookshop
 keep an activity and a link with its clients. It proved 100%
 useful. You can have a site on the same model.
+
 
 [Install it yourself](/docs/en/install.md) or ask us. Contact us at `contact@abelujo.cc`.
 
