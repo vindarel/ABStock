@@ -156,7 +156,8 @@
                             :secret-question *secret-question*
                             :open-form t
                             :user-content *user-content*
-                            :contact *contact-infos*)))
+                            :contact *contact-infos*
+                            :stripe-api-key (getf *stripe-config* :|api-key|))))
 
 ;;
 ;; Validate the basket: send an email, show a success message.

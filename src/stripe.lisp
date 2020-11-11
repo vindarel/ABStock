@@ -10,7 +10,7 @@
                 :headers
                 (list (cons "Authorization" (format nil "Bearer ~a" (getf *stripe-config* :|api-key|))))))
 
-(easy-routes:defroute create-stripe-session-route ("/create-session" :method :post)
+(easy-routes:defroute create-stripe-checkout-session-route ("/stripe/create-checkout-session" :method :post :decorators (easy-routes:@json))
     (ids)
 
   (let* ((ids-list (str:split "," ids :omit-nulls t))
@@ -19,8 +19,9 @@
                            ids-list))
          (cards (filter-cards-by-ids ids-list)))
     
-    (stripe-post "/checkout/sessions"
-                 (serialize-stripe-session cards))))
+    (let ((session (stripe-post "/checkout/sessions"
+                                (serialize-stripe-session cards))))
+      (json:encode-json-to-string (list (cons :id (access session :id)))))))
 
 (defun serialize-stripe-session (cards)
   (with-output-to-string (json:*json-output*)
