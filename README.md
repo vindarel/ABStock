@@ -1,8 +1,8 @@
 [![Gitter](https://badges.gitter.im/openbookstore-developers/community.svg)](https://gitter.im/openbookstore-developers/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 <p>
-  <h3 align="center"> ABStock </h3>
-  <h2 align="center"> Catalogue and commands online </h2>
+  <h2 align="center"> ABStock </h2>
+  <h3 align="center"> Catalogue and commands online </h3>
 </p>
 
 <p align="center">
