@@ -17,6 +17,8 @@
 (defvar *selection* nil
   "List of cards for the selection page.")
 
+(defvar *hostname* nil "The hostname")
+
 ;;
 ;; User variables.
 ;;
