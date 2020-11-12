@@ -77,7 +77,7 @@
     ("line_items" . (array ,@(loop for card in cards collect
                                    `(object
                                      ("price_data" . (object
-                                                      ("currency" . "usd")
+                                                      ("currency" . "eur")
                                                       ("product_data" . (object
                                                                          ("name" . ,(getf card :|title|))
                                                                          ("images" . (array ,(getf card :|cover|)))))
