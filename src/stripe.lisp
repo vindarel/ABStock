@@ -46,6 +46,14 @@
     (let ((session (create-stripe-checkout-session cards)))
       (json:encode-json-to-string (list (cons :id (access session :id)))))))
 
+(defparameter +checkout-success.html+ (djula:compile-template* "checkout-success.html"))
+
+(easy-routes:defroute checkout-success-route ("/checkout/success")
+    ()
+  (djula:render-template* +checkout-success.html+ nil
+                          :contact *contact-infos*
+                          :user-content *user-content*))
+
 (defun round-amount (amount &optional (divisor 1))
   (multiple-value-bind (quotient remainder) (truncate (/ amount divisor))
     (if (>= (abs remainder) 1/2)
@@ -85,7 +93,7 @@
                                      ("quantity" . 1)))))
     ("mode" . "payment")
     ("success_url" . ,(format nil "~a/checkout/success" *hostname*))
-    ("cancel_url" . ,(format nil "~a/checkout/success" *hostname*))))
+    ("cancel_url" . ,(format nil "~a/checkout/cancel" *hostname*))))
 
 ;; (serialize-stripe-session (subseq *cards* 0 3))
 
