@@ -54,6 +54,14 @@
                           :contact *contact-infos*
                           :user-content *user-content*))
 
+(defparameter +checkout-cancel.html+ (djula:compile-template* "checkout-cancel.html"))
+
+(easy-routes:defroute checkout-cancel-route ("/checkout/cancel")
+    ()
+  (djula:render-template* +checkout-cancel.html+ nil
+                          :contact *contact-infos*
+                          :user-content *user-content*))
+
 (defun round-amount (amount &optional (divisor 1))
   (multiple-value-bind (quotient remainder) (truncate (/ amount divisor))
     (if (>= (abs remainder) 1/2)
