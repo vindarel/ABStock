@@ -27,8 +27,11 @@
 ;;   -d mode=payment
 (defun create-stripe-checkout-session (cards)
   (stripe-post "/checkout/sessions"
-               (serialize-stripe-session cards)
-               :content-type "application/json"))
+               nil
+               :parameters (encode-post-parameters (serialize-stripe-session cards))
+               :content-type "www/form-encoded-parameters"))
+
+;; (create-stripe-checkout-session (subseq *cards* 0 3))
 
 (easy-routes:defroute create-stripe-checkout-session-route ("/stripe/create-checkout-session" :method :post :decorators (easy-routes:@json))
     (ids)
@@ -43,6 +46,10 @@
                                 (serialize-stripe-session cards))))
       (json:encode-json-to-string (list (cons :id (access session :id)))))))
 
+(defun price-to-cents (price)
+  "TODO: prices should be of type integer (cents)"
+  3000)
+
 (defun serialize-stripe-session (cards)
   `(object
     ("payment_methods_types" . (array "card"))
@@ -53,7 +60,7 @@
                                                       ("product_data" . (object
                                                                          ("name" . ,(getf card :|title|))
                                                                          ("images" . ,(getf card :|cover|))))
-                                                      ("unit_amount" . ,(getf card :|price|))))
+                                                      ("unit_amount" . ,(price-to-cents (getf card :|price|)))))
                                      ("quantity" . 1)))))
     ("mode" . "payment")
     ("success_url" . ,(format nil "~a/checkout/success" *hostname*))
@@ -94,7 +101,7 @@
              ((and (listp object)
                    (equalp (first object) 'array))
               (encode-vector-post-parameters object context))
-             (t (push (cons (parameter-path context) object) parameters)))))
+             (t (push (cons (parameter-path context) (princ-to-string object)) parameters)))))
       (%encode-post-parameters object nil)
       parameters)))
 
