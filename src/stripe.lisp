@@ -26,10 +26,11 @@
 ;;   -d "line_items[0][quantity]"=2 \
 ;;   -d mode=payment
 (defun create-stripe-checkout-session (cards)
-  (stripe-post "/checkout/sessions"
-               nil
-               :parameters (encode-post-parameters (serialize-stripe-session cards))
-               :content-type "application/x-www-form-urlencoded"))
+  (json:decode-json-from-source
+   (stripe-post "/checkout/sessions"
+                nil
+                :parameters (encode-post-parameters (serialize-stripe-session cards))
+                :content-type "application/x-www-form-urlencoded")))
 
 ;; (create-stripe-checkout-session (subseq *cards* 0 3))
 
@@ -42,8 +43,7 @@
                            ids-list))
          (cards (filter-cards-by-ids ids-list)))
     
-    (let ((session (stripe-post "/checkout/sessions"
-                                (serialize-stripe-session cards))))
+    (let ((session (create-stripe-checkout-session cards)))
       (json:encode-json-to-string (list (cons :id (access session :id)))))))
 
 (defun price-to-cents (price)

@@ -157,7 +157,7 @@
                             :open-form t
                             :user-content *user-content*
                             :contact *contact-infos*
-                            :stripe-api-key (getf *stripe-config* :|api-key|))))
+                            :stripe-api-key (getf *stripe-config* :|publishable-api-key|))))
 
 ;;
 ;; Validate the basket: send an email, show a success message.

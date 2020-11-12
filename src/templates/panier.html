@@ -131,7 +131,7 @@ var checkoutButton = document.getElementById('checkout-button');
 checkoutButton.addEventListener('click', function() {
   // Create a new Checkout Session using the server-side endpoint you
   // created in step 3.
-  fetch('/stripe/create-checkout-session?' + window.location.search, {
+  fetch('/stripe/create-checkout-session' + window.location.search, {
     method: 'POST',
   })
     .then(function(response) {
