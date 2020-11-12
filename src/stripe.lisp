@@ -46,9 +46,30 @@
     (let ((session (create-stripe-checkout-session cards)))
       (json:encode-json-to-string (list (cons :id (access session :id)))))))
 
+(defun round-amount (amount &optional (divisor 1))
+  (multiple-value-bind (quotient remainder) (truncate (/ amount divisor))
+    (if (>= (abs remainder) 1/2)
+        (+ quotient (truncate (signum remainder)))
+        quotient)))
+
+(defun parse-amount (string)
+  "Parse an amount"
+  (setf string (remove (code-char 160) string))
+  (setf string (remove #\Space string))
+  (setf string (substitute #\. #\, string))
+  (let ((decs (or (position #\. (reverse string)) 0)))
+    (round-amount (* (expt 10 2)
+                     (/ (parse-integer (remove #\. string))
+                        (expt 10 decs))))))
+
+(defun decimal (number &optional (decimals 2))
+  (* number (expt 10 decimals)))
+
+(defun float-to-cents (float)
+  (parse-amount (format nil (format nil "~~~a$" 2) float))) 
+
 (defun price-to-cents (price)
-  "TODO: prices should be of type integer (cents)"
-  3000)
+  (float-to-cents price))
 
 (defun serialize-stripe-session (cards)
   `(object
