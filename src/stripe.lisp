@@ -44,29 +44,22 @@
       (json:encode-json-to-string (list (cons :id (access session :id)))))))
 
 (defun serialize-stripe-session (cards)
-  (with-output-to-string (json:*json-output*)
-    (json:with-object ()
-      (json:encode-object-member "payment_methods_types" (list "card"))
-      (json:as-object-member ("line_items")
-        (json:with-array ()
-          (dolist (card cards)
-            (json:as-array-member ()
-              (json:with-object ()
-                (json:as-object-member ("price_data")
-                  (json:with-object ()
-                    (json:encode-object-member "currency" "usd")
-                    (json:as-object-member ("product_data")
-                      (json:with-object ()
-                        (json:encode-object-member "name"
-                                                   (getf card :|title|))
-                        (json:encode-object-member "images"
-                                                   (list (getf card :|cover|)))))
-                    (json:encode-object-member "unit_amount"
-                                               (getf card :|price|))))
-                (json:encode-object-member "quantity" 1))))))
-      (json:encode-object-member "mode" "payment")
-      (json:encode-object-member "success_url" (format nil "~a/checkout/success" *hostname*))
-      (json:encode-object-member "cancel_url" (format nil "~a/checkout/cancel" *hostname*)))))
+  `(object
+    ("payment_methods_types" . (array "card"))
+    ("line_items" . (array ,@(loop for card in cards collect
+                                   `(object
+                                     ("price_data" . (object
+                                                      ("currency" . "usd")
+                                                      ("product_data" . (object
+                                                                         ("name" . ,(getf card :|title|))
+                                                                         ("images" . ,(getf card :|cover|))))
+                                                      ("unit_amount" . ,(getf card :|price|))))
+                                     ("quantity" . 1)))))
+    ("mode" . "payment")
+    ("success_url" . ,(format nil "~a/checkout/success" *hostname*))
+    ("cancel_url" . ,(format nil "~a/checkout/success" *hostname*))))
+
+;; (serialize-stripe-session (subseq *cards* 0 3))
 
 (defun encode-post-parameters (object)
   (let (parameters)
@@ -104,3 +97,5 @@
              (t (push (cons (parameter-path context) object) parameters)))))
       (%encode-post-parameters object nil)
       parameters)))
+
+;; (encode-post-parameters (serialize-stripe-session (subseq *cards* 0 3)))
