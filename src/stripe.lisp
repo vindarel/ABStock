@@ -14,7 +14,7 @@
          :method :post
          :content data
          :additional-headers
-         (list (cons "Authorization" (format nil "Bearer ~a" (getf *stripe-config* :|api-key|))))
+         (list (cons "Authorization" (format nil "Bearer ~a" (getf *stripe-config* :|secret-api-key|))))
          args))
 
 ;; curl https://api.stripe.com/v1/checkout/sessions \
@@ -29,7 +29,7 @@
   (stripe-post "/checkout/sessions"
                nil
                :parameters (encode-post-parameters (serialize-stripe-session cards))
-               :content-type "www/form-encoded-parameters"))
+               :content-type "application/x-www-form-urlencoded"))
 
 ;; (create-stripe-checkout-session (subseq *cards* 0 3))
 
@@ -52,14 +52,14 @@
 
 (defun serialize-stripe-session (cards)
   `(object
-    ("payment_methods_types" . (array "card"))
+    ("payment_method_types" . (array "card"))
     ("line_items" . (array ,@(loop for card in cards collect
                                    `(object
                                      ("price_data" . (object
                                                       ("currency" . "usd")
                                                       ("product_data" . (object
                                                                          ("name" . ,(getf card :|title|))
-                                                                         ("images" . ,(getf card :|cover|))))
+                                                                         ("images" . (array ,(getf card :|cover|)))))
                                                       ("unit_amount" . ,(price-to-cents (getf card :|price|)))))
                                      ("quantity" . 1)))))
     ("mode" . "payment")
@@ -75,12 +75,9 @@
            (let ((at-beginning t))
              (with-output-to-string (s)
                (dolist (part (reverse context))
-                 (if (numberp part)
-                     (format s "[~a]" part)
-                     (progn
-                       (when (not at-beginning)
-                         (write-char #\. s))
-                       (write-string part s)))
+                 (if at-beginning
+                     (format s "~a" part)
+                     (format s "[~a]" part))
                  (setf at-beginning nil)))))
          (encode-object-post-parameters (object context)
            (loop for key-and-value in (rest object)
