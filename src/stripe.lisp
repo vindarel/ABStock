@@ -4,11 +4,31 @@
 
 (defparameter *stripe-api-url* "https://api.stripe.com/v1")
 
-(defun stripe-post (path data)
-  (dexador:post (format nil "~a~a" *stripe-api-url* path)
-                :content data
-                :headers
-                (list (cons "Authorization" (format nil "Bearer ~a" (getf *stripe-config* :|api-key|))))))
+(push (cons "application" "json") drakma:*text-content-types*)
+
+(defun stripe-post (path data &rest args)
+  (format t "Stripe post to: ~a ~a~%" (format nil "~a~a" *stripe-api-url* path)
+          data)
+  (apply #'drakma:http-request
+         (format nil "~a~a" *stripe-api-url* path)
+         :method :post
+         :content data
+         :additional-headers
+         (list (cons "Authorization" (format nil "Bearer ~a" (getf *stripe-config* :|api-key|))))
+         args))
+
+;; curl https://api.stripe.com/v1/checkout/sessions \
+;;   -u sk_test_4eC39HqLyjWDarjtT1zdp7dc: \
+;;   -d success_url="https://example.com/success" \
+;;   -d cancel_url="https://example.com/cancel" \
+;;   -d "payment_method_types[0]"=card \
+;;   -d "line_items[0][price]"=price_H5ggYwtDq4fbrJ \
+;;   -d "line_items[0][quantity]"=2 \
+;;   -d mode=payment
+(defun create-stripe-checkout-session (cards)
+  (stripe-post "/checkout/sessions"
+               (serialize-stripe-session cards)
+               :content-type "application/json"))
 
 (easy-routes:defroute create-stripe-checkout-session-route ("/stripe/create-checkout-session" :method :post :decorators (easy-routes:@json))
     (ids)
@@ -47,3 +67,40 @@
       (json:encode-object-member "mode" "payment")
       (json:encode-object-member "success_url" (format nil "~a/checkout/success" *hostname*))
       (json:encode-object-member "cancel_url" (format nil "~a/checkout/cancel" *hostname*)))))
+
+(defun encode-post-parameters (object)
+  (let (parameters)
+    (labels
+        ((parameter-path (context)
+           (let ((at-beginning t))
+             (with-output-to-string (s)
+               (dolist (part (reverse context))
+                 (if (numberp part)
+                     (format s "[~a]" part)
+                     (progn
+                       (when (not at-beginning)
+                         (write-char #\. s))
+                       (write-string part s)))
+                 (setf at-beginning nil)))))
+         (encode-object-post-parameters (object context)
+           (loop for key-and-value in (rest object)
+                 do (%encode-post-parameters
+                     (cdr key-and-value)
+                     (cons (car key-and-value) context))))
+         (encode-vector-post-parameters (vector context)
+           (loop for i from 0
+                 for x in (rest vector)
+                 do (%encode-post-parameters
+                     x
+                     (cons i context))))
+         (%encode-post-parameters (object context)
+           (cond
+             ((and (listp object)
+                   (equalp (first object) 'object))
+              (encode-object-post-parameters object context))
+             ((and (listp object)
+                   (equalp (first object) 'array))
+              (encode-vector-post-parameters object context))
+             (t (push (cons (parameter-path context) object) parameters)))))
+      (%encode-post-parameters object nil)
+      parameters)))
