@@ -43,7 +43,7 @@
       "http://path/to/contact.html")
 
 (setf (user-content-welcome-image *user-content*)
-      "path/to/img.png")
+      nil)  ;; "path/to/img.png"
 
 (setf (user-content-welcome-text *user-content*) " Welcome!")
 
@@ -58,6 +58,14 @@
       </p>
       """" )
 
+;;;
+;;; Sélection du libraire.
+;;;
+(setf (user-content-enable-product-selection *user-content*)
+      nil)
+
+(setf (user-content-product-selection-intro-text *user-content*)
+      nil)
 ;;
 ;; Shopping basket.
 ;;
