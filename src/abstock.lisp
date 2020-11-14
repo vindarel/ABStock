@@ -332,7 +332,7 @@
   "Sort shelves.
   A shelf name shouldn't start with an accentued letter, or it won't be sorted correctly..."
   ;; A poor man's text normalizer…
-  (loop for elt in shelves
+  (loop for elt in (copy-seq shelves)
      when (str:starts-with? "É" (getf elt :|name|))
      do (setf (getf elt :|name|)
               (str:replace-all "É" "E" (getf elt :|name|))))
