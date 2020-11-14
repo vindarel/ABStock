@@ -312,11 +312,13 @@
      collect shelf))
 
 (defun sort-shelves (shelves)
-  #+sbcl
-  (sort shelves #'sb-unicode:unicode< :key (lambda (it)
-                                               (getf it :|name|)))
   #-sbcl
-  (normalize-shelves shelves))
+  (progn
+    (log:warn "sorting shelves: on this implementations, shelves are only sorted by ASCII characters, not unicode. Thus, accentuated letters will come last.")
+    (normalize-shelves shelves))
+  #+sbcl
+  (sort (copy-seq shelves) #'sb-unicode:unicode< :key (lambda (it)
+                                                        (getf it :|name|))))
 
 (defun sort-shelves-by-number-prefix (shelves)
   "A second pass to sort. The first pass sorted alphabetically.
@@ -324,7 +326,7 @@
   (sort (copy-seq shelves)
         #'<
         :key (lambda (it)
-               (let* ((str-prefix (ppcre:scan-to-strings "[0-9]+.?[0.9]?" (access it :name))))
+               (let ((str-prefix (ppcre:scan-to-strings "[0-9]+" (access it :name))))
                  (or (ignore-errors (parse-float:parse-float str-prefix))
                      -1)))))
 
