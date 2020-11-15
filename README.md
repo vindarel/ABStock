@@ -184,7 +184,11 @@ Known TODOs:
 
 ## Licence
 
-AGPLv3
+AGPLv3.
+
+The `src/static/img/no_cover.png` image is a modified version of [this original
+one](https://commons.wikimedia.org/wiki/File:Meuble_h%C3%A9raldique_Livre_ouvert_2.svg)
+that is distributed under CC-BY-SA ([Ssire](https://commons.wikimedia.org/wiki/User:Ssire)).
 
 ---
 
