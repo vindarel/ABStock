@@ -210,6 +210,7 @@
                                :open-form t
                                :secret-question *secret-question*
                                :form-data `(:name ,name :email ,email :phone ,phone :message ,message)
+                               :user-content *user-content*
                                :contact *contact-infos*))
 
       ;; Give one email or a phone.
@@ -224,6 +225,7 @@
                                :cards cards
                                :form-data `(:name ,name :email ,email :phone ,phone :message ,message)
                                :secret-question *secret-question*
+                               :user-content *user-content*
                                :contact *contact-infos*))
 
       ;; Send email.
@@ -241,7 +243,8 @@
                                      :title (format nil "~a - ~a"
                                                     (user-content-brand-name *user-content*)
                                                     "Commande envoyée")
-                                     :success-messages (list "Votre demande a bien été envoyée."))
+                                     :success-messages (list "Votre demande a bien été envoyée.")
+                                     :user-content *user-content*)
              )
          (error (c)
            (log:error "email error: sending to '~a' with ids '~a' (cards found: '~a' failed with the following error: ~a" email ids (length cards) c)
@@ -257,7 +260,8 @@
 
            ;; Return error message.
            (djula:render-template* +error-messages.html+ nil
-                                   :messages (list "Votre demande n'a pas pu être envoyée. Merci de ré-essayer un peu plus tard."))
+                                   :messages (list "Votre demande n'a pas pu être envoyée. Merci de ré-essayer un peu plus tard.")
+                                   :user-content *user-content*)
            ))))))
 
 (defun get-cards-same-author (card)
