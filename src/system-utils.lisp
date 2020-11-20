@@ -7,8 +7,8 @@
   (let ((pid
          #+sbcl
           (sb-posix:getpid)
-          #-sbcl
-          (osicat-posix:getpid)))
+          #+ccl
+          (ccl::getpid)))
     (with-open-file (f filename
                        :direction :output
                        :if-does-not-exist :create

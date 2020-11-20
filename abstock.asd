@@ -28,8 +28,6 @@
                ;; scripting
                :unix-opts
                :cl-ansi-text
-               #-sbcl
-               osicat
 
                ;; dev
                :log4cl
