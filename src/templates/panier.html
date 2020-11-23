@@ -41,7 +41,11 @@
 	  <div class="media">
 	    <div class="media-left">
 	      <p class="image is-64x64">
-		<img src="{{ card.cover }}">
+            {% if card.cover %}
+              <img src="{{ card.cover }}" alt="Couverture de {{ card.title }}"/>
+            {% else %}
+              <img src="/static/img/no_cover.png" alt="Pas de couverture"/>
+            {% endif %}
 	      </p>
 	    </div>
 	    <div class="media-content">

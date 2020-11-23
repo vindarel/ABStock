@@ -10,7 +10,11 @@
         <div class="card" id="{{ card.id }}">
           <div class="card-image">
             <figure class="image">
-              <img src="{{ card.cover }}" alt="Couverture de {{ card.title }}"/>
+              {% if card.cover %}
+                <img src="{{ card.cover }}" alt="Couverture de {{ card.title }}"/>
+              {% else %}
+                <img src="/static/img/no_cover.png" alt="Pas de couverture"/>
+              {% endif %}
             </figure>
           </div>
         </div>
