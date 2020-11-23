@@ -10,4 +10,4 @@ build:
 	     --eval '(quit)'
 
 run:
-	rlwrap sbcl --load run.lisp --eval '(in-package :abstock)'
+	rlwrap $(LISP) --load run.lisp --eval '(in-package :abstock)'
