@@ -322,13 +322,26 @@
 
 (defun sort-shelves-by-number-prefix (shelves)
   "A second pass to sort. The first pass sorted alphabetically.
-  A shelf name \"10.1 xyz\" needs to come after \"1.1 abc\"."
+  A shelf named \"10.1 xyz\" needs to come after \"1.1 abc\"."
   (sort (copy-seq shelves)
         #'<
         :key (lambda (it)
-               (let ((str-prefix (ppcre:scan-to-strings "[0-9]+" (access it :name))))
+               (let ((str-prefix (ppcre:scan-to-strings "^[0-9]+" (access it :name))))
                  (or (ignore-errors (parse-float:parse-float str-prefix))
                      -1)))))
+
+#+(or nil)
+(let* ((shelves '((:|name| "Zzz")
+                 (:|name| "10-12 / Foo")
+                 (:|name| "Jeunesse")
+                 (:|name| "Jeunesse / 10-11 ans") ))
+       (sorted-shelves (sort-shelves shelves)))
+  (assert (string-equal "Zzz"
+                        (access (car (last sorted-shelves))
+                                :|name|)))
+  (assert (str:starts-with? "10"
+                            (access (first sorted-shelves)
+                                    :|name|))))
 
 (defun normalize-shelves (shelves)
   "Sort shelves.
