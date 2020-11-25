@@ -1,1 +1,2 @@
 *.fasl
+/src/static/theme.css

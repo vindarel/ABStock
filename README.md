@@ -121,6 +121,14 @@ ccl --load run.lisp -e '(in-package :abstock)'
 # to quit: (ccl:quit) or C-d
 ```
 
+## Theme
+
+You can theme ABStock by writing your own CSS rules into `src/static/theme.css`. This file is always loaded by the base template and is out of source control. You can create a symlink to it.
+
+**important**: for the good of the project, think about sharing your
+work! Link it [in the wiki](https://gitlab.com/vindarel/abstock/-/wikis/home), send us an email or open an issue. Many thanks in advance.
+
+
 ## Deployment
 
 You can run the app as a script:
