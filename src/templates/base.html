@@ -5,6 +5,11 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/notiflix@2.1.3/dist/AIO/notiflix-aio-2.1.3.min.js"></script>
+
+    <!-- Our static files are served under /static/ (in the src/static/ directory). -->
+    <link rel="stylesheet" href="/static/style.css">
+    <script defer src="/static/abstock.js"></script>
+
     <title>{% block title %} {{ user-content.brand-name }} {% endblock %}</title>
     {% if user-content.additional-headers %}
     {{ user-content.additional-headers | safe }}
@@ -136,6 +141,8 @@
     </footer>
 
   </body>
+
+  <!--TODO: move the JS into abstock.js when there is no MR (potential) conflicts.-->
   <script>
     (function() {
         var burger = document.querySelector('.burger');

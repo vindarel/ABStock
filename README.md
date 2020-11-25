@@ -180,6 +180,46 @@ to see the logs:
 use `-f` to follow the logs as they are written.
 
 
+## Develop
+
+You can contribute HTML, CSS, JavaScript, testing, documentation, and Common Lisp code. Thanks in advance!
+
+Install the application locally.
+
+### Static assets
+
+CSS and JavaScript files are served from the `src/static` directory under
+the `/static` prefix (see `*default-static-directory*` in web.lisp).
+
+You must reference them like this:
+
+    <link rel="stylesheet" href="/static/style.css">
+
+
+### Live reload
+
+To get live-reload of static files during development, you can use [browser-sync](https://www.browsersync.io/).
+
+```
+$ browser-sync start --proxy http://localhost:8901/ --files src/static/*
+[Browsersync] Proxying: http://localhost:8901
+[Browsersync] Access URLs:
+ -------------------------------------
+       Local: http://localhost:3000
+    External: http://192.168.1.11:3000
+ -------------------------------------
+          UI: http://localhost:3001
+ UI External: http://localhost:3001
+ -------------------------------------
+[Browsersync] Watching files...
+[Browsersync] File event [change] : src/static/style.css
+[Browsersync] File event [change] : src/static/style.css
+[…]
+```
+
+Now, whenever you edit some CSS or JS, you see the results instantly in the browser.
+
+
 ## Issues and feature requests
 
 Issue tracker: https://gitlab.com/vindarel/abstock/-/issues
