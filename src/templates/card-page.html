@@ -1,4 +1,3 @@
-
 {% extends "base.html" %}
 
 {% block content %}
@@ -50,6 +49,10 @@
 
             {% if card.price %}
 	    <div class="title is-6"> {{ card.price | price }} €</div>
+            {% endif %}
+
+            {% if card.summary %}
+	    <div class="content"><blockquote> {{ card.summary }} </blockquote></div>
             {% endif %}
 
             <button class="button is-medium is-fullwidth is-outlined is-rounded" style="cursor: pointer;" title="Ajouter au panier" onclick="add_to_cart({{ card.id }})"> Ajouter au panier 
