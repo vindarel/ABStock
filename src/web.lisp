@@ -12,7 +12,7 @@
 (defvar *sentry-dsn-file* "~/.config/abstock/sentry-dsn.txt")
 
 (defparameter *dev-mode* nil
-  "If t, use a subset of all the cards.")
+  "If non-nil, don't use Sentry and use a subset of all the cards.")
 
 (defvar *selection* nil
   "List of cards for the selection page.")
@@ -326,6 +326,14 @@
       (ignore-errors (parse-integer (uiop:getenv "AB_PORT")))
       *port*))
 
+(defun get-sentry-dsn ()
+  "If not in `*dev-mode*', read the Sentry DSN from the SENTRY_DSN environment variable
+  or the ~/.config/abstock/sentry-dsn.txt file (`*sentry-dsn-file*')."
+  (unless *dev-mode*
+    (or (uiop:getenv "SENTRY_DSN")
+        (when (uiop:file-exists-p *sentry-dsn-file*)
+          (str:trim (str:from-file (uiop:native-namestring *sentry-dsn-file*)))))))
+
 (defun start-server (&key port)
   (let ((port (get-port port)))
     (uiop:format! t "~&Starting the web server on port ~a" port)
@@ -349,13 +357,13 @@
   ;; Enable Sentry client.
   (unless *dev-mode*
     (handler-case
-        (progn
+        (let ((dsn (get-sentry-dsn)))
           ;; sentry-client is not in Quicklisp.
-          (when (uiop:file-exists-p *sentry-dsn-file*)
-            (sentry-client:initialize-sentry-client
-             (str:trim (str:from-file (uiop:native-namestring *sentry-dsn-file*)))
-             :client-class 'sentry-client:async-sentry-client)
-            (uiop:format! t "~&Sentry client initialized.~&")))
+          (when dsn
+           (sentry-client:initialize-sentry-client
+            (get-sentry-dsn)
+            :client-class 'sentry-client:async-sentry-client)
+           (uiop:format! t "~&Sentry client initialized.~&")))
       (error (c)
         ;; it actually can hardly fail here since the dependency is in the .asd.
         (uiop:format! *error-output* "~&*** Starting Sentry client failed: ~a~& ***" c))))
