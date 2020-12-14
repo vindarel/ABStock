@@ -12,6 +12,7 @@
                :cl-slug
                :local-time
                :cl-cron
+               :function-cache
                ;; :local-time-duration
                :cl-ppcre
                :parse-float

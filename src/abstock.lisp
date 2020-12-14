@@ -3,6 +3,8 @@
         :sxql)
   (:import-from :defclass-std
                 :defclass/std)
+  (:import-from :function-cache
+                :defcached)
   (:import-from :access
                 :access)
   (:export :main
@@ -285,8 +287,9 @@
         :key (lambda (it)
                (access it :|created|))))
 
-(defun last-created-cards (&key (n 20))
-  "Return the last 20 most recent cards added in stock."
+(defcached (last-created-cards :timeout (* 60 60)) (&key (n 20))
+  "Return the last 20 most recent cards added in stock.
+  Results are cached for 1h."
   (subseq (sort-cards-by-creation-date *cards*) 0 n))
 
 ;;

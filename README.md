@@ -234,8 +234,8 @@ Now, whenever you edit some CSS or JS, you see the results instantly in the brow
 
 ABStock defines API endpoints, free for the developer to use to create new applications:
 
-- `/api/v1/selection.json`
-- `/api/v1/lastcreated.json`
+- `/api/v1/selection.json`: get the selection.
+- `/api/v1/lastcreated.json`: get the last created books. Results are cached for 1 hour.
 
 
 ## Issues and feature requests
