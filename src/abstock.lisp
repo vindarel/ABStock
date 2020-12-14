@@ -1,7 +1,6 @@
 (defpackage abstock
   (:use :cl
-        :sxql
-        :log4cl)
+        :sxql)
   (:import-from :defclass-std
                 :defclass/std)
   (:import-from :access
