@@ -48,6 +48,7 @@
                  (:file "web")
                  (:file "email")
                  (:file "selection")
+                 (:file "api")
                  (:file "utils")
                  (:file "system-utils"))))
 
