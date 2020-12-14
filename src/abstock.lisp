@@ -225,6 +225,7 @@
 (defun all-cards ()
   "Generates SxQL query. (yield) generates the SQL. It is not executed."
   (select ((:distinct :search_card.id)
+           :search_card.created
            :search_card.title
            :search_card.price
            :search_card.isbn
@@ -276,6 +277,17 @@
      do  (setf (getf card :|repr2|)
                (str:downcase (str:concat ascii-author " " ascii-title ascii-publisher)))
      collect card))
+
+(defun sort-cards-by-creation-date (cards)
+  "Return a copy of `cards' sorted by creation date, newly created first."
+  (sort (copy-seq cards)
+        #'string-not-lessp
+        :key (lambda (it)
+               (access it :|created|))))
+
+(defun last-created-cards (&key (n 20))
+  "Return the last 20 most recent cards added in stock."
+  (subseq (sort-cards-by-creation-date *cards*) 0 n))
 
 ;;
 ;; Shelves
