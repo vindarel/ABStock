@@ -194,7 +194,7 @@ You can contribute HTML, CSS, JavaScript, testing, documentation, and Common Lis
 
 Install the application locally.
 
-### Static assets
+### Static assets. Themes.
 
 CSS and JavaScript files are served from the `src/static` directory under
 the `/static` prefix (see `*default-static-directory*` in web.lisp).
@@ -203,6 +203,9 @@ You must reference them like this:
 
     <link rel="stylesheet" href="/static/style.css">
 
+You can use `theme.js` and `theme.css` for your own code.
+
+You can use Bulma's mechanism to create new themes: https://bulma.io/documentation/customize/
 
 ### Live reload
 
@@ -226,6 +229,13 @@ $ browser-sync start --proxy http://localhost:8901/ --files src/static/*
 ```
 
 Now, whenever you edit some CSS or JS, you see the results instantly in the browser.
+
+### Use the API
+
+ABStock defines API endpoints, free for the developer to use to create new applications:
+
+- `/api/v1/selection.json`
+- `/api/v1/lastcreated.json`
 
 
 ## Issues and feature requests
