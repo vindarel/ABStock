@@ -193,6 +193,7 @@
 (defun card-by-isbn (isbn)
   "Generates SxQL query. (yield) generates the SQL. It is not executed."
   (select (:search_card.title
+           :search_card.created
            :search_card.price
            :search_card.id
            :search_card.isbn
