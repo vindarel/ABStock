@@ -192,10 +192,10 @@
 ;; same, search one card by isbn (dev only, unused in prod).
 (defun card-by-isbn (isbn)
   "Generates SxQL query. (yield) generates the SQL. It is not executed."
-  (select (:search_card.title
+  (select ((:distinct :search_card.id)
            :search_card.created
            :search_card.price
-           :search_card.id
+           :search_card.title
            :search_card.isbn
            :search_card.details_url
            :search_card.cover
