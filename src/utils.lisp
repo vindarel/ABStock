@@ -118,7 +118,8 @@
 
 (defun remove-duplicated-cards (cards)
   (remove-duplicates cards :key (lambda (card)
-                                  (getf card :|isbn|))))
+                                  (getf card :|isbn|))
+                     :test #'string=))
 
 (declaim (ftype (function ((or null string))
                           string)

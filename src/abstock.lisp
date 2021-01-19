@@ -263,7 +263,8 @@
         ;; caution: what's long is printing all the cards.
         (log:info "(re)loading the DB")
         (setf *cards* (normalise-cards
-                       (dbi:fetch-all query)))
+                       (remove-duplicated-cards
+                        (dbi:fetch-all query))))
         t)
       (warn "The DB file ~a does not exist. We can't load data from the DB.~&" *db-name*)))
 
