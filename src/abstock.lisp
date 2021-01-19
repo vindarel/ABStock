@@ -267,8 +267,15 @@
         t)
       (warn "The DB file ~a does not exist. We can't load data from the DB.~&" *db-name*)))
 
+(defun slugify-details-url (card)
+  "Return a slug to identify this card, relative to the server root URL.
+  Example: /livre/1-trop-bon-la-courgette"
+  (format nil "/livre/~a-~a" (access card :|id|)
+          (slug:slugify (access card :|title|))))
+
 (defun normalise-cards (cards)
-  "Add a repr key that joins title and author and removes accents."
+  "Add a repr key that joins title and author and removes accents.
+  Change details_url to a short, slugified URL relative to the server root."
   (loop for card in cards
      ;; access is more generic than getf, it also works with uninterned symbols
      ;; (but we don't have such anymore).
@@ -279,6 +286,8 @@
               (str:downcase (str:concat ascii-title " " ascii-publisher)))
      do  (setf (getf card :|repr2|)
                (str:downcase (str:concat ascii-author " " ascii-title ascii-publisher)))
+     do (setf (getf card :|details_url|)
+              (slugify-details-url card))
      collect card))
 
 (defun sort-cards-by-creation-date (cards)
