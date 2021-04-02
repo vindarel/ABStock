@@ -25,6 +25,10 @@
 (setf *secret-question* "stupid question")
 (setf *secret-answer* "answer")
 
+;; Theme
+;; Themes are defined in src/templates/themes/<yourtheme>/
+(setf *theme* nil)
+
 ;; Content.
 
 (setf (user-content-brand-name *user-content*)

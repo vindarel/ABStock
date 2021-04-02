@@ -172,3 +172,9 @@
   ;; Throw a type warning:
   (assert (equalp ""
                   (format-phone-number 99))))
+
+(defun format-box (stream title)
+  "Print title inside a \"#\" box."
+  (format stream "~&~a~&" (make-string 80 :initial-element #\#))
+  (format stream "# ~a ~&" title)
+  (format stream "~a~&" (make-string 80 :initial-element #\#)))

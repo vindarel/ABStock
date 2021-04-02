@@ -17,6 +17,10 @@
 (defvar *selection* nil
   "List of cards for the selection page.")
 
+(defparameter *theme* ""
+  "Custom theme name (string).
+  The theme templates are located at src/templates/<theme>/.")
+
 ;;
 ;; User variables.
 ;;
@@ -26,6 +30,14 @@
 
 
 ;; Utils.
+(defun get-template(template &optional theme)
+  "Loads template from the base templates directory or from the given theme templates directory if it exists."
+  (if (and (str:non-blank-string-p theme)
+           (probe-file (asdf:system-relative-pathname "abstock" (str:concat "src/templates/themes/" theme "/" template))))
+      ;; then
+      (str:concat "themes/" theme "/" template)
+      ;; else :D
+      template))
 
 (defun get-cards ()
   (if *dev-mode*
@@ -37,19 +49,28 @@
 ;;
 ;; Templates.
 ;;
+
+;; Load our default templates.
 (djula:add-template-directory
  (asdf:system-relative-pathname "abstock" "src/templates/"))
-(defparameter +base.html+ (djula:compile-template* "base.html"))
-(defparameter +welcome.html+ (djula:compile-template* "welcome.html"))
-(defparameter +cards.html+ (djula:compile-template* "cards.html"))
-(defparameter +selection-page.html+ (djula:compile-template* "selection-page.html"))
-(defparameter +card-page.html+ (djula:compile-template* "card-page.html"))
+;; and load the current theme's templates (if any).
+(when (str:non-blank-string-p *theme*)
+  (format-box t (format nil "Loading theme \"~a\" !" *theme*))
+  (djula:add-template-directory
+   (asdf:system-relative-pathname
+    "abstock" (str:concat "src/templates/themes/" *theme* "/"))))
 
-(defparameter +panier.html+ (djula:compile-template* "panier.html"))
-(defparameter +command-confirmed.html+ (djula:compile-template* "command-confirmed.html"))
+(defparameter +base.html+ (djula:compile-template* (get-template "base.html" *theme*)))
+(defparameter +welcome.html+ (djula:compile-template* (get-template "welcome.html" *theme*)))
+(defparameter +cards.html+ (djula:compile-template* (get-template "cards.html" *theme*)))
+(defparameter +selection-page.html+ (djula:compile-template* (get-template "selection-page.html" *theme*)))
+(defparameter +card-page.html+ (djula:compile-template* (get-template "card-page.html" *theme*)))
 
-(defparameter +error-messages.html+ (djula:compile-template* "error-messages.html"))
-(defparameter +404.html+ (djula:compile-template* "404.html"))
+(defparameter +panier.html+ (djula:compile-template* (get-template "panier.html" *theme*)))
+(defparameter +command-confirmed.html+ (djula:compile-template* (get-template "command-confirmed.html" *theme*)))
+
+(defparameter +error-messages.html+ (djula:compile-template* (get-template "error-messages.html" *theme*)))
+(defparameter +404.html+ (djula:compile-template* (get-template "404.html" *theme*)))
 
 ;;
 ;; Custom Djula filter to format prices.

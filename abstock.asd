@@ -44,13 +44,13 @@
                (:module "src"
                 :components
                 ((:file "abstock")
+                 (:file "utils")
                  (:file "user-content")
                  (:file "parameters")
                  (:file "web")
                  (:file "email")
                  (:file "selection")
                  (:file "api")
-                 (:file "utils")
                  (:file "system-utils"))))
 
   :build-operation "program-op"
