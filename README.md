@@ -133,6 +133,10 @@ You have several ways to customize ABStock, from CSS tweaking to a full theme re
 **important**: for the good of the project, think about sharing your
 work! Link it [in the wiki](https://gitlab.com/vindarel/abstock/-/wikis/home), send us an email or open an issue. Many thanks in advance.
 
+Here's a real world example theme of ours. You can contact us to have a pretty one too ;)
+
+![](abstock-leblason.png "https://catalogue.librairieleblason.com/")
+
 
 ## Deployment
 
