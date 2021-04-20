@@ -1,7 +1,24 @@
+# v0.9 - May, 2021
 
-# June, 2020
+- custom themes:
+  - full themes support: all templates can be overwritten.
+  - load a custom theme.js
+  - load a custom theme.css
+- new API to get the selection and the last created cards.
+- get the selection from DB (not only from the CSV)
+- serve static assets under static/
+- email: format phone numbers.
+- CLI: added -v, -h and --pid flags.
+- set up CI, build binaries for Debian 10 (experimental).
 
+# v0.8 - Septembre, 2020
+
+- card page: show cards of the same shelf.
 - ignore shelves by ids or by name prefixes.
+- sort correctly with accents and unicode strings on SBCL (not on CCL).
+- beautify URLs (card id + title slug)
+- added post-config.lisp
+- 404 page
 
 # v0.7
 
