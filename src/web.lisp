@@ -305,13 +305,13 @@
 
 (easy-routes:defroute card-page (#.*card-page-url* :method :get) ()
   "Show a card.
+  The URL contains a :slug part.
   The slug must start with an id. The rest of the slug, the title, is not important."
   (let* ((card-id (ignore-errors
                     (parse-integer (first (str:split "-" slug)))))
-         (res (when card-id
-                (filter-cards-by-ids (list card-id))))
-         (card (when res
-                 (first res)))
+         (card (when card-id
+                (first
+                 (filter-cards-by-ids (list card-id)))))
          (same-author (when card
                         (get-cards-same-author card)))
          (same-shelf (when card

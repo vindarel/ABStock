@@ -274,6 +274,9 @@
 (defun slugify-details-url (card)
   "Return a slug to identify this card, relative to the server root URL.
   Example: /livre/1-trop-bon-la-courgette"
+  ;; the reverse operation is
+  ;; (parse-integer (first (str:split "-" slug)))
+  ;; not in a function yet.
   (format nil "/livre/~a-~a" (access card :|id|)
           (slug:slugify (access card :|title|))))
 
