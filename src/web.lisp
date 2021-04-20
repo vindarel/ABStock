@@ -196,6 +196,9 @@
                   (getf card :|price|)
                   (getf card :|isbn|)))))
 
+(defun total-command (cards)
+  (reduce #'+ cards :key (lambda (it) (getf it :|price|))))
+
 (defun email-content (name email phone payment message cards)
   (with-output-to-string (s)
     (format s "Bonjour cher libraire,~&~%~&Un nouveau client a commandé des livres.~&~%")
@@ -205,12 +208,31 @@
             (format-phone-number phone))
     (format s "~%Il/elle a commandé:~&~%~a~&~%" (cards-to-txt cards))
     (format s "Le total de la commande est de: ~,2F €.~&~%"
-            (reduce #'+ cards :key (lambda (it) (getf it :|price|))))
+            (total-command cards))
     (format s "Moyen de paiement: ~a~&~%" payment)
     (when (not (str:blankp message))
       (format s "Et il/elle a ajouté ce petit mot:~%~%«~a»~%~%" (str:shorten 300 message)))
     (format s "Nous sommes le: ~a~&~%" (local-time:format-timestring nil (local-time:now) :format local-time:+rfc-1123-format+))
     (format s "À bientôt !~&")))
+
+(defun confirmation-email-content (cards)
+  (with-output-to-string (s)
+    (format s "Bonjour,~&~%")
+    (format s "Nous vous confirmons votre commande des titres suivants:~&~%~a~&~%" (cards-to-txt cards))
+    (format s "Le total de la commande est de: ~,2F €.~&~%"
+            (total-command cards))
+    (format s "Merci !")))
+
+(defun send-confirmation-email (&key to name from reply-to cards)
+  "Send a confirmation email to the client."
+  (declare (ignorable name))
+  (bt:make-thread (lambda ()
+                    (email-send :to to
+                                :from from
+                                :reply-to reply-to
+                                :subject "Confirmation de commande"
+                                :content (confirmation-email-content cards)))
+                  :name "confirmation-email"))
 
 (easy-routes:defroute panier-validate-route ("/panier" :method :post) (&post name email phone payment antispam ids message)
   (let* ((ids-list (str:split "," ids :omit-nulls t))
@@ -222,7 +244,6 @@
                                                                   (getf card :|id|)))
                    when position
                    collect  (elt *cards* position))))
-
     (cond
       ;; Validate the "antispam".
       ((not (string-equal *secret-answer* (str:downcase antispam)))
@@ -263,14 +284,24 @@
                          :content (email-content name email phone payment message cards))
              (log:info "email sent for client " name email)
 
+             ;; Send confirmation email to client.
+             (send-confirmation-email :to email
+                                      :name name
+                                      :reply-to (list
+                                                 (getf *email-config* :|to|)
+                                                 (user-content-brand-name *user-content*))
+                                      ;; "from" must be a validated address on SendGrid account.
+                                      ;; Thankfully reply-to works with any address.
+                                      :from (getf *email-config* :|from|)
+                                      :cards cards)
+
              ;; Return success.
              (djula:render-template* +command-confirmed.html+ nil
                                      :title (format nil "~a - ~a"
                                                     (user-content-brand-name *user-content*)
                                                     "Commande envoyée")
                                      :success-messages (list "Votre demande a bien été envoyée.")
-                                     :user-content *user-content*)
-             )
+                                     :user-content *user-content*))
          (error (c)
            (log:error "email error: sending to '~a' with ids '~a' (cards found: '~a' failed with the following error: ~a" email ids (length cards) c)
 

@@ -34,7 +34,7 @@ The website features by default the following pages, all customizable:
   - a pre-selection of the books to showcase,
 - a form to start searching books. A visitor can search by title, authors, publisher, shelf and ISBN(s).
 - a shopping basket, for visitors to add books in
-- a confirmation form, which sends the command by email to the shop owner,
+- a confirmation form, which sends the command by email to the shop owner, and a confirmation email to the client,
 - a special page to showcase a selection.
   - they can be chosen from Abelujo or defined in a file
 
