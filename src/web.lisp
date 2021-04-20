@@ -381,11 +381,12 @@
     (handler-case
         (let ((dsn (get-sentry-dsn)))
           ;; sentry-client is not in Quicklisp.
-          (when dsn
-           (sentry-client:initialize-sentry-client
-            (get-sentry-dsn)
-            :client-class 'sentry-client:async-sentry-client)
-           (uiop:format! t "~&Sentry client initialized.~&")))
+          (if dsn
+              (progn
+                (sentry-client:initialize-sentry-client dsn
+                                                        :client-class 'sentry-client:async-sentry-client)
+                (uiop:format! t "~&Sentry client initialized.~&"))
+              (uiop:format! t "~&Sentry was not initialized.~&")))
       (error (c)
         ;; it actually can hardly fail here since the dependency is in the .asd.
         (uiop:format! *error-output* "~&*** Starting Sentry client failed: ~a~& ***" c))))

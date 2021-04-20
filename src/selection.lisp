@@ -1,15 +1,28 @@
 (in-package :abstock)
 
-;; Read a ;-separated CSV file with two columns, ISBN and quantity.
+;; The bookshop's selection can come from one of two sources:
+;; - selection.csv
+;; - the DB.
+;;
+;; In the DB, cards can have a boolean field that says if they are part of the selection:
+;; is_catalogue_selection.
+;;
+;; If there is a selection.csv at ABStock's project root, we read it instead.
+;; (historical method)
+;;
+;; We read a ;-separated CSV file with two columns, ISBN and quantity.
 ;; They will be on the selection page.
 ;; File: selection.csv
 ;;
-;; main function:
+;; Main function:
 ;; (read-selection)
 ;;
 
+(defun selection-file-exists-p (&key (file "selection.csv"))
+  (uiop:file-exists-p file))
+
 (defun read-selection-file (&key (file "selection.csv"))
-  (if (uiop:file-exists-p file)
+  (if (selection-file-exists-p :file file)
       (loop for line in (str:lines (str:from-file file))
          for isbn = (first (str:split ";" line))
          collect isbn)
@@ -33,11 +46,18 @@
      do (format t "** NOTICE **: This card has no shelf: it won't be shown in the selection page: ~a~&" isbn)
      else collect card))
 
+(defun filter-cards-with-selection (cards)
+  "Get the cards that were selection for the selection page from Abelujo.
+  The Card table has a is_catalogue_selection column."
+  (loop for card in cards
+     if (equal 1 (access card :|is_catalogue_selection|))
+     collect card))
+
 (defun read-cards-selection ()
   (cards-from-isbns (read-selection-file)))
 
-(defun read-selection ()
-  "Read the csv with the ISBNs selection, exclude cards without a shelf (and print them on stdout)."
+(defun read-selection-from-file ()
+  "Read the CSV file with the ISBNs selection, exclude cards without a shelf (and print them on stdout)."
   (handler-case
       (setf *selection*
             (normalise-cards
@@ -52,7 +72,30 @@
     (setf *selection* (read-selection)))
   (pick-cards :n n :cards *selection* :ensure-cover ensure-cover))
 
+(defun read-selection-from-db ()
+  "Get all selected cards from the current DB in memory and do some cleanup: exclude cards without a shelf."
+  (handler-case
+      (setf *selection*
+            (normalise-cards
+             (filter-cards-without-shelf
+              (filter-cards-with-selection *cards*))))
+    (error (c)
+      (format *error-output* "~&Error while extracting the selection from the DB: ~a~&Did you update Abelujo too?~&" c))))
+
+(defun read-selection ()
+  "Get it from the DB or read it from file."
+  (setf *selection*
+        (cond
+          ((selection-file-exists-p)
+           (log:info "~&We get the selection from file.~&")
+           (read-selection-from-file))
+          (t
+           (log:info "~&We get the selection from the DB.~&")
+           (read-selection-from-db)))))
+
 (defun get-selection (&key (n 20) (random nil))
+  "Get the selection.
+  (main function)"
   (when *cards*
     (let* ((cards (if random
                       (pick-cards :n n)

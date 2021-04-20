@@ -155,6 +155,7 @@
            :search_card.details_url
            :search_card.cover
            :search_card.quantity
+           :search_card.is_catalogue_selection
            (:as :search_author.name :author)
            (:as :search_shelf.name :shelf)
            (:as :search_publisher.name :publisher))
@@ -200,6 +201,7 @@
            :search_card.details_url
            :search_card.cover
            :search_card.quantity
+           :search_card.is_catalogue_selection
            (:as :search_author.name :author)
            (:as :search_shelf.name :shelf)
            (:as :search_publisher.name :publisher))
@@ -237,6 +239,7 @@
            :search_card.date_publication
            :search_card.summary
            :search_card.quantity
+           :search_card.is_catalogue_selection
            (:as :search_author.name :author)
            (:as :search_shelf.name :shelf)
            (:as :search_shelf.id :shelf_id) ;; cannot use a -

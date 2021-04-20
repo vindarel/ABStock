@@ -13,12 +13,18 @@
   We must have the corresponding cron job to copy the DB."
   (cl-cron:make-cron-job #'get-all-cards :minute 30 :hour 4)
   (cl-cron:make-cron-job #'get-all-shelves :minute 30 :hour 4)
+  ;; re-read the selection, either from selection.csv either from the DB
+  ;; (books can be selected from Abelujo)
+  (cl-cron:make-cron-job #'read-selection :minute 59 :hour 4)
 
   (cl-cron:make-cron-job #'get-all-cards :minute 45 :hour 13)
   (cl-cron:make-cron-job #'get-all-shelves :minute 45 :hour 13)
+  (cl-cron:make-cron-job #'read-selection :minute 59 :hour 13)
 
   (cl-cron:make-cron-job #'get-all-cards :minute 30 :hour 20)
   (cl-cron:make-cron-job #'get-all-shelves :minute 30 :hour 20)
+  (cl-cron:make-cron-job #'read-selection :minute 59 :hour 20)
+
   (cl-cron:start-cron)
   (log:info "Re-defined the scheduled DB reload for 3 times a day."))
 

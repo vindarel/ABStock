@@ -34,6 +34,7 @@ Le site se compose de plusieurs pages, toutes configurables:
 - la page panier montre la sélection du client, et propose de remplir un formulaire pour valider la commande.
 - le formulaire envoie la commande par **courriel** au libraire.
 - une page spéciale qui montre **la sélection du libraire**, livres triés par rayon.
+  - cette sélection est établie depuis le logiciel de gestion (Abelujo)
 
 
 <p style="text-align: center">
