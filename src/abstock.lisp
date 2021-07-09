@@ -156,9 +156,18 @@
            :search_card.cover
            :search_card.quantity
            :search_card.is_catalogue_selection
+           :search_card.summary
+           :search_card.width
+           :search_card.height
+           :search_card.thickness
+           :search_card.weight
+           :search_card.presedit
+           :search_card.meta
            (:as :search_author.name :author)
+           (:as :search_author.bio :author_bio)
            (:as :search_shelf.name :shelf)
-           (:as :search_publisher.name :publisher))
+           (:as :search_publisher.name :publisher)
+           (:as :search_publisher.address :publisher_city))
     (from :search_card
           :search_author
           :search_publisher
@@ -202,9 +211,18 @@
            :search_card.cover
            :search_card.quantity
            :search_card.is_catalogue_selection
+           :search_card.summary
+           :search_card.width
+           :search_card.height
+           :search_card.thickness
+           :search_card.weight
+           :search_card.presedit
+           :search_card.meta
            (:as :search_author.name :author)
+           (:as :search_author.bio :author_bio)
            (:as :search_shelf.name :shelf)
-           (:as :search_publisher.name :publisher))
+           (:as :search_publisher.name :publisher)
+           (:as :search_publisher.address :publisher_city))
     (from :search_card
           :search_author
           :search_publisher
@@ -240,10 +258,20 @@
            :search_card.summary
            :search_card.quantity
            :search_card.is_catalogue_selection
+           :search_card.summary
+           :search_card.width
+           :search_card.height
+           :search_card.thickness
+           :search_card.weight
+           :search_card.presedit
+           :search_card.meta
            (:as :search_author.name :author)
+           (:as :search_author.bio :author_bio)
            (:as :search_shelf.name :shelf)
            (:as :search_shelf.id :shelf_id) ;; cannot use a -
-           (:as :search_publisher.name :publisher))
+           (:as :search_publisher.name :publisher)
+           (:as :search_publisher.address :publisher_city))
+
     (from :search_card
           :search_author
           :search_publisher)
@@ -514,7 +542,7 @@
   (format t "  - (reload-cards)~& ~
   - (load-init): reload the configuration~& ~
   - (load-post-init)~& ~
-  - (read-selection): to re-read the csv selection
+  - (read-selection): to get the selection from the DB or re-read it from the CSV.~&
   - (connect): when you change the DB during a session.~&
   - (load \"src/abstock.lisp\"): to reload a lisp file. HTML files are reloaded automatically.")
   (values))
