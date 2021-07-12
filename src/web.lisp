@@ -21,6 +21,8 @@
   "Custom theme name (string).
   The theme templates are located at src/templates/<theme>/.")
 
+(defvar *hostname* nil "The hostname. Required for Stripe payments.")
+
 ;;
 ;; User variables.
 ;;
@@ -175,7 +177,8 @@
                             :secret-question *secret-question*
                             :open-form t
                             :user-content *user-content*
-                            :contact *contact-infos*)))
+                            :contact *contact-infos*
+                            :stripe-api-key (getf *stripe-config* :|publishable-api-key|))))
 
 (easy-routes:defroute robots-route ("robots.txt" :method :get) ()
   (setf (hunchentoot:content-type*) "txt")

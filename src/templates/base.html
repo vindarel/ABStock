@@ -15,6 +15,9 @@
     <!-- Load the CSS theme if it exists. If it does not, that is not a problem. -->
     <link rel="stylesheet" href="/static/theme.css">
 
+    <!-- Stripe. It's advised to load it on all pages, even non-payment ones (security). -->
+    <script src="https://js.stripe.com/v3/"></script>
+
     <title>{% block title %} {{ user-content.brand-name }} {% endblock %}</title>
     {% if user-content.additional-headers %}
     {{ user-content.additional-headers | safe }}
@@ -88,30 +91,37 @@
     </section>
 
     <script>
-      function setbasketqty () {
-          let storage = window.localStorage;
-          let quantity = 0;
-          if (storage.getItem("savedcardids")) {
-              let ids = storage.getItem("savedcardids").split(",");
-              if (ids) {
-                  quantity = ids.length;
-              }
-          }
-          let elt = document.getElementById("basketqty");
-          elt.innerText = quantity;
+    function setbasketqty () {
+      let storage = window.localStorage;
+      let quantity = 0;
+      if (storage.getItem("savedcardids")) {
+        let ids = storage.getItem("savedcardids").split(",");
+        if (ids) {
+          quantity = ids.length;
+        }
       }
-      setbasketqty();
+      let elt = document.getElementById("basketqty");
+      elt.innerText = quantity;
+    }
+    setbasketqty();
 
-     function gotobasket () {
-         let storage = window.localStorage;
-         let ids = "";
-         if (storage.getItem("savedcardids")) {
-             ids = storage.getItem("savedcardids");
-         }
-         let url = "/panier?ids=" + ids;
-         console.log("redirecting to ", url);
-         window.location.href = url;
-     }
+    function gotobasket () {
+      let storage = window.localStorage;
+      let ids = "";
+      if (storage.getItem("savedcardids")) {
+        ids = storage.getItem("savedcardids");
+      }
+      let url = "/panier?ids=" + ids;
+      console.log("redirecting to ", url);
+      window.location.href = url;
+    }
+
+    function emptybasket () {
+      let storage = window.localStorage;
+      storage.setItem("savedcardids", "");
+      setbasketqty();
+    }
+
     </script>
 
     {% block content %} {% endblock %}
@@ -149,32 +159,32 @@
 
   <!--TODO: move the JS into abstock.js when there is no MR (potential) conflicts.-->
   <script>
-    (function() {
-        var burger = document.querySelector('.burger');
-        var menu = document.querySelector('#'+burger.dataset.target);
-        burger.addEventListener('click', function() {
-            burger.classList.toggle('is-active');
-            menu.classList.toggle('is-active');
-        });
-    })();
+  (function() {
+    var burger = document.querySelector('.burger');
+    var menu = document.querySelector('#'+burger.dataset.target);
+    burger.addEventListener('click', function() {
+      burger.classList.toggle('is-active');
+      menu.classList.toggle('is-active');
+    });
+  })();
 
-    function add_to_cart (id) {
-      console.log("-- adding card of id ", id, " into the shopping basket.");
-      let storage = window.localStorage;
-      if (storage.getItem("savedcardids")) {
-        let ids = storage.getItem("savedcardids");
-        ids = ids + "," + id;
-        storage.setItem("savedcardids", ids);
-        console.log("local storage is now: ", ids);
-      } else {
-        console.log("saving card id: ", id);
-        storage.setItem("savedcardids", id);
-      }
+  function add_to_cart (id) {
+    console.log("-- adding card of id ", id, " into the shopping basket.");
+    let storage = window.localStorage;
+    if (storage.getItem("savedcardids")) {
+      let ids = storage.getItem("savedcardids");
+      ids = ids + "," + id;
+      storage.setItem("savedcardids", ids);
+      console.log("local storage is now: ", ids);
+    } else {
+      console.log("saving card id: ", id);
+      storage.setItem("savedcardids", id);
+    }
 
-      setbasketqty();  // from base.
+    setbasketqty();  // from base.
 
-      Notiflix.Notify.Success('Le livre a été ajouté au panier.');
-    };
+    Notiflix.Notify.Success('Le livre a été ajouté au panier.');
+  };
 
   </script>
 </html>

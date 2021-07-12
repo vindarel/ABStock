@@ -50,8 +50,9 @@
                  (:file "web")
                  (:file "email")
                  (:file "selection")
-                 (:file "api")
-                 (:file "system-utils"))))
+                 (:file "utils")
+                 (:file "system-utils")
+                 (:file "stripe"))))
 
   :build-operation "program-op"
   :build-pathname "abstock"

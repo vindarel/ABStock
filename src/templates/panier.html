@@ -31,6 +31,7 @@
 
         {% if user-content.basket-show-validation-form %}
         {% include "validation-form.html" %}
+        <button class="button is-link" id="checkout-button">Checkout</button>
         {% endif %}
 
       </div>
@@ -51,21 +52,21 @@
 	    <div class="media-content">
 	      <div class="content">
                 <h4> {{ card.title }} </h4>
-		<p>
+                <p>
                   <span> {{ card.author }} </span>
-		  <span class="tag"> {{ card.shelf }} </span>
+                  <span class="tag"> {{ card.shelf }} </span>
                   <span> {{ card.publisher | capfirst }} </span>
-		</p>
-	      </div>
-	    </div>
-	    <div class="media-right">
-	      <span name="price" data-price="{{ card.price }}" class="has-text-grey-light"> {{ card.price | price }} €</span>
+                </p>
+              </div>
+            </div>
+            <div class="media-right">
+              <span name="price" data-price="{{ card.price }}" class="has-text-grey-light"> {{ card.price | price }} €</span>
               <span  class="icon is-small" style="cursor: pointer;" title="Ajouter au panier" onclick="basketremove({{ card.id }})">
                 <i class="delete is-small"></i>
               </span>
-	    </div>
-	  </div>
-	</article>
+            </div>
+          </div>
+        </article>
       </div>
       {% endfor %}
     </div>
@@ -73,57 +74,89 @@
 </div>
 
 <script>
-  function totalprice () {
-    let prices = document.getElementsByName("price");
-    let total = 0.0;
-    for (var i = 0; i < prices.length; i++) {
-      let val = prices[i].dataset.price;
-      if (val) {
-        val = parseFloat(val);
-        total += val * 100;
-      }
+function totalprice () {
+  let prices = document.getElementsByName("price");
+  let total = 0.0;
+  for (var i = 0; i < prices.length; i++) {
+    let val = prices[i].dataset.price;
+    if (val) {
+      val = parseFloat(val);
+      total += val * 100;
     }
-    let elt_total = document.getElementById("total");
-    elt_total.innerText = total / 100;
+  }
+  let elt_total = document.getElementById("total");
+  elt_total.innerText = total / 100;
+}
+
+totalprice();
+
+function basketremove (id) {
+  let idtag = "card" + id;
+  let elt = document.getElementById(idtag);
+  // Remove element.
+  if (elt) {
+    elt.remove();
+    console.log("-- card removed.");
   }
 
+  // Update the total price.
   totalprice();
 
-  function basketremove (id) {
-    let idtag = "card" + id;
-    let elt = document.getElementById(idtag);
-    // Remove element.
-    if (elt) {
-      elt.remove();
-      console.log("-- card removed.");
-    }
-
-    // Update the total price.
-    totalprice();
-
-    // "remove" from local storage (recompute all).
-    let idelts = document.getElementsByName("cardid");
-    let ids_string = "";
-    for (var i = 0; i < idelts.length; i++) {
-      let id = idelts[i].dataset.id;
-      ids_string = ids_string + id + ",";
-    }
-    window.localStorage.setItem("savedcardids", ids_string);
-    console.log("-- saved ids are now: ", window.localStorage.getItem("savedcardids"));
-
-    // update hidden form field.
-    insert_hidden_ids();
+  // "remove" from local storage (recompute all).
+  let idelts = document.getElementsByName("cardid");
+  let ids_string = "";
+  for (var i = 0; i < idelts.length; i++) {
+    let id = idelts[i].dataset.id;
+    ids_string = ids_string + id + ",";
   }
+  window.localStorage.setItem("savedcardids", ids_string);
+  console.log("-- saved ids are now: ", window.localStorage.getItem("savedcardids"));
 
-  function insert_hidden_ids () {
-    let ids = window.localStorage.getItem("savedcardids");
-    if (ids) {
-      let elt = document.getElementById("formids");
-      elt.value = ids;
-    }
-  }
-
+  // update hidden form field.
   insert_hidden_ids();
+}
+
+function insert_hidden_ids () {
+  let ids = window.localStorage.getItem("savedcardids");
+  if (ids) {
+    let elt = document.getElementById("formids");
+    elt.value = ids;
+  }
+}
+
+insert_hidden_ids();
 </script>
+
+<script type="text/javascript">
+// Create an instance of the Stripe object with your publishable API key
+var stripe = Stripe('{{stripe-api-key}}');
+var checkoutButton = document.getElementById('checkout-button');
+
+checkoutButton.addEventListener('click', function() {
+  // Create a new Checkout Session using the server-side endpoint you
+  // created in step 3.
+  fetch('/stripe/create-checkout-session' + window.location.search, {
+    method: 'POST',
+  })
+    .then(function(response) {
+      return response.json();
+    })
+    .then(function(session) {
+      return stripe.redirectToCheckout({ sessionId: session.id });
+    })
+    .then(function(result) {
+      // If `redirectToCheckout` fails due to a browser or network
+      // error, you should display the localized error message to your
+      // customer using `error.message`.
+      if (result.error) {
+        alert(result.error.message);
+      }
+    })
+    .catch(function(error) {
+      console.error('Error:', error);
+    });
+});
+</script>
+
 
 {% endblock %}

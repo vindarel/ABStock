@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ user-content.brand-name }}
+{% endblock %}
+
+{% block content %}
+<section class="hero is-info">
+
+  <div class="hero-head">
+    
+  </div>
+
+  <div class="hero-body">
+    <div class="container has-text-justified">
+      <div class="column is-6 is-offset-3">
+        <h1 class="title">
+          {% if user-content.welcome-image %}
+          <img src="{{ user-content.welcome-image }}"></img>
+          {% endif %}
+        </h1>
+        <h2 class="subtitle">
+          Checkout canceled
+        </h2>
+        <div class="box">
+          Forgot to add something to your cart? Shop around then come back to pay!
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
