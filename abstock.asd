@@ -44,7 +44,6 @@
                (:module "src"
                 :components
                 ((:file "abstock")
-                 (:file "utils")
                  (:file "user-content")
                  (:file "parameters")
                  (:file "web")
