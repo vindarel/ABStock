@@ -4,11 +4,15 @@
 
 (defparameter *stripe-api-url* "https://api.stripe.com/v1")
 
-(push (cons "application" "json") drakma:*text-content-types*)
+(defparameter +checkout-success.html+ (djula:compile-template* "checkout-success.html"))
+(defparameter +checkout-cancel.html+ (djula:compile-template* "checkout-cancel.html"))
+
+(push (cons "application" "json") drakma:*text-content-types*)  ;XXX:
 
 (defun stripe-post (path data &rest args)
   (format t "Stripe post to: ~a ~a~%" (format nil "~a~a" *stripe-api-url* path)
           data)
+  ;TODO: use dexador
   (apply #'drakma:http-request
          (format nil "~a~a" *stripe-api-url* path)
          :method :post
@@ -26,6 +30,7 @@
 ;;   -d "line_items[0][quantity]"=2 \
 ;;   -d mode=payment
 (defun create-stripe-checkout-session (cards)
+  ;TODO: use jonathan
   (json:decode-json-from-source
    (stripe-post "/checkout/sessions"
                 nil
@@ -34,7 +39,8 @@
 
 ;; (create-stripe-checkout-session (subseq *cards* 0 3))
 
-(easy-routes:defroute create-stripe-checkout-session-route ("/stripe/create-checkout-session" :method :post :decorators (easy-routes:@json))
+(easy-routes:defroute create-stripe-checkout-session-route
+    ("/stripe/create-checkout-session" :method :post :decorators (easy-routes:@json))
     (ids)
 
   (let* ((ids-list (str:split "," ids :omit-nulls t))
@@ -42,22 +48,17 @@
                              (parse-integer it))
                            ids-list))
          (cards (filter-cards-by-ids ids-list)))
-    
+
     (let ((session (create-stripe-checkout-session cards)))
       (json:encode-json-to-string (list (cons :id (access session :id)))))))
 
-(defparameter +checkout-success.html+ (djula:compile-template* "checkout-success.html"))
 
-(easy-routes:defroute checkout-success-route ("/checkout/success")
-    ()
+(easy-routes:defroute checkout-success-route ("/checkout/success") ()
   (djula:render-template* +checkout-success.html+ nil
                           :contact *contact-infos*
                           :user-content *user-content*))
 
-(defparameter +checkout-cancel.html+ (djula:compile-template* "checkout-cancel.html"))
-
-(easy-routes:defroute checkout-cancel-route ("/checkout/cancel")
-    ()
+(easy-routes:defroute checkout-cancel-route ("/checkout/cancel") ()
   (djula:render-template* +checkout-cancel.html+ nil
                           :contact *contact-infos*
                           :user-content *user-content*))
@@ -77,12 +78,14 @@
     (round-amount (* (expt 10 2)
                      (/ (parse-integer (remove #\. string))
                         (expt 10 decs))))))
+#+(or)
+(assert (equal 330 (parse-amount "3.3")))
 
 (defun decimal (number &optional (decimals 2))
   (* number (expt 10 decimals)))
 
 (defun float-to-cents (float)
-  (parse-amount (format nil (format nil "~~~a$" 2) float))) 
+  (parse-amount (format nil (format nil "~~~a$" 2) float)))
 
 (defun price-to-cents (price)
   (float-to-cents price))
@@ -103,7 +106,32 @@
     ("success_url" . ,(format nil "~a/checkout/success" *hostname*))
     ("cancel_url" . ,(format nil "~a/checkout/cancel" *hostname*))))
 
-;; (serialize-stripe-session (subseq *cards* 0 3))
+#+(or)
+(serialize-stripe-session (subseq *cards* 0 3))
+#| It looks like this:
+
+(OBJECT ("payment_method_types" ARRAY "card")
+ ("line_items" ARRAY
+  (OBJECT
+   (#1="price_data" OBJECT #2=("currency" . "eur")
+    (#3="product_data" OBJECT
+     (#4="name" . "Astrid Bromure Tome2 Comment Atomiser Les Fantomes")
+     (#5="images" ARRAY NIL))
+    (#6="unit_amount" . 1050))
+   . #7=(("quantity" . 1)))
+  (OBJECT
+   (#1# OBJECT #2# (#3# OBJECT (#4# . "Aspirine - Tome1") (#5# ARRAY NIL))
+    (#6# . 1600))
+   . #7#)
+  (OBJECT
+   (#1# OBJECT #2#
+    (#3# OBJECT (#4# . "Aspirine - Tome 3 - Monster Tinder") (#5# ARRAY NIL))
+    (#6# . 1600))
+   . #7#))
+ ("mode" . "payment") ("success_url" . "NIL/checkout/success")
+ ("cancel_url" . "NIL/checkout/cancel"))
+
+|#
 
 (defun encode-post-parameters (object)
   (let (parameters)
@@ -139,4 +167,29 @@
       (%encode-post-parameters object nil)
       parameters)))
 
-;; (encode-post-parameters (serialize-stripe-session (subseq *cards* 0 3)))
+#+(or)
+(encode-post-parameters (serialize-stripe-session (subseq *cards* 0 3)))
+
+#|
+
+(("cancel_url" . "NIL/checkout/cancel")
+ ("success_url" . "NIL/checkout/success") ("mode" . "payment")
+ ("line_items[2][quantity]" . "1")
+ ("line_items[2][price_data][unit_amount]" . "1600")
+ ("line_items[2][price_data][product_data][images][0]" . "NIL")
+ ("line_items[2][price_data][product_data][name]"
+  . "Aspirine - Tome 3 - Monster Tinder")
+ ("line_items[2][price_data][currency]" . "eur")
+ ("line_items[1][quantity]" . "1")
+ ("line_items[1][price_data][unit_amount]" . "1600")
+ ("line_items[1][price_data][product_data][images][0]" . "NIL")
+ ("line_items[1][price_data][product_data][name]" . "Aspirine - Tome1")
+ ("line_items[1][price_data][currency]" . "eur")
+ ("line_items[0][quantity]" . "1")
+ ("line_items[0][price_data][unit_amount]" . "1050")
+ ("line_items[0][price_data][product_data][images][0]" . "NIL")
+ ("line_items[0][price_data][product_data][name]"
+  . "Astrid Bromure Tome2 Comment Atomiser Les Fantomes")
+ ("line_items[0][price_data][currency]" . "eur")
+ ("payment_method_types[0]" . "card"))
+|#
