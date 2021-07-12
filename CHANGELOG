@@ -1,3 +1,8 @@
+# v0.10, July, 2021
+
+- added: we fetch more fields from the Abelujo DB, including new ones, like `meta`. Requires an Abelujo update from July, 10th.
+- added: new API /api/v1/search.json?query=, cached for 5 minutes.
+
 # v0.9 - May, 2021
 
 - custom themes:
