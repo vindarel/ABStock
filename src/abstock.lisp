@@ -320,7 +320,7 @@
      do (setf (getf card :|repr|)
               (str:downcase (str:concat ascii-title " " ascii-publisher)))
      do  (setf (getf card :|repr2|)
-               (str:downcase (str:concat ascii-author " " ascii-title ascii-publisher)))
+               (str:downcase (str:concat ascii-author " " ascii-title " " ascii-publisher)))
      do (setf (getf card :|details_url|)
               (slugify-details-url card))
      collect card))
