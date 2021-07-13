@@ -22,6 +22,8 @@
   The theme templates are located at src/templates/<theme>/.")
 
 (defvar *hostname* nil "The hostname. Required for Stripe payments.")
+#+(or)
+(setf *hostname* "http://localhost:8899")
 
 ;;
 ;; User variables.
@@ -178,6 +180,7 @@
                             :open-form t
                             :user-content *user-content*
                             :contact *contact-infos*
+                            :stripe-enabled-p (stripe-enabled-p)
                             :stripe-api-key (getf *stripe-config* :|publishable-api-key|))))
 
 (easy-routes:defroute robots-route ("robots.txt" :method :get) ()
@@ -260,6 +263,7 @@
                                :secret-question *secret-question*
                                :form-data `(:name ,name :email ,email :phone ,phone :message ,message)
                                :user-content *user-content*
+                               :stripe-enabled-p (stripe-enabled-p)
                                :contact *contact-infos*))
 
       ;; Give one email or a phone.

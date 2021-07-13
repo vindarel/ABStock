@@ -96,3 +96,16 @@
       """")
 
 (setf *ignore-shelves-starting-by* '("test-" "TEST"))
+
+;;;
+;;; Stripe
+;;;
+
+;; enable/disable Stripe integration.
+(setf *stripe-enabled* t)
+
+;; Stripe settings
+(setf *stripe-config*
+      '(:|publishable-api-key| "pk_test_JVEvtMDiifqgpjqTL34p7DL000qGyw13EH"
+        ;; do NOT publish the secret key (other than a test one).
+        :|secret-api-key| "sk_test_51FZIQmJqOLQjpdKjtl8MWDPSzc4CdZGHuIMTy4wp2clT98AL0npvUZ2ELMxkBVb3UPvzVoZgkWnCfUEBv0iKbXp900KvsGcB1r"))

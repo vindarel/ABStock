@@ -1,6 +1,21 @@
 (in-package :abstock)
 
-(defvar *stripe-config*)
+(defparameter *stripe-enabled* t
+  "If non t, disable the Stripe integration.")
+
+(defparameter *stripe-config* nil
+  "Stripe configuration with keys:
+- :|secret-api|
+- :|publishable-api-key|")
+
+;; testing data
+#+(or)
+(setf *stripe-config*
+      '(:|publishable-api-key| "pk_test_JVEvtMDiifqgpjqTL34p7DL000qGyw13EH"
+        :|secret-api-key| "sk_test_51FZIQmJqOLQjpdKjtl8MWDPSzc4CdZGHuIMTy4wp2clT98AL0npvUZ2ELMxkBVb3UPvzVoZgkWnCfUEBv0iKbXp900KvsGcB1r"))
+
+;; Testing credit cards:
+;; https://stripe.com/docs/testing#cards
 
 (defparameter *stripe-api-url* "https://api.stripe.com/v1")
 
@@ -8,6 +23,13 @@
 (defparameter +checkout-cancel.html+ (djula:compile-template* "checkout-cancel.html"))
 
 (push (cons "application" "json") drakma:*text-content-types*)  ;XXX:
+
+(defun stripe-enabled-p ()
+  (when (and *stripe-enabled*
+             *stripe-config*
+             (getf *stripe-config* :|publishable-api-key|)
+             (getf *stripe-config* :|secret-api-key|))
+    t))
 
 (defun stripe-post (path data &rest args)
   (format t "Stripe post to: ~a ~a~%" (format nil "~a~a" *stripe-api-url* path)
