@@ -1,3 +1,7 @@
+# dev
+
+- if `*fetch-summaries*` is `t` in config.lisp, try to find the book summary on an internet source.
+
 # v0.10, July, 2021
 
 - added: we fetch more fields from the Abelujo DB, including new ones, like `meta`. Requires an Abelujo update from July, 10th.

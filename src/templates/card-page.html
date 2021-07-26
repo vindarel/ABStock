@@ -19,9 +19,12 @@
         </div>
       </div>
 
-      <div class="card-content column is-4">
+      <div class="card-content column is-5">
         <div class="media">
           <span class="media-content">
+
+            <div id="card-id" style="display: none" data-id="{{ card.id }}">  </div>
+
             <p class="title is-4 no-padding">
               <a href="{{ card | url }}" style="color: black;">
                 {{ card.title }}
@@ -44,20 +47,22 @@
             {% endif %}
 
             {% if card.isbn %}
-	    <div class="has-text-grey-light"> {{ card.isbn }} </div>
+	    <div id="card-isbn" class="has-text-grey-light"> {{ card.isbn }} </div>
             {% endif %}
 
             {% if card.price %}
 	    <div class="title is-6"> {{ card.price | price }} €</div>
             {% endif %}
 
-            {% if card.summary %}
-	    <div class="content"><blockquote> {{ card.summary }} </blockquote></div>
-            {% endif %}
-
             <button class="button is-medium is-fullwidth is-outlined is-rounded" style="cursor: pointer;" title="Ajouter au panier" onclick="add_to_cart({{ card.id }})"> Ajouter au panier 
               <i class="fas fa-lg fa-plus-circle" style="color: #ea62ff"></i>
             </button>
+
+            {% if card.summary %}
+	    <div class="content"><blockquote> {{ card.summary }} </blockquote></div>
+            {% else %}
+            <div> <blockquote id="new-card-summary"> </blockquote></div>
+            {% endif %}
 
           </span>
         </div>
@@ -90,5 +95,42 @@
 
   </div>
 </div>
+
+<script>
+  function is_summary_field () {
+    let node = document.getElementById("new-card-summary");
+    console.log(node);
+    if (node !== undefined) {
+      return true;
+    }
+  }
+
+  function get_summary () {
+    let check = is_summary_field();
+    if (check != true) {
+      return;
+    }
+    let id_node = document.getElementById("card-id");
+    let id = id_node.dataset['id'];
+    fetch(`/api/card/${id}/summary`, {
+    method: 'GET',
+    })
+      .then((response) => {
+        console.log(response);
+        // console.log(response.text());
+        return response.text();
+      })
+    .then((text) => {
+      console.log(text);
+      let summary_node = document.getElementById("new-card-summary");
+      summary_node.textContent = text;
+      return text;
+    });
+  }
+
+  get_summary();
+
+
+</script>
 
 {% endblock %}

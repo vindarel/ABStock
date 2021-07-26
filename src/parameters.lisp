@@ -11,3 +11,7 @@
 
 (defparameter *card-page-url* (concatenate 'string "/" *card-page-url-name* "/:slug")
   "Full representation of the URL that links to a card page. Build on `*card-page-url-name*', adds slashes and the slug. It creates /livre/:slug, suitable to pass to easy-routes:defroute.")
+
+
+(defparameter *fetch-summaries* nil
+  "If t, visiting the page of a book that doesn't have a summary will look for one on an internet data source.")

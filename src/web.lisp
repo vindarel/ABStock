@@ -364,13 +364,15 @@
 
 (easy-routes:defroute api-summary-route ("/api/card/:id/summary" :method :get) ()
   "If the card of this id has no summary, look for it on an internet datasource."
-  (let* ((card (search-card id)))
-    (log:info card)
-    (unless (str:non-blank-string-p (access card :|summary|))
-      (let ((summary (datasources/librairiedeparis::get-summary-from-isbn (access card :|isbn|))))
-        (when summary
-          (setf (hunchentoot:content-type*) "text/plain")
-          summary)))))
+  (when *fetch-summaries*               ;; false by default for now.
+    (let* ((card (search-card id)))
+      (log:info card)
+      (unless (str:non-blank-string-p (access card :|summary|))
+        (let ((summary (datasources/librairiedeparis::get-summary-from-isbn (access card :|isbn|))))
+          (when summary
+            (setf (access card :|summary|) summary)
+            (setf (hunchentoot:content-type*) "text/plain")
+            summary))))))
 
 (easy-routes:defroute random-card ("/au-pif") ()
   (let* ((card (first (pick-cards :n 1)))
