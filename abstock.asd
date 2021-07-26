@@ -26,13 +26,19 @@
                :easy-routes
                :djula
 
+               ;; web scraping
+               :lquery ;; datasources/dilicom
+
                ;; scripting
                :unix-opts
                :cl-ansi-text
 
+               ;; utils
+               :arrows
+
                ;; dev
                :log4cl
-               :sentry-client.async           ;; ! not in Quicklisp
+               :sentry-client.async ;; ! not in Quicklisp
                :sentry-client.hunchentoot
                ;; :cl-i18n
                )
@@ -41,6 +47,10 @@
                 ((:file "package")
                  (:file "conditions")
                  (:file "txt-loader")))
+               (:module "src/datasources"
+                :components
+                ((:file "packages")
+                 (:file "librairiedeparis")))
                (:module "src"
                 :components
                 ((:file "abstock")

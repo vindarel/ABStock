@@ -334,7 +334,7 @@
      :key (lambda (card)
             (getf card :|title|)))))
 
-(easy-routes:defroute card-page (#.*card-page-url* :method :get) ()
+(easy-routes:defroute card-page-route (#.*card-page-url* :method :get) ()
   "Show a card.
   The URL contains a :slug part.
   The slug must start with an id. The rest of the slug, the title, is not important."
@@ -361,6 +361,16 @@
                                :same-shelf same-shelf))
       (t
        (djula:render-template* +404.html+ nil)))))
+
+(easy-routes:defroute api-summary-route ("/api/card/:id/summary" :method :get) ()
+  "If the card of this id has no summary, look for it on an internet datasource."
+  (let* ((card (search-card id)))
+    (log:info card)
+    (unless (str:non-blank-string-p (access card :|summary|))
+      (let ((summary (datasources/librairiedeparis::get-summary-from-isbn (access card :|isbn|))))
+        (when summary
+          (setf (hunchentoot:content-type*) "text/plain")
+          summary)))))
 
 (easy-routes:defroute random-card ("/au-pif") ()
   (let* ((card (first (pick-cards :n 1)))

@@ -310,7 +310,8 @@
 
 (defun normalise-cards (cards)
   "Add a repr key that joins title and author and removes accents.
-  Change details_url to a short, slugified URL relative to the server root."
+  Change details_url to a short, slugified URL relative to the server root.
+  XXX: we should keep the initial details_url and add a new field."
   (loop for card in cards
      ;; access is more generic than getf, it also works with uninterned symbols
      ;; (but we don't have such anymore).
