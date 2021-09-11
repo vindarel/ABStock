@@ -158,6 +158,11 @@ SSH.
 HTML changes are automatically taken up by the server. (you can switch
 this off, this Djula's documentation).
 
+### Environnement variables
+
+- `AB_PORT` to set the port (defaults to 8989). Takes precedence on the configuration file.
+
+
 ### Reloading the shelves and the cards in the Lisp shell
 
 When you are in lisp shell and Abstock is runing you can reload the shelves or the cards:
@@ -173,6 +178,8 @@ When you are in lisp shell and Abstock is runing you can reload the shelves or t
 
 ### Systemd
 
+Build the binary, then in `/etc/systemd/system/abstock.service`:
+
 ```
 [Unit]
 Description=Abstock
@@ -180,8 +187,10 @@ Description=Abstock
 [Service]
 Restart=on-failure
 WorkingDirectory=/home/abstock/repo
-ExecStart=/usr/bin/sbcl --load run.lisp --eval '(in-package :abstock)'
+ExecStart=/home/abstock/repo/abstock --pid PID.txt
 User=abstock  # or an existing user
+Type=simple
+Restart=on-failure
 
 [Install]
 WantedBy=multi-user.target
