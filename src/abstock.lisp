@@ -102,7 +102,7 @@
 (defvar *ignore-shelves-starting-by* nil
   "List of strings. Ignore the shelves whose name starts by one of them.")
 
-(defvar *page-length* 50
+(defvar *page-length* 200
   "Page length. Not used much yet.")
 
 ;;
