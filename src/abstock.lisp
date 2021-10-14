@@ -448,6 +448,7 @@
     (setf shelf (or (ignore-errors (parse-integer shelf))
                     -1)))
 
+  ;; Asking all titles. Return a subset.
   (when (and (str:blank? query)
              (and shelf
                   (minusp shelf)))
@@ -456,6 +457,7 @@
                                          (length *cards*)))
               *page-length*)))
 
+  ;; Searching in a shelf.
   (let* (isbns-not-found
          (cards (if (and shelf
                          (plusp shelf))
@@ -492,7 +494,8 @@
                              collect card))))
                      cards)))
     (format t "Found: ~a~&" (length result))
-    (values result
+    ;; Return a subset. It blows the stack with 6.000 titles.
+    (values (alexandria-2:subseq* result 0 *page-length*)
             (length result)
             isbns-not-found)))
 
