@@ -4,6 +4,7 @@
   :author "vindarel"
   :license "GPL3"
   :depends-on (
+               ;; use CIEL !
                :bordeaux-threads
                ;; web client
                :dexador
@@ -35,6 +36,7 @@
 
                ;; utils
                :arrows
+               :serapeum
 
                ;; dev
                :log4cl

@@ -440,15 +440,58 @@
     (values result
             (set-difference isbns collected-isbns :test #'string-equal))))
 
-(defun search-cards (query &key shelf)
+(defun get-nb-pages (length page-size)
+  "Given a total number of elements and a page size, compute how many pages fit in there.
+  (if there's a remainder, add 1 page)"
+  (multiple-value-bind (nb-pages remainder)
+      (floor length page-size)
+    (if (plusp remainder)
+        (1+ nb-pages)
+        nb-pages)))
+#+abstock-test
+(assert (and (= 30 (get-nb-pages 6000 200))
+             (= 31 (get-nb-pages 6003 200))
+             (= 1 (get-nb-pages 1 200))))
+
+(defun get-pagination (&key (page 1) (nb-elements 0) (page-size 200)
+                         (max-nb-buttons 5))
+  "From a current page number, a total number of elements, a page size,
+  return a dict with all of that, and the total number of pages.
+
+  Example:
+
+(get-pagination :nb-elements 1001)
+;; =>
+ (dict
+  :PAGE 1
+  :NB-ELEMENTS 1001
+  :PAGE-SIZE 200
+  :NB-PAGES 6
+  :TEXT-LABEL \"Page 1 / 6\"
+ )
+"
+  (let* ((nb-pages (get-nb-pages nb-elements page-size))
+         (max-nb-buttons (min nb-pages max-nb-buttons)))
+    (serapeum:dict :page page
+                   :nb-elements nb-elements
+                   :page-size page-size
+                   :nb-pages nb-pages
+                   :max-nb-buttons max-nb-buttons
+                   :text-label (format nil "Page ~a / ~a" page nb-pages))))
+
+(defun search-cards (query &key shelf (page 1))
   "cards: plist,
    query: string,
-   shelf (optional): id (int)."
+   shelf (optional): id (int)
+   page (optional): int (or string)."
   (when (stringp shelf)
     (setf shelf (or (ignore-errors (parse-integer shelf))
                     -1)))
+  (setf page (or (ignore-errors (parse-integer page))
+                 1))
 
   ;; Asking all titles. Return a subset.
+  ;XXX: pagination?
   (when (and (str:blank? query)
              (and shelf
                   (minusp shelf)))
@@ -493,11 +536,68 @@
                                       (ppcre:scan query repr2))
                              collect card))))
                      cards)))
-    (format t "Found: ~a~&" (length result))
-    ;; Return a subset. It blows the stack with 6.000 titles.
-    (values (alexandria-2:subseq* result 0 *page-length*)
-            (length result)
-            isbns-not-found)))
+    (let ((pagination (get-pagination :page page
+                                      :page-size *page-length*
+                                      :nb-elements (length result))))
+      (format t "Found: ~a. Pagination: ~S ~&" (length result) pagination)
+      ;; Return a subset of the results. It blows the stack(?) with 6.000 titles.
+      (values (get-page-items result pagination)
+              (length result)
+              isbns-not-found
+              pagination))))
+
+(defun get-page-items (elements pagination)
+  "From this list of items and this pagination object, return the subset of the list.
+
+  Supposing we have our entire list of results in memory. We are not querying a DB here."
+  (assert (hash-table-p pagination) nil
+          "the pagination object is expected to be a hash table. Otherwise, use access:access below.")
+  (let* ((page (or (gethash :page pagination 1)
+                   1))
+         (start (max 0
+                     (* (1- page)
+                        (gethash :page-size pagination 200))))
+         (end (* page
+                 (gethash :page-size pagination 200))))
+    ;; Be defensive.
+    (when (> start end)
+      (return-from get-page-items nil))
+    (when (> start (gethash :nb-elements pagination))
+      (return-from get-page-items nil))
+    ;; subseq* doesn't care about a too large end index.
+    ;; (but start must be in range).
+    (alexandria-2:subseq* elements
+                          ;; start: page number
+                          start
+                          ;; end: (page number + 1) * page size
+                          end)))
+#+test-abstock
+(assert
+ (and (let ((items '(:a :b :c :d :e)))
+        (get-page-items items (get-pagination :page-size 2
+                                              :page 3
+                                              :NB-ELEMENTS  (length items))))
+      (equal '(:a :b)
+             (let ((items '(:a :b :c :d :e)))
+               (get-page-items items (get-pagination :page-size 2
+                                                     :page 1
+                                                     :NB-ELEMENTS  (length items)))))
+      (equal '(:c :d)
+             (let ((items '(:a :b :c :d :e)))
+               (get-page-items items (get-pagination :page-size 2
+                                                     :page 2
+                                                     :NB-ELEMENTS  (length items)))))
+      ;; bad page number.
+      (null
+       (let ((items '(:a :b :c :d :e)))
+         (get-page-items items (get-pagination :page-size 2
+                                               :page 99
+                                               :NB-ELEMENTS  (length items)))))
+      (null
+       (let ((items '(:a :b :c :d :e)))
+         (get-page-items items (get-pagination :page-size 2
+                                               :page -2
+                                               :NB-ELEMENTS  (length items)))))))
 
 (defun save (&key (file "cards.lisp"))
   "Save cards and shelves on file. Re-read with `load-cards'.

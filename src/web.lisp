@@ -133,32 +133,30 @@
                           :selection (get-selection)
                           :shelves *shelves*))
 
-(easy-routes:defroute search-route ("/search" :method :get) (q rayon)
-  (format t "~& /search ~a, rayon: ~a~&" q rayon)
-  (let* ((rayon (when rayon (ignore-errors (parse-integer rayon))))
-         cards
-         result-length
-         isbns-not-found)
-    (multiple-value-bind (res res-length not-found)
+(easy-routes:defroute search-route ("/search" :method :get) (q rayon page)
+  (format t "~& /search ~a, rayon: ~a, page: ~a~&" q rayon page)
+  (let ((rayon (when rayon (ignore-errors (parse-integer rayon)))))
+    (multiple-value-bind (cards result-length isbns-not-found pagination-object)
         (search-cards (slug:asciify (str:downcase q))
-                      :shelf rayon)
-      (setf cards res)
-      (setf result-length res-length)
-      (setf isbns-not-found not-found))
-    (djula:render-template* +cards.html+ nil
-                            :title (format nil "~a - ~a"
-                                           (user-content-brand-name *user-content*)
-                                           q)
-                            :user-content *user-content*
-                            :query q
-                            :query-length (length (str:words q))
-                            :shelf_id rayon
-                            :cards cards
-                            :isbns-not-found isbns-not-found
-                            :length-isbns-not-found (length isbns-not-found)
-                            :shelves *shelves*
-                            :no-results (or (null result-length)
-                                            (zerop result-length)))))
+                      :shelf rayon
+                      :page page)
+      (djula:render-template* +cards.html+ nil
+                              :title (format nil "~a - ~a"
+                                             (user-content-brand-name *user-content*)
+                                             q)
+                              :user-content *user-content*
+                              :query q
+                              :query-length (length (str:words q))
+                              :shelf_id rayon
+                              :cards cards
+                              :isbns-not-found isbns-not-found
+                              :length-isbns-not-found (length isbns-not-found)
+                              :shelves *shelves*
+                              :current-page 1
+                              :total-pages (get-nb-pages result-length *page-length*)
+                              :pagination pagination-object
+                              :no-results (or (null result-length)
+                                              (zerop result-length))))))
 
 (easy-routes:defroute panier-route ("/panier" :method :get) (ids)
   (let* ((ids-list (str:split "," ids :omit-nulls t))

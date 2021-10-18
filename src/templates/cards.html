@@ -38,6 +38,47 @@
       {% endfor %}
     </div>
 
+    {% if pagination %}
+    <nav class="pagination" role="navigation" aria-label="pagination">
+      <a class="pagination-link"> {{ pagination.text-label }} </a>
+      <ul class="pagination-list">
+        <li>
+          {% if pagination.page == 1 %}
+          <a class="pagination-link" aria-label="Goto previous page" disabled> < </a>
+          {% else %}
+          <a class="pagination-link" aria-label="Goto previous page"
+             href="/search?q={{ query }}&rayon={{ shelf_id }}&page=1"> < </a>
+          {% endif %}
+
+          {% for _ in pagination.max-nb-buttons.make-list %}
+          {% if forloop.counter == pagination.page %}
+          <a class="pagination-link is-current" aria-label="Goto page {{ forloop.counter }}"
+              href="/search?q={{ query }}&rayon={{ shelf_id }}&page={{ forloop.counter }}" >
+            {{ forloop.counter }} </a>
+          {% else %}
+          <a class="pagination-link" aria-label="Goto page {{ forloop.counter }}"
+              href="/search?q={{ query }}&rayon={{ shelf_id }}&page={{ forloop.counter }}" >
+            {{ forloop.counter }} </a>
+          {% endif %}
+          {% endfor %}
+
+          {% if pagination.page == pagination.nb-pages %}
+          <a class="pagination-link" aria-label="Goto next page" disabled> > </a>
+          {% else %}
+          <a class="pagination-link" aria-label="Goto next page"
+             href="/search?q={{ query }}&rayon={{ shelf_id }}&page={{ pagination.nb-pages }}"> > </a>
+          {% endif %}
+        </li>
+        <li>
+          {% if pagination.page != pagination.nb-pages %}
+          <span class="pagination-ellipsis">&hellip;</span>
+          {% endif %}
+        </li>
+      </ul>
+    </nav>
+    {% endif %}
+
+    </div>
   </div>
 </div>
 
