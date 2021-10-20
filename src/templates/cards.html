@@ -40,7 +40,7 @@
 
     {% if pagination %}
     <nav class="pagination" role="navigation" aria-label="pagination">
-      <a class="pagination-link"> {{ pagination.text-label }} </a>
+      <!-- <a class="pagination-link"> {{ pagination.text-label }} </a> -->
       <ul class="pagination-list">
         <li>
           {% if pagination.page == 1 %}
@@ -51,6 +51,7 @@
           {% endif %}
 
           {% for _ in pagination.max-nb-buttons.make-list %}
+          <!-- show the is-current class (blue button) or not -->
           {% if forloop.counter == pagination.page %}
           <a class="pagination-link is-current" aria-label="Goto page {{ forloop.counter }}"
               href="/search?q={{ query }}&rayon={{ shelf_id }}&page={{ forloop.counter }}" >
@@ -62,11 +63,18 @@
           {% endif %}
           {% endfor %}
 
-          {% if pagination.max-nb-buttons > pagination.nb-pages %}
+          <!-- Show a button for the last page? -->
+          {% if pagination.max-nb-buttons < pagination.nb-pages %}
           <span class="pagination-ellipsis">&hellip;</span>
+          {% if pagination.page == pagination.nb-pages %}
+          <a class="pagination-link is-current" aria-label="Goto page {{ forloop.counter }}"
+              href="/search?q={{ query }}&rayon={{ shelf_id }}&page={{ pagination.nb-pages }}" >
+            {{ pagination.nb-pages }} </a>
+          {% else %}
           <a class="pagination-link" aria-label="Goto page {{ forloop.counter }}"
               href="/search?q={{ query }}&rayon={{ shelf_id }}&page={{ pagination.nb-pages }}" >
-            {{ pagination.nb-pages }}
+            {{ pagination.nb-pages }} </a>
+          {% endif %}
           {% endif %}
 
           {% if pagination.page == pagination.nb-pages %}
