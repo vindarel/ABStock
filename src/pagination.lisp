@@ -33,7 +33,7 @@ and give it to the template to create the pagination buttons.
              (= 31 (get-nb-pages 6003 200))
              (= 1 (get-nb-pages 1 200))))
 
-(defun get-pagination (&key (page 1) (nb-elements 0) (page-size 200)
+(defun make-pagination (&key (page 1) (nb-elements 0) (page-size 200)
                          (max-nb-buttons 5))
   "From a current page number, a total number of elements, a page size,
   return a dict with all of that, and the total number of pages.

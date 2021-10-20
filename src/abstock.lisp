@@ -497,9 +497,9 @@
                                       (ppcre:scan query repr2))
                              collect card))))
                      cards)))
-    (let ((pagination (get-pagination :page page
-                                      :page-size *page-length*
-                                      :nb-elements (length result))))
+    (let ((pagination (make-pagination :page page
+                                       :page-size *page-length*
+                                       :nb-elements (length result))))
       (format t "Found: ~a. Pagination: ~S ~&" (length result) pagination)
       ;; Return a subset of the results. It blows the stack(?) with 6.000 titles.
       (values (get-page-items result pagination)
