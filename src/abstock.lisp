@@ -444,7 +444,13 @@
   "cards: plist,
    query: string,
    shelf (optional): id (int)
-   page (optional): int (or string)."
+   page (optional): int (or string).
+
+  Return: multiple values:
+  - the list of items to display
+  - page length
+  - the number of ISBNs not found (in the case of a search, otherwise nil)
+  - the pagination object (make-pagination)"
   (when (stringp shelf)
     (setf shelf (or (ignore-errors (parse-integer shelf))
                     -1)))
@@ -452,14 +458,19 @@
                  1))
 
   ;; Asking all titles. Return a subset.
-  ;XXX: pagination?
+  ;; Use pagination.
   (when (and (str:blank? query)
              (and shelf
                   (minusp shelf)))
     (return-from search-cards
-      (values (subseq (get-cards) 0 (min *page-length*
-                                         (length *cards*)))
-              *page-length*)))
+      (let* ((results (get-cards))
+             (pagination (make-pagination :page page
+                                          :page-size *page-length*
+                                          :nb-elements (length results))))
+        (values (get-page-items results pagination)
+                *page-length*
+                nil ;; ISBNs not found.
+                pagination))))
 
   ;; Searching in a shelf.
   (let* (isbns-not-found
