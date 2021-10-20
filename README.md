@@ -176,6 +176,17 @@ When you are in lisp shell and Abstock is runing you can reload the shelves or t
 (get-all-shelves)
 ```
 
+#### Fetch books' summaries
+
+```lisp
+(setf *fetch-summaries* t)
+```
+
+It will fetch the book's summary asynchronously on its datasource
+(french one supported) when a visitor visits the book's page.
+
+This is not activated by default yet.
+
 ### Systemd
 
 Build the binary, then in `/etc/systemd/system/abstock.service`:
