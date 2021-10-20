@@ -4,6 +4,8 @@ Disallow: /search
 Disallow: /panier
 Crawl-delay: 120
 
+User-agent: SemrushBot
+Disallow: /
 
 User-agent: msnbot
 Crawl-delay: 1
