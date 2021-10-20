@@ -62,6 +62,13 @@
           {% endif %}
           {% endfor %}
 
+          {% if pagination.max-nb-buttons > pagination.nb-pages %}
+          <span class="pagination-ellipsis">&hellip;</span>
+          <a class="pagination-link" aria-label="Goto page {{ forloop.counter }}"
+              href="/search?q={{ query }}&rayon={{ shelf_id }}&page={{ pagination.nb-pages }}" >
+            {{ pagination.nb-pages }}
+          {% endif %}
+
           {% if pagination.page == pagination.nb-pages %}
           <a class="pagination-link" aria-label="Goto next page" disabled> > </a>
           {% else %}
@@ -70,9 +77,6 @@
           {% endif %}
         </li>
         <li>
-          {% if pagination.page != pagination.nb-pages %}
-          <span class="pagination-ellipsis">&hellip;</span>
-          {% endif %}
         </li>
       </ul>
     </nav>

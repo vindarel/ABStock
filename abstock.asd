@@ -56,6 +56,7 @@
                (:module "src"
                 :components
                 ((:file "abstock")
+                 (:file "pagination")
                  (:file "utils")
                  (:file "user-content")
                  (:file "parameters")
