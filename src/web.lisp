@@ -422,7 +422,7 @@
     (handler-case
         (let ((dsn (get-sentry-dsn)))
           ;; sentry-client is not in Quicklisp.
-          (if dsn
+          (if (str:non-blank-string-p dsn)
               (progn
                 (sentry-client:initialize-sentry-client dsn
                                                         :client-class 'sentry-client:async-sentry-client)
