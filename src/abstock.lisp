@@ -272,19 +272,19 @@
            (:as :search_publisher.name :publisher)
            (:as :search_publisher.address :publisher_city))
 
-    (from :search_card
-          :search_author
-          :search_publisher)
-    (join :search_card_authors
-          :on (:and (:= :search_card.id :search_card_authors.card_id)
-                    (:= :search_author.id :search_card_authors.author_id)))
-    ;; left-join: accept cards without shelf.
-    (left-join :search_shelf
-          :on (:= :search_card.shelf_id :search_shelf.id))
-    (join :search_card_publishers
-          :on (:and (:= :search_card.id :search_card_publishers.card_id)
-                    (:= :search_publisher.id :search_card_publishers.publisher_id)))
-    (where (:> :search_card.quantity 0))))
+          (from :search_card
+                :search_author
+                :search_publisher)
+          (join :search_card_authors
+                :on (:and (:= :search_card.id :search_card_authors.card_id)
+                          (:= :search_author.id :search_card_authors.author_id)))
+          ;; left-join: accept cards without shelf.
+          (left-join :search_shelf
+                     :on (:= :search_card.shelf_id :search_shelf.id))
+          (join :search_card_publishers
+                :on (:and (:= :search_card.id :search_card_publishers.card_id)
+                          (:= :search_publisher.id :search_card_publishers.publisher_id)))
+          (where (:> :search_card.quantity 0))))
 
 (defun get-all-cards ()
   "Get all the ids of the cards in the DB."
