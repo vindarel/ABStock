@@ -485,3 +485,8 @@
 
 (defun stop ()
   (hunchentoot:stop *server*))
+
+(defun toggle-dev-mode ()
+  (serapeum:toggle-pretty-print-hash-table)
+  (format t "*dev-mode*: ~a (you won't see as much books)~&" (setf *dev-mode* (not *dev-mode*)))
+  (format t "hunchentoot catch errors: ~a~&" (setf hunchentoot:*catch-errors-p* (not hunchentoot:*catch-errors-p*))))
