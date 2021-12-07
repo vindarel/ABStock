@@ -245,7 +245,7 @@
 ;;
 ;; Get all cards data.
 ;;
-(defun all-cards ()
+(defun all-cards (&key (order :desc))
   "Generates SxQL query. (yield) generates the SQL. It is not executed."
   (select ((:distinct :search_card.id)
            :search_card.created
@@ -284,7 +284,8 @@
           (join :search_card_publishers
                 :on (:and (:= :search_card.id :search_card_publishers.card_id)
                           (:= :search_publisher.id :search_card_publishers.publisher_id)))
-          (where (:> :search_card.quantity 0))))
+          (where (:> :search_card.quantity 0))
+          (order-by `(,order :search_card.created))))
 
 (defun get-all-cards ()
   "Get all the ids of the cards in the DB."
