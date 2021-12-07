@@ -3,6 +3,7 @@
 - add pagination to all pages.
 - fix display order: most recent first.
 - ability to fetch the summary of books online, asynchronously: if `*fetch-summaries*` is `t` in `config.lisp`, try to find the book summary on an internet source.
+- filter out empty shelves and don't display them in the select dropdown.
 - changes and additions to the API to work with an external website that displays the books catalogue.
   - add a search API: `/api/v1/search.json?query=foo`, with a 5min cache.
 

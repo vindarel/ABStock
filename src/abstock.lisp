@@ -354,6 +354,7 @@
          (query (dbi:execute query)))
     (setf *shelves* (dbi:fetch-all query))
     (setf *shelves* (filter-shelves *shelves*))
+    (setf *shelves* (remove-empty-shelves *shelves*))
     (setf *shelves* (sort-shelves *shelves*))
     (setf *shelves* (sort-shelves-by-number-prefix *shelves*)))
   t)
@@ -371,6 +372,34 @@
      unless (or (shelf-name-matches-p names-starting-by (access shelf :name))
                 (find (access shelf :id) ids))
      collect shelf))
+
+(defun remove-empty-shelves (shelves)
+  "Remove shelves whose id we can't find in the current list of cards.
+  Return a new list of shelves (the global *shelves* is not set here)."
+  ;; Not done from SQL. Not so unefficient...
+  (let ((new-list '()))
+    (dolist (shelf shelves)
+      (if (find (access shelf :|id|)
+                *cards*
+                :key (lambda (it) (access it :|shelf_id|)))
+          (push shelf new-list)
+          (format t "This shelf is empty: ~a (~a)~&"
+                  (access shelf :|name|)
+                  (access shelf :|id|))))
+    (reverse new-list)))
+#+abstock-tests
+(let ((shelves '((:|name| "Aix-en-Provence" :|id| 68) ;; <-- present
+                 (:|name| "BD" :|id| 73)))            ;; <-- NOT present
+      (*cards* '((:|repr2| "collectif lisp " :|repr| "les sons de lisp'" :|id| 3078
+                  :|shelf| "Aix-en-Provence"
+                  :|shelf_id| 68
+                  :|publisher| "Académie d'Aix"
+                  :|publisher_city| NIL))))
+
+  (let ((new-list (remove-empty-shelves shelves)))
+    (assert (and (= 1 (length new-list))
+                 (= 68 (access (first new-list)
+                               :|id|))))))
 
 (defun sort-shelves (shelves)
   #-sbcl
