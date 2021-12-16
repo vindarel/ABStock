@@ -160,9 +160,7 @@
 
 (easy-routes:defroute panier-route ("/panier" :method :get) (ids)
   (let* ((ids-list (str:split "," ids :omit-nulls t))
-         (ids-list (mapcar (lambda (it)
-                             (parse-integer it))
-                           ids-list))
+         (ids-list (mapcar #'parse-integer ids-list))
          (cards (filter-cards-by-ids ids-list)))
     (format t "~&basket ids: ~a, cards found: ~a~&" ids-list (length cards))
     (djula:render-template* +panier.html+ nil
@@ -234,9 +232,7 @@
 
 (easy-routes:defroute panier-validate-route ("/panier" :method :post) (&post name email phone payment antispam ids message)
   (let* ((ids-list (str:split "," ids :omit-nulls t))
-         (ids-list (mapcar (lambda (it)
-                             (parse-integer it))
-                           ids-list))
+         (ids-list (mapcar #'parse-integer ids-list))
          (cards (loop for id in ids-list
                    for position = (position id (get-cards) :key (lambda (card)
                                                                   (getf card :|id|)))
