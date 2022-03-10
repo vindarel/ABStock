@@ -11,6 +11,11 @@
 
 (defvar *sentry-dsn-file* "~/.config/abstock/sentry-dsn.txt")
 
+(defvar *email-config*
+  ;; used in email.lisp, defined here before loading the config.lisp.
+  '(:|sender-api-key| ""
+    :|from| ""))
+
 (defparameter *dev-mode* nil
   "If non-nil, don't use Sentry and use a subset of all the cards.")
 
@@ -65,6 +70,7 @@
 (defparameter +cards.html+ (djula:compile-template* (get-template "cards.html" *theme*)))
 (defparameter +selection-page.html+ (djula:compile-template* (get-template "selection-page.html" *theme*)))
 (defparameter +card-page.html+ (djula:compile-template* (get-template "card-page.html" *theme*)))
+(defparameter +admin-page.html+ (djula:compile-template* (get-template "admin.html" *theme*)))
 
 (defparameter +panier.html+ (djula:compile-template* (get-template "panier.html" *theme*)))
 (defparameter +command-confirmed.html+ (djula:compile-template* (get-template "command-confirmed.html" *theme*)))
@@ -107,10 +113,23 @@
   Static assets are reachable under the /static/ prefix.")
 
 (defun serve-static-assets ()
+  "Let Hunchentoot serve static assets under /static/ of the ABStock directory."
   (push (hunchentoot:create-folder-dispatcher-and-handler
          "/static/" (merge-pathnames *default-static-directory*
                                      (asdf:system-source-directory :abstock)))
         hunchentoot:*dispatch-table*))
+
+(defun read-custom-file (path)
+  "Read the content of the file on this path, if it exists. Create the directories of that path if needed.
+  Used to read custom texts."
+  (when (uiop:file-exists-p (ensure-directories-exist path))
+    (str:from-file path)))
+
+(defun get-user-custom-texts ()
+  (bt:with-lock-held (*user-template-lock*)
+    (dict :welcome (read-custom-file *user-template-path/welcome*)
+                   :selection (read-custom-file *user-template-path/selection-presentation*)
+                   :body (read-custom-file *user-template-path/body*))))
 
 ;;
 ;; Routes.
@@ -119,7 +138,8 @@
   (djula:render-template* +welcome.html+ nil
                           :contact *contact-infos*
                           :user-content *user-content*
-                          ;TODO: dev
+                          :user-custom-texts (get-user-custom-texts)
+                                        ;TODO: dev
                           ;; :selection-cards (pick-cards :n 6) ;; random
                           :selection-cards (get-selection-subset :ensure-cover t)
                           :shelves *shelves*))
@@ -379,6 +399,77 @@
 ;; (easy-routes:defroute card-page (*card-url-name* :method :get) ()
 ;;   (djula:render-template* +card-page.html+ nil
 ;;                           :card card))
+
+(defvar *admin-uuid* nil
+  "UUID used to build the admin URL.")
+
+(defvar *admin-url* "/uuid-admin"
+  "Admin UUID url, needs to be built with (get-admin-url).")
+
+(defun build-uuid ()
+  (setf *admin-uuid*
+        (uuid:make-v5-uuid uuid:+namespace-url+ "abstock")))
+
+(defun get-admin-url ()
+  (or *admin-url*
+      (setf *admin-url*
+            (str:downcase
+             (str:concat "/"
+                         (with-output-to-string (s)
+                           (format s "~a"
+                                   (or *admin-uuid* (build-uuid))))
+                         "-admin")))))
+
+;XXX: move to sart-up.
+(progn
+  (get-admin-url)
+  (uiop:format! t "~&**** your admin URL is: ~a" *admin-url*))
+
+(defparameter *user-template-path/welcome*
+  (ensure-directories-exist
+   (asdf:system-relative-pathname
+    :abstock "static/user/templates/welcome.txt"))
+  "Template modified from the admin.")
+
+(defparameter *user-template-path/selection-presentation* (asdf:system-relative-pathname
+                                            :abstock "static/user/templates/selection-presentation.txt")
+  "Template modified from the admin.")
+
+(defparameter *user-template-path/body* (asdf:system-relative-pathname
+                                         :abstock "static/user/templates/body.txt")
+  "Template modified from the admin.")
+
+(hunchentoot:define-easy-handler
+ (admin-route :uri (get-admin-url)) ()
+
+ (let ((txt (str:from-file
+             *user-template-path/welcome*)))
+   (log:info txt)
+   (djula:render-template* +admin-page.html+ nil
+                           :saved-template (str:trim txt))))
+
+(defun @json (next)
+  (setf (hunchentoot:content-type*) "application/json")
+  (funcall next))
+
+(defvar *user-template-lock* (bt:make-lock)
+  "Lock to save user HTML edited in the admin.")
+
+(easy-routes:defroute save-admin-route ("/uuid-admin"
+                                        :method :post
+                                        :decorators (@json)) (&post api-token)
+  ;TODO: used api token.
+  (log:info api-token)
+  (log:info "Content to save is: " (hunchentoot:raw-post-data))
+  (let ((target-file (ensure-directories-exist *user-template-path/welcome*)))
+    (bt:with-lock-held (*user-template-lock*)
+      (str:to-file
+       target-file
+       (str:trim (hunchentoot:raw-post-data))
+       :if-exists :overwrite
+       :if-does-not-exist :create)
+      (log:info "Template saved."))
+    (jojo:to-json (serapeum:dict "status" 200))))
 
 ;;
 ;; Start.

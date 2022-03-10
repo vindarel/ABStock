@@ -43,6 +43,9 @@
                :sentry-client.async ;; ! not in Quicklisp
                :sentry-client.hunchentoot
                ;; :cl-i18n
+
+               ;; others
+               :uuid                    ;; already in dependencies of dependencies.
                )
   :components ((:module "src/loaders"
                 :components

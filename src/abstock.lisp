@@ -7,6 +7,8 @@
                 :defcached)
   (:import-from :access
                 :access)
+  (:import-from :serapeum
+                :dict)
   (:export :main
            :start))
 

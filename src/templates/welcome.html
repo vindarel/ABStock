@@ -21,6 +21,11 @@
         </h1>
         <h2 class="subtitle">
 
+          {% if user-custom-texts and user-custom-texts.welcome %}
+
+          {{ user-custom-texts.welcome | safe }}
+
+          {% else %}
           {% if user-content.welcome-text %}
 
           {{ user-content.welcome-text | safe }}
@@ -28,6 +33,7 @@
           {% else %}
 
           Welcome !
+          {% endif %}
 
           {% endif %}
 
@@ -53,7 +59,15 @@
       <div class="column is-6 is-offset-3">
         <div class="content is-medium" style="text-align:justify">
 
+          {% if user-custom-texts and user-custom-texts.selection %}
+
+            {{ user-custom-texts.selection | safe }}
+
+          {% else %}
+
           <p> Voici un aperçu de notre <a href="/selection-du-libraire"> sélection du libraire</a>, à retrouver en intégralité sur sa page dédiée: </p>
+
+          {% endif %}
 
         </div>
       </div>
@@ -90,7 +104,15 @@
       <div class="column is-6 is-offset-3">
         <div class="content is-medium" style="text-align:justify">
 
+          {% if user-custom-texts and user-custom-texts.body %}
+
+          {{ user-custom-texts.body }}
+
+          {% else %}
+
           {{ user-content.welcome-second-text | safe }}
+
+          {% endif %}
 
         </div>
       </div>
