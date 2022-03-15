@@ -21,9 +21,9 @@
         </h1>
         <h2 class="subtitle">
 
-          {% if user-custom-texts and user-custom-texts.welcome %}
+          {% if user-custom-texts and user-custom-texts.0.content %}
 
-          {{ user-custom-texts.welcome | safe }}
+          {{ user-custom-texts.0.content | safe }}
 
           {% else %}
           {% if user-content.welcome-text %}
@@ -59,9 +59,9 @@
       <div class="column is-6 is-offset-3">
         <div class="content is-medium" style="text-align:justify">
 
-          {% if user-custom-texts and user-custom-texts.selection %}
+          {% if user-custom-texts and user-custom-texts.1.content %}
 
-            {{ user-custom-texts.selection | safe }}
+            {{ user-custom-texts.1.content | safe }}
 
           {% else %}
 
@@ -104,9 +104,9 @@
       <div class="column is-6 is-offset-3">
         <div class="content is-medium" style="text-align:justify">
 
-          {% if user-custom-texts and user-custom-texts.body %}
+          {% if user-custom-texts and user-custom-texts.2.content %}
 
-          {{ user-custom-texts.body }}
+          {{ user-custom-texts.2.content }}
 
           {% else %}
 

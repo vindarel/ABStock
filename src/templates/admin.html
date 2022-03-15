@@ -14,18 +14,19 @@
       <div>
 
         <div>
-          <em> Pour modifier le texte, cliquer dessus. Utiliser la barre d'outils quand du texte est sélectionné. Ne pas d'écrire de code HTML directement.</em>
+          <em> Pour modifier le texte, cliquer dessus. Utiliser la barre d'outils quand du texte est sélectionné. Ne pas écrire de code HTML directement.</em>
         </div>
         <br/>
 
+        {% for obj in user-custom-texts %}
         <div class="columns">
           <div class="column is-four-fifths">
-            <h4 class="title is-4">Présentation de la librairie</h4>
+            <h4 class="title is-4"> {{ obj.title }} </h4>
           </div>
 
           <div class="column">
             <button class="button is-success"
-                onclick="save_admin('welcome')"> save </button>
+                onclick="save_admin('{{ obj.id }}')"> save </button>
           </div>
         </div>
 
@@ -33,10 +34,10 @@
         <!-- warn: adding HTML tags manually ends up in a mess. -->
 
         <!-- This editor id matches with the custom textid -->
-        <article contenteditable="true" id="welcome">
+        <article contenteditable="true" id="{{ obj.id }}">
 
-          {% if user-custom-texts and user-custom-texts.welcome %}
-          {{ user-custom-texts.welcome | safe }}
+          {% if user-custom-texts and obj.content %}
+          {{ obj.content | safe }}
           {% else %}
 
           <div>Lorem ipsum dolor sit amet.</div>
@@ -49,65 +50,9 @@
           {% endif %}
 
         </article>
+        <br/>
 
-      </div>
-
-      <br>
-      <div>
-        <div class="columns">
-          <div class="column is-four-fifths">
-            <h4 class="title is-4">Présentation de la sélection du libraire</h4>
-          </div>
-          <!-- <div><em>Le texte qui présente la sélection du libraire.</em></div> -->
-
-          <div class="column">
-            <button class="button is-success"
-                onclick="save_admin('selection')"> save </button>
-          </div>
-        </div>
-
-        <stylo-editor></stylo-editor>
-        <article contenteditable="true" id="selection">
-
-          {% if user-custom-texts.selection %}
-          {{ user-custom-texts.selection | safe }}
-          {% else %}
-
-          Voici un aperçu de notre sélection du libraire, à retrouver en intégralité sur sa page dédiée:
-          {% endif %}
-
-        </article>
-
-      </div>
-
-      <br>
-      <div>
-        <div class="columns">
-          <div class="column is-four-fifths">
-            <h4 class="title is-4">Troisième texte</h4>
-          </div>
-
-          <div class="column">
-            <button class="button is-success"
-                onclick="save_admin('body')"> save </button>
-          </div>
-        </div>
-
-        <stylo-editor></stylo-editor>
-        <article contenteditable="true" id="body">
-
-          {% if user-custom-texts.body %}
-          {{ user-custom-texts.body | safe }}
-          {% else %}
-
-          <div> Vous pouvez nous contacter au:</div>
-          <ul>
-            <li>06 009</li>
-          </ul>
-
-          {% endif %}
-
-        </article>
+        {% endfor %}
 
       </div>
 

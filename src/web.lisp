@@ -142,10 +142,19 @@
     (str:from-file path)))
 
 (defun get-user-custom-texts ()
+  "Return a list of dicts representing the texts that we will update in the admin.
+  - keys: an id and content (the text)."
   (bt:with-lock-held (*user-template-lock*)
-    (dict :welcome (read-custom-file *user-template-path/welcome*)
-                   :selection (read-custom-file *user-template-path/selection-presentation*)
-                   :body (read-custom-file *user-template-path/body*))))
+    (list
+     (dict :id :welcome
+           :title "Présentation de la librairie"
+           :content (read-custom-file *user-template-path/welcome*))
+     (dict :id :selection
+           :title "Présentation de la sélection du libraire"
+           :content (read-custom-file *user-template-path/selection-presentation*))
+     (dict :id :body
+           :title "Troisième texte"
+           :content (read-custom-file *user-template-path/body*)))))
 
 ;;
 ;; Routes.
@@ -473,11 +482,12 @@
            (str:to-file (ensure-directories-exist path)
                         content)))
     (cond
-      ((equal textid "welcome")
+      ;; The textid will be uppercase (from symbol to string).
+      ((equalp textid "welcome")
        (to-file *user-template-path/welcome* content))
-      ((equal textid "selection")
+      ((equalp textid "selection")
        (to-file *user-template-path/selection-presentation* content))
-      ((equal textid "body")
+      ((equalp textid "body")
        (to-file *user-template-path/body* content))
       (t
        (log:warn "Writing custom content to file ~S is unknown" textid)))))
