@@ -470,9 +470,7 @@
   "From a textid (either 'welcome', 'selection' or 'body', write content to the corresponding file."
   (flet ((to-file (path content)
            (str:to-file (ensure-directories-exist path)
-                        content
-                        :if-exists :overwrite
-                        :if-does-not-exist :create)))
+                        content)))
     (cond
       ((equal textid "welcome")
        (to-file *user-template-path/welcome* content))
