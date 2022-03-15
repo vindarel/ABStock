@@ -5,12 +5,19 @@ function get_cookie(name){
     });
 }
 
-function save_admin() {
-    let editor = document.getElementById('editor');
+function save_admin(textid) {
+    // Get the editor element equal to the given textid.
+    let editor = document.getElementById(textid);
     let content = editor.innerHTML;
     console.log("HTML to save is: ", content);
 
-    fetch("/uuid-admin", {
+    let url = "/uuid-admin";
+    if (textid) {
+        url += "?textid=" + textid;
+        console.log("POSTing on ", url);
+    }
+
+    fetch(url, {
         method: 'POST',
         body: content
     })

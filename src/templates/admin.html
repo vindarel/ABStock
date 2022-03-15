@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ title }}
+{% endblock %}
+
+{% block content %}
+
+<div class="container" style="margin-bottom: 5em">
+  <div>
+
+    <h4 class="title is-4">Présentation de la librairie</h4>
+    <!-- <div> -->
+      <!-- <em>Le texte en haut de page. Attention, mettre des tags HTML ne fonctionne pas bien.</em> -->
+    <!-- </div> -->
+
+    <button class="button is-success"
+        style="margin-bottom: 3em"
+        onclick="save_admin('welcome')"> save </button>
+
+    <stylo-editor></stylo-editor>
+    <!-- warn: adding HTML tags manually ends up in a mess. -->
+
+    <!-- This editor id matches with the custom textid -->
+    <article contenteditable="true" id="welcome">
+
+      {% if user-custom-texts and user-custom-texts.welcome %}
+      {{ user-custom-texts.welcome | safe }}
+      {% else %}
+
+      <div>Lorem ipsum dolor sit amet.</div>
+      <ul>
+        <li>Hello</li>
+        <li>World</li>
+      </ul>
+      <div>In ac tortor suscipit.</div>
+
+      {% endif %}
+
+    </article>
+
+  </div>
+
+  <br>
+  <div>
+    <h4 class="title is-4">Présentation de la sélection du libraire</h4>
+    <!-- <div><em>Le texte qui présente la sélection du libraire.</em></div> -->
+
+    <button class="button is-success"
+        style="margin-bottom: 3em"
+        onclick="save_admin('selection')"> save </button>
+
+    <stylo-editor></stylo-editor>
+    <article contenteditable="true" id="selection">
+
+      {% if user-custom-texts.selection %}
+      {{ user-custom-texts.selection | safe }}
+      {% else %}
+
+      Voici un aperçu de notre sélection du libraire, à retrouver en intégralité sur sa page dédiée:
+      {% endif %}
+
+    </article>
+
+  </div>
+
+  <br>
+  <div>
+    <h4 class="title is-4">Troisième texte</h4>
+
+    <button class="button is-success"
+        style="margin-bottom: 3em"
+        onclick="save_admin('body')"> save </button>
+
+    <stylo-editor></stylo-editor>
+    <article contenteditable="true" id="body">
+
+      {% if user-custom-texts.body %}
+      {{ user-custom-texts.body | safe }}
+      {% else %}
+
+      <div> Vous pouvez nous contacter au:</div>
+      <ul>
+        <li>06 009</li>
+      </ul>
+
+      {% endif %}
+
+    </article>
+
+  </div>
+</div>
+
+{% endblock %}

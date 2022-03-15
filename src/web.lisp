@@ -26,6 +26,22 @@
   "Custom theme name (string).
   The theme templates are located at src/templates/<theme>/.")
 
+;; Path to text edited by the user in the rich-text editor:
+(defparameter *user-template-path/welcome*
+  (ensure-directories-exist
+   (asdf:system-relative-pathname
+    :abstock "static/user/templates/welcome.txt"))
+  "Template modified from the admin.")
+
+(defparameter *user-template-path/selection-presentation* (asdf:system-relative-pathname
+                                            :abstock "static/user/templates/selection-presentation.txt")
+  "Template modified from the admin.")
+
+(defparameter *user-template-path/body* (asdf:system-relative-pathname
+                                         :abstock "static/user/templates/body.txt")
+  "Template modified from the admin.")
+
+
 ;;
 ;; User variables.
 ;;
@@ -403,12 +419,20 @@
 (defvar *admin-uuid* nil
   "UUID used to build the admin URL.")
 
+(defvar *api-token* nil
+  "UUID secret token for API.")
+
 (defvar *admin-url* "/uuid-admin"
   "Admin UUID url, needs to be built with (get-admin-url).")
 
 (defun build-uuid ()
   (setf *admin-uuid*
         (uuid:make-v5-uuid uuid:+namespace-url+ "abstock")))
+
+(defun build-api-token ()
+  (or *api-token*
+      (setf *api-token*
+            (uuid:make-v5-uuid uuid:+namespace-url+ "abstock"))))
 
 (defun get-admin-url ()
   (or *admin-url*
@@ -425,28 +449,15 @@
   (get-admin-url)
   (uiop:format! t "~&**** your admin URL is: ~a" *admin-url*))
 
-(defparameter *user-template-path/welcome*
-  (ensure-directories-exist
-   (asdf:system-relative-pathname
-    :abstock "static/user/templates/welcome.txt"))
-  "Template modified from the admin.")
-
-(defparameter *user-template-path/selection-presentation* (asdf:system-relative-pathname
-                                            :abstock "static/user/templates/selection-presentation.txt")
-  "Template modified from the admin.")
-
-(defparameter *user-template-path/body* (asdf:system-relative-pathname
-                                         :abstock "static/user/templates/body.txt")
-  "Template modified from the admin.")
-
 (hunchentoot:define-easy-handler
  (admin-route :uri (get-admin-url)) ()
 
- (let ((txt (str:from-file
+ (let ((txt (read-custom-file
              *user-template-path/welcome*)))
    (log:info txt)
    (djula:render-template* +admin-page.html+ nil
-                           :saved-template (str:trim txt))))
+                           :api-token *api-token*
+                           :user-custom-texts (get-user-custom-texts))))
 
 (defun @json (next)
   (setf (hunchentoot:content-type*) "application/json")
@@ -455,21 +466,36 @@
 (defvar *user-template-lock* (bt:make-lock)
   "Lock to save user HTML edited in the admin.")
 
+(defun write-custom-file (textid content)
+  "From a textid (either 'welcome', 'selection' or 'body', write content to the corresponding file."
+  (flet ((to-file (path content)
+           (str:to-file (ensure-directories-exist path)
+                        content
+                        :if-exists :overwrite
+                        :if-does-not-exist :create)))
+    (cond
+      ((equal textid "welcome")
+       (to-file *user-template-path/welcome* content))
+      ((equal textid "selection")
+       (to-file *user-template-path/selection-presentation* content))
+      ((equal textid "body")
+       (to-file *user-template-path/body* content))
+      (t
+       (log:warn "Writing custom content to file ~S is unknown" textid)))))
+
 (easy-routes:defroute save-admin-route ("/uuid-admin"
                                         :method :post
-                                        :decorators (@json)) (&post api-token)
-  ;TODO: used api token.
-  (log:info api-token)
+                                        :decorators (@json)) (api-token textid)
+                                        ;TODO: used api token.
+  (log:info api-token textid)
+  (unless textid
+    (return-from save-admin-route (jojo:to-json (dict "error" "textid is null"))))
   (log:info "Content to save is: " (hunchentoot:raw-post-data))
-  (let ((target-file (ensure-directories-exist *user-template-path/welcome*)))
-    (bt:with-lock-held (*user-template-lock*)
-      (str:to-file
-       target-file
-       (str:trim (hunchentoot:raw-post-data))
-       :if-exists :overwrite
-       :if-does-not-exist :create)
-      (log:info "Template saved."))
-    (jojo:to-json (serapeum:dict "status" 200))))
+  (bt:with-lock-held (*user-template-lock*)
+    (write-custom-file textid
+                       (str:trim (hunchentoot:raw-post-data)))
+    (log:info "Template for ~S saved." textid))
+    (jojo:to-json (serapeum:dict "status" 200)))
 
 ;;
 ;; Start.
