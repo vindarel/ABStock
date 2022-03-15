@@ -106,7 +106,7 @@
 
           {% if user-custom-texts and user-custom-texts.2.content %}
 
-          {{ user-custom-texts.2.content }}
+          {{ user-custom-texts.2.content | safe }}
 
           {% else %}
 

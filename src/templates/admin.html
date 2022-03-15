@@ -14,7 +14,10 @@
       <div>
 
         <div>
-          <em> Pour modifier le texte, cliquer dessus. Utiliser la barre d'outils quand du texte est sélectionné. Ne pas écrire de code HTML directement.</em>
+          <em> Pour modifier le texte, cliquez dessus. Pour mettre en
+          forme (mettre en gras, en couleur, ajouter un lien etc),
+          sélectionnez du texte et utilisez la barre d'outils qui
+          apparaît. N'écrivez pas de code HTML directement.</em>
         </div>
         <br/>
 
@@ -31,13 +34,14 @@
         </div>
 
         <stylo-editor></stylo-editor>
-        <!-- warn: adding HTML tags manually ends up in a mess. -->
 
         <!-- This editor id matches with the custom textid -->
         <article contenteditable="true" id="{{ obj.id }}">
 
-          {% if user-custom-texts and obj.content %}
+          {% if obj.content %}
+
           {{ obj.content | safe }}
+
           {% else %}
 
           <div>Lorem ipsum dolor sit amet.</div>
