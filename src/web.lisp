@@ -457,7 +457,8 @@
    (log:info txt)
    (djula:render-template* +admin-page.html+ nil
                            :api-token *api-token*
-                           :user-custom-texts (get-user-custom-texts))))
+                           :user-custom-texts (get-user-custom-texts)
+                           :user-content *user-content*)))
 
 (defun @json (next)
   (setf (hunchentoot:content-type*) "application/json")

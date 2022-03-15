@@ -6,88 +6,113 @@
 
 {% block content %}
 
-<div class="container" style="margin-bottom: 5em">
-  <div>
+<div class="container" style="margin: 3em">
+  <div class="columns">
+    <div class="column is-one-quarter"></div>
 
-    <h4 class="title is-4">Présentation de la librairie</h4>
-    <!-- <div> -->
-      <!-- <em>Le texte en haut de page. Attention, mettre des tags HTML ne fonctionne pas bien.</em> -->
-    <!-- </div> -->
+    <div class="column">
+      <div>
 
-    <button class="button is-success"
-        style="margin-bottom: 3em"
-        onclick="save_admin('welcome')"> save </button>
+        <div>
+          <em> Pour modifier le texte, cliquer dessus. Utiliser la barre d'outils quand du texte est sélectionné. Ne pas d'écrire de code HTML directement.</em>
+        </div>
+        <br/>
 
-    <stylo-editor></stylo-editor>
-    <!-- warn: adding HTML tags manually ends up in a mess. -->
+        <div class="columns">
+          <div class="column is-four-fifths">
+            <h4 class="title is-4">Présentation de la librairie</h4>
+          </div>
 
-    <!-- This editor id matches with the custom textid -->
-    <article contenteditable="true" id="welcome">
+          <div class="column">
+            <button class="button is-success"
+                onclick="save_admin('welcome')"> save </button>
+          </div>
+        </div>
 
-      {% if user-custom-texts and user-custom-texts.welcome %}
-      {{ user-custom-texts.welcome | safe }}
-      {% else %}
+        <stylo-editor></stylo-editor>
+        <!-- warn: adding HTML tags manually ends up in a mess. -->
 
-      <div>Lorem ipsum dolor sit amet.</div>
-      <ul>
-        <li>Hello</li>
-        <li>World</li>
-      </ul>
-      <div>In ac tortor suscipit.</div>
+        <!-- This editor id matches with the custom textid -->
+        <article contenteditable="true" id="welcome">
 
-      {% endif %}
+          {% if user-custom-texts and user-custom-texts.welcome %}
+          {{ user-custom-texts.welcome | safe }}
+          {% else %}
 
-    </article>
+          <div>Lorem ipsum dolor sit amet.</div>
+          <ul>
+            <li>Hello</li>
+            <li>World</li>
+          </ul>
+          <div>In ac tortor suscipit.</div>
 
-  </div>
+          {% endif %}
 
-  <br>
-  <div>
-    <h4 class="title is-4">Présentation de la sélection du libraire</h4>
-    <!-- <div><em>Le texte qui présente la sélection du libraire.</em></div> -->
+        </article>
 
-    <button class="button is-success"
-        style="margin-bottom: 3em"
-        onclick="save_admin('selection')"> save </button>
+      </div>
 
-    <stylo-editor></stylo-editor>
-    <article contenteditable="true" id="selection">
+      <br>
+      <div>
+        <div class="columns">
+          <div class="column is-four-fifths">
+            <h4 class="title is-4">Présentation de la sélection du libraire</h4>
+          </div>
+          <!-- <div><em>Le texte qui présente la sélection du libraire.</em></div> -->
 
-      {% if user-custom-texts.selection %}
-      {{ user-custom-texts.selection | safe }}
-      {% else %}
+          <div class="column">
+            <button class="button is-success"
+                onclick="save_admin('selection')"> save </button>
+          </div>
+        </div>
 
-      Voici un aperçu de notre sélection du libraire, à retrouver en intégralité sur sa page dédiée:
-      {% endif %}
+        <stylo-editor></stylo-editor>
+        <article contenteditable="true" id="selection">
 
-    </article>
+          {% if user-custom-texts.selection %}
+          {{ user-custom-texts.selection | safe }}
+          {% else %}
 
-  </div>
+          Voici un aperçu de notre sélection du libraire, à retrouver en intégralité sur sa page dédiée:
+          {% endif %}
 
-  <br>
-  <div>
-    <h4 class="title is-4">Troisième texte</h4>
+        </article>
 
-    <button class="button is-success"
-        style="margin-bottom: 3em"
-        onclick="save_admin('body')"> save </button>
+      </div>
 
-    <stylo-editor></stylo-editor>
-    <article contenteditable="true" id="body">
+      <br>
+      <div>
+        <div class="columns">
+          <div class="column is-four-fifths">
+            <h4 class="title is-4">Troisième texte</h4>
+          </div>
 
-      {% if user-custom-texts.body %}
-      {{ user-custom-texts.body | safe }}
-      {% else %}
+          <div class="column">
+            <button class="button is-success"
+                onclick="save_admin('body')"> save </button>
+          </div>
+        </div>
 
-      <div> Vous pouvez nous contacter au:</div>
-      <ul>
-        <li>06 009</li>
-      </ul>
+        <stylo-editor></stylo-editor>
+        <article contenteditable="true" id="body">
 
-      {% endif %}
+          {% if user-custom-texts.body %}
+          {{ user-custom-texts.body | safe }}
+          {% else %}
 
-    </article>
+          <div> Vous pouvez nous contacter au:</div>
+          <ul>
+            <li>06 009</li>
+          </ul>
 
+          {% endif %}
+
+        </article>
+
+      </div>
+
+      <div class="columns is-one-quarter"></div>
+    </div>
   </div>
 </div>
 
