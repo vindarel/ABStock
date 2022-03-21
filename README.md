@@ -10,7 +10,6 @@
   <a href="https://abstock.gitlab.io/#/en/install"><b>Install</b></a> |
   <a href="https://framasphere.org/people/4ac5fae0bed90133a3ed2a0000053625"><b>Blog</b></a> |
   <a href="https://gitter.im/openbookstore-developers/community?utm_source=share-link&utm_medium=link&utm_campaign=share-link"><b>Gitter chat</b></a> |
-  <a href="https://www.patreon.com/abelujo"><b>Support us on Patreon</b></a> |
   <a href="https://liberapay.com/vindarel/donate"><b>Support us on Liberapay</b></a> |
   <a href="https://ko-fi.com/vindarel"><b>Buy me a coffee!</b></a> |
   <a href="/README_fr.md">Français</a>
