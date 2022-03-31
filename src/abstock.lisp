@@ -113,12 +113,16 @@
 ;; We don't want to print 3000+ strings, it hangs the editor and the server.
 (setf *print-length* 100)
 
+(defun get-db-name ()
+  "Get the db.db full path, relative to our installation"
+  (asdf:system-relative-pathname :abstock *db-name*))
+
 (defun connect ()
-  ;TODO: needs to be run inside the directory of db.db
+                                        ;TODO: needs to be run inside the directory of db.db
   (if (uiop:file-exists-p *db-name*)
       (setf *connection*
             (dbi:connect :sqlite3
-                         :database-name *db-name*))
+                         :database-name (get-db-name)))
       (error "The DB file ~a does not exist." *db-name*)))
 
 (defun load-init ()
