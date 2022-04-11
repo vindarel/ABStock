@@ -61,11 +61,18 @@
 
           {% if user-custom-texts and user-custom-texts.1.content %}
 
-            {{ user-custom-texts.1.content | safe }}
+          {{ user-custom-texts.1.content | safe }}
+
+          {% else %}
+
+          {% if user-content.product-selection-intro-text %}
+
+          {{ user-content.product-selection-intro-text | safe }}
 
           {% else %}
 
           <p> Voici un aperçu de notre <a href="/selection-du-libraire"> sélection du libraire</a>, à retrouver en intégralité sur sa page dédiée: </p>
+          {% endif %}
 
           {% endif %}
 
