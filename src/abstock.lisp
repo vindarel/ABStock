@@ -62,8 +62,8 @@
 
 (defun find-config ()
   (cond
-    ((uiop:file-exists-p "config.lisp")
-     "config.lisp")
+    ((uiop:file-exists-p (asdf:system-relative-pathname :abstock "config.lisp"))
+     (asdf:system-relative-pathname :abstock "config.lisp"))
     ((uiop:file-exists-p *config*)
      *config*)
     (t
