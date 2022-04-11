@@ -12,7 +12,12 @@
       <div class="column is-8 is-offset-2">
 
         <div class="box content">
+          {% if user-content.product-selection-short-name %}
+          <h3> {{ user-content.product-selection-short-name }} </h3>
+          {% else %}
           <h3> Sélection du libraire </h3>
+          {% endif %}
+
 
           {% if user-content.product-selection-intro-text %}
           {{ user-content.product-selection-intro-text | safe }}

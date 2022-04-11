@@ -48,7 +48,11 @@
           {% if user-content.enable-product-selection %}
           <div class="navbar-brand">
             <a class="navbar-item" href="/selection-du-libraire">
+              {% if user-content.product-selection-short-name %}
+              {{ user-content.product-selection-short-name }}
+              {% else %}
               Sélection du libraire
+              {% endif %}
             </a>
 
           </div>

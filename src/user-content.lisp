@@ -31,6 +31,9 @@
    (enable-product-selection
     :std nil
     :doc "Product selection: link on the front page and own page. Cards are grouped by category (shelf).")
+   (product-selection-short-name
+    :std nil
+    :doc "Short name of the selection page. To appear in buttons.")
    (product-selection-intro-text
     :doc "Intro text (HTML) at the top of the product selection page.")
 

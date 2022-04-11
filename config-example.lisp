@@ -68,6 +68,10 @@
 (setf (user-content-enable-product-selection *user-content*)
       nil)
 
+(setf (user-content-product-selection-short-name *user-content*)
+      ;; mainly for the navbar button. Defaults to "Sélection du libraire".
+      """"Our selection"""")
+
 (setf (user-content-product-selection-intro-text *user-content*)
       nil)
 ;;
