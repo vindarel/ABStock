@@ -77,11 +77,11 @@
 ;; and load the current theme's templates (if any).
 (defun load-theme-templates (&optional (theme *theme*))
   "Load the Djula templates of the given theme (see `*THEME*')."
-  (when (str:non-blank-string-p *theme*)
-    (format-box t (format nil "Loading theme \"~a\" !" *theme*))
+  (when (str:non-blank-string-p theme)
+    (format-box t (format nil "Loading theme \"~a\" !" theme))
     (djula:add-template-directory
      (asdf:system-relative-pathname
-      "abstock" (str:concat "src/templates/themes/" *theme* "/")))))
+      "abstock" (str:concat "src/templates/themes/" theme "/")))))
 
 ;; do it at startup:
 (load-theme-templates)
