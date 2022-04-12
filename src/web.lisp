@@ -151,17 +151,20 @@
 (defun get-user-custom-texts ()
   "Return a list of dicts representing the texts that we will update in the admin.
   - keys: an id and content (the text)."
-  (bt:with-lock-held (*user-template-lock*)
-    (list
-     (dict :id :welcome
-           :title "Présentation de la librairie"
-           :content (read-custom-file *user-template-path/welcome*))
-     (dict :id :selection
-           :title "Présentation de la sélection du libraire"
-           :content (read-custom-file *user-template-path/selection-presentation*))
-     (dict :id :body
-           :title "Troisième texte"
-           :content (read-custom-file *user-template-path/body*)))))
+  (if *use-admin-custom-texts*
+      (bt:with-lock-held (*user-template-lock*)
+        (list
+         (dict :id :welcome
+               :title "Présentation de la librairie"
+               :content (read-custom-file *user-template-path/welcome*))
+         (dict :id :selection
+               :title "Présentation de la sélection du libraire"
+               :content (read-custom-file *user-template-path/selection-presentation*))
+         (dict :id :body
+               :title "Troisième texte"
+               :content (read-custom-file *user-template-path/body*))))
+
+      (log:info "We are NOT reading the admin content saved on file. See *user-template-path/body*")))
 
 ;;
 ;; Routes.
@@ -446,6 +449,10 @@
 
 (defvar *admin-url* "/uuid-admin"
   "Admin UUID url, needs to be built with (get-admin-url).")
+
+(defparameter *use-admin-custom-texts* t
+  "If non true, don't read the saved admin content. Bypass it. We'll read the config only.
+  Dev and debugging purposes")
 
 (defun build-uuid ()
   (setf *admin-uuid*
