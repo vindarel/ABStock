@@ -82,7 +82,12 @@
                     <i class="fa fa-shopping-basket"></i>
                   </span>
                   <span>
+                    {% if user-content.basket-short-name %}
+                    {{ user-content.basket-short-name }}
+                    {% else %}
                     Panier
+                    {% endif %}
+
                     <span id="basketqty" class="tag is-light is-rounded"> 0 </span>
                   </span>
                 </a>

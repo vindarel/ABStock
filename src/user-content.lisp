@@ -38,6 +38,8 @@
     :doc "Intro text (HTML) at the top of the product selection page.")
 
    ;; Shopping basket.
+   (basket-short-name
+    :doc "Button string.")
    (basket-title
     :doc "The title on the shopping basket's page.")
    (basket-text

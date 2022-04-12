@@ -78,7 +78,12 @@
 ;; Shopping basket.
 ;;
 (setf (user-content-basket-title *user-content*)
+      ;; Basket page title
       "Your basket")
+
+(setf (user-content-basket-short-name *user-content*)
+      ;; button
+      "Basket")
 
 (setf (user-content-basket-text *user-content*)
       """"
