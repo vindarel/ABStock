@@ -174,6 +174,7 @@
                                         ;TODO: dev
                           ;; :selection-cards (pick-cards :n 6) ;; random
                           :selection-cards (get-selection-subset :ensure-cover t)
+                          :search-form-template (get-template "search-form.html" *theme*)
                           :shelves *shelves*))
 
 #+nil
@@ -193,6 +194,7 @@
                       :shelf rayon
                       :page page)
       (djula:render-template* +cards.html+ nil
+                              :search-form-template (get-template "search-form.html" *theme*)
                               :title (format nil "~a - ~a"
                                              (user-content-brand-name *user-content*)
                                              q)
