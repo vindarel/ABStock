@@ -51,7 +51,7 @@
 
 
 ;; Utils.
-(defun get-template(template &optional theme)
+(defun get-template(template &optional (theme *theme*))
   "Loads template from the base templates directory or from the given theme templates directory if it exists."
   (if (and (str:non-blank-string-p theme)
            (probe-file (asdf:system-relative-pathname "abstock" (str:concat "src/templates/themes/" theme "/" template))))
@@ -75,12 +75,19 @@
 (djula:add-template-directory
  (asdf:system-relative-pathname "abstock" "src/templates/"))
 ;; and load the current theme's templates (if any).
-(when (str:non-blank-string-p *theme*)
-  (format-box t (format nil "Loading theme \"~a\" !" *theme*))
-  (djula:add-template-directory
-   (asdf:system-relative-pathname
-    "abstock" (str:concat "src/templates/themes/" *theme* "/"))))
+(defun load-theme-templates (&optional (theme *theme*))
+  "Load the Djula templates of the given theme (see `*THEME*')."
+  (when (str:non-blank-string-p *theme*)
+    (format-box t (format nil "Loading theme \"~a\" !" *theme*))
+    (djula:add-template-directory
+     (asdf:system-relative-pathname
+      "abstock" (str:concat "src/templates/themes/" *theme* "/")))))
 
+;; do it at startup:
+(load-theme-templates)
+
+;; These templates are only loaded at startup.
+;; It would be nice to re-load them on demand, when the theme changes for example.
 (defparameter +base.html+ (djula:compile-template* (get-template "base.html" *theme*)))
 (defparameter +welcome.html+ (djula:compile-template* (get-template "welcome.html" *theme*)))
 (defparameter +cards.html+ (djula:compile-template* (get-template "cards.html" *theme*)))
@@ -215,6 +222,10 @@
                             :cards cards
                             :secret-question *secret-question*
                             :open-form t
+                            ;; The template can be overriden by a theme,
+                            ;; but at the same time the path isn't discovered automatically
+                            ;; at startup like the others because we use an "include".
+                            :validation-form-template (get-template "validation-form.html" *theme*)
                             :user-content *user-content*
                             :contact *contact-infos*)))
 
