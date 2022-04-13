@@ -464,19 +464,14 @@
             (uuid:make-v5-uuid uuid:+namespace-url+ "abstock"))))
 
 (defun get-admin-url ()
-  (or *admin-url*
-      (setf *admin-url*
+  (or (setf *admin-url*
             (str:downcase
              (str:concat "/"
                          (with-output-to-string (s)
                            (format s "~a"
                                    (or *admin-uuid* (build-uuid))))
-                         "-admin")))))
-
-;XXX: move to sart-up.
-(progn
-  (get-admin-url)
-  (uiop:format! t "~&**** your admin URL is: ~a" *admin-url*))
+                         "-admin")))
+      *admin-url*))
 
 (hunchentoot:define-easy-handler
  (admin-route :uri (get-admin-url)) ()
@@ -601,6 +596,10 @@
   ;; Start the web server.
   (start-server :port port)
   (uiop:format! t "~&~a~&" (cl-ansi-text:green "✔ Ready. You can access the application!"))
+
+  ;; Build the admin URL (uuid like)
+  (get-admin-url)
+  (format-box t (format nil "Your admin URL is: ~a" *admin-url*))
 
   ;; Load data from the DB.
   (if load-db
