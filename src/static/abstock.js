@@ -38,7 +38,7 @@ function save_admin(textid) {
             }
             else {
                 console.log("status is not success: ", myJson.status);
-                Notiflix.Notify.Warning("OK ou pas ?");
+                Notiflix.Notify.Warning(myJson.message);
             }
         })
         .catch((error) => {

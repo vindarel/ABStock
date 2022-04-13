@@ -516,10 +516,10 @@
                                         ;TODO: use api token.
   (setf api-token (hunchentoot:header-in* "api-token"))
   (log:info textid api-token)
-  (unless (equal api-token *api-token*)
+  (unless (or (str:non-blank-string-p api-token)
+              (equal api-token *api-token*))
     (log:warn "API tokens don't match: " api-token)
     (return-from save-admin-route
-      ;; mmh error message unused client side.
       (jojo:to-json (dict "status" 500 "message" "authorization failed."))))
   (unless textid
     (return-from save-admin-route (jojo:to-json (dict "error" "textid is null"))))
