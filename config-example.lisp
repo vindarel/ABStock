@@ -10,6 +10,8 @@
 
 (setf *port* 8989)
 
+(setf *api-token* "your secret token")
+
 (setf *contact-infos*
   '(:|phone| "06 09 09 09 09"
     :|phone2| "06 09 09 77 77"

@@ -6,6 +6,9 @@
 (defvar *server* nil
   "Server instance (Hunchentoot acceptor).")
 
+(defvar *api-token nil
+  "Basic security: API secret token to set in the config.lisp file. If it isn't set, the admin user won't be able to edit texts from the \"admin\" page.")
+
 (defparameter *port* 8899
   "We can override it in the config file.")
 
@@ -509,9 +512,15 @@
 
 (easy-routes:defroute save-admin-route ("/uuid-admin"
                                         :method :post
-                                        :decorators (@json)) (api-token textid)
-                                        ;TODO: used api token.
-  (log:info api-token textid)
+                                        :decorators (@json)) (textid api-token)
+                                        ;TODO: use api token.
+  (setf api-token (hunchentoot:header-in* "api-token"))
+  (log:info textid api-token)
+  (unless (equal api-token *api-token*)
+    (log:warn "API tokens don't match: " api-token)
+    (return-from save-admin-route
+      ;; mmh error message unused client side.
+      (jojo:to-json (dict "status" 500 "message" "authorization failed."))))
   (unless textid
     (return-from save-admin-route (jojo:to-json (dict "error" "textid is null"))))
   (log:info "Content to save is: " (hunchentoot:raw-post-data))

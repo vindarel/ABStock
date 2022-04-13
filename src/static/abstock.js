@@ -17,8 +17,14 @@ function save_admin(textid) {
         console.log("POSTing on ", url);
     }
 
+    let token = document.getElementById('api-token').innerText;
+    console.log("token: ", token);
+
     fetch(url, {
         method: 'POST',
+        headers: new Headers({
+            'api-token': token,
+        }),
         body: content
     })
         .then((response) => {
