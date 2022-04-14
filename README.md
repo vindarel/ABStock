@@ -36,14 +36,10 @@ The website features by default the following pages, all customizable:
 - a confirmation form, which sends the command by email to the shop owner, and a confirmation email to the client,
 - a special page to showcase a selection.
   - they can be chosen from Abelujo or defined in a file
-- an **admin page** to change the text shown on different pages. **New** on March, 2022.
-  - *Work In Progress*
-  - your admin URL is printed to standard output when you start the app (there are no user acconuts):
-  - we use a user-friendly rich-text editor: [Stylo](https://stylojs.com/).
+- an **admin page** to change the text shown on different pages, with a rich-text editor: [Stylo](https://stylojs.com/). **New** on April, 2022.
+  - your admin URL is printed to standard output when you start the app (there are no user accounts). See the documentation.
 
-    Your admin URL is: /5453ca7b-244f-5087-ad1b-b7d250f19a99-admin
-
-Here's how searching the stock looks like:
+Here's how searching the stock looks like by default (we can build themes on-demand):
 
 ![welcome screen](search.png "welcome screen")
 

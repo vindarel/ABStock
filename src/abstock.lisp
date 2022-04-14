@@ -37,7 +37,7 @@
 ;; A "card" is the generic name for a book.
 
 
-(defparameter *version* "0.10")          ; duplicated in .asd
+(defparameter *version* "0.11")          ; duplicated in .asd
 
 (defparameter *banner* "
 
