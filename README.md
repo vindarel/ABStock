@@ -280,10 +280,12 @@ GitHub mirror: https://github.com/vindarel/ABStock
 
 Known TODOs:
 
-* admin panel
+* [X] admin panel
 * [X] read products data from a TXT, CSV or a JSON file
-* i18n / remove a few still hardcoded words
-* online Stripe payments
+* [-] i18n / remove a few still hardcoded words
+  - (we managed to translate it, with the config and by overriding templates)
+* [-] online Stripe payments
+  - done upstream in the master software.
 * simple stats
 
 ## Licence
