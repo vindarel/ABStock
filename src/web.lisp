@@ -459,7 +459,17 @@
 
 (defun build-uuid ()
   (setf *admin-uuid*
-        (uuid:make-v5-uuid uuid:+namespace-url+ "abstock")))
+        (uuid:make-v5-uuid
+         uuid:+namespace-url+
+         (str:concat "abstock"
+                     ;; add a bit of randomness.
+                     ;; concat a random string to this seed.
+                     ;; Otherwise the uuid with the "abstock" seed is still the same.
+                     ;; There would be also the random-uui package,
+                     ;; but it adds some more deps.
+                     (with-output-to-string (s)
+                       (loop repeat 10
+                          do (format s "~a" (code-char (+ 80 (random 10))))))))))
 
 (defun build-api-token ()
   (or *api-token*
