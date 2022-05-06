@@ -251,11 +251,12 @@
 ;;
 ;; Get all cards data.
 ;;
-(defun all-cards (&key (order :desc))
+(defun query-all-cards (&key (order :desc))
   "Generates SxQL query. (yield) generates the SQL. It is not executed."
   (select ((:distinct :search_card.id)
            :search_card.created
            :search_card.title
+           :search_card.title_ascii
            :search_card.price
            :search_card.isbn
            :search_card.cover
@@ -272,10 +273,12 @@
            :search_card.presedit
            :search_card.meta
            (:as :search_author.name :author)
+           (:as :search_author.name_ascii :author_ascii)
            (:as :search_author.bio :author_bio)
            (:as :search_shelf.name :shelf)
            (:as :search_shelf.id :shelf_id) ;; cannot use a -
            (:as :search_publisher.name :publisher)
+           (:as :search_publisher.name_ascii :publisher_ascii)
            (:as :search_publisher.address :publisher_city))
 
           (from :search_card
@@ -296,8 +299,9 @@
 (defun get-all-cards ()
   "Get all the ids of the cards in the DB."
   (if (uiop:file-exists-p *db-name*)
-      (let* ((query (dbi:prepare *connection* (yield (all-cards))))
-             (query (dbi:execute query (list 0))))
+      (let* ((query (dbi:execute (dbi:prepare *connection*
+                                              (yield (query-all-cards)))
+                                 (list 0))))
         ;; caution: what's long is printing all the cards.
         (log:info "(re)loading the DB")
         (setf *cards* (normalise-cards
@@ -316,15 +320,16 @@
           (slug:slugify (access card :|title|))))
 
 (defun normalise-cards (cards)
-  "Add a repr key that joins title and author and removes accents.
+  "Add a repr key that joins title and author.
   Change details_url to a short, slugified URL relative to the server root.
   XXX: we should keep the initial details_url and add a new field."
+  (log:info cards)
   (loop for card in cards
      ;; access is more generic than getf, it also works with uninterned symbols
      ;; (but we don't have such anymore).
-     for ascii-title = (slug:asciify (access card :|title|))
-     for ascii-author = (slug:asciify (access card :|author|))
-     for ascii-publisher = (slug:asciify (access card :|publisher|))
+     for ascii-title = (access card :|title_ascii|)
+     for ascii-author = (access card :|author_ascii|)
+     for ascii-publisher = (access card :|publisher_ascii|)
      do (setf (getf card :|repr|)
               (str:downcase (str:concat ascii-title " " ascii-publisher)))
      do  (setf (getf card :|repr2|)
