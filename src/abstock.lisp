@@ -327,13 +327,13 @@
   (loop for card in cards
      ;; access is more generic than getf, it also works with uninterned symbols
      ;; (but we don't have such anymore).
-     for ascii-title = (access card :|title_ascii|)
-     for ascii-author = (access card :|author_ascii|)
-     for ascii-publisher = (access card :|publisher_ascii|)
+     for title_ascii = (access card :|title_ascii|)
+     for author_ascii = (access card :|author_ascii|)
+     for publisher_ascii = (access card :|publisher_ascii|)
      do (setf (getf card :|repr|)
-              (str:downcase (str:concat ascii-title " " ascii-publisher)))
+              (str:downcase (str:concat title_ascii " " publisher_ascii)))
      do  (setf (getf card :|repr2|)
-               (str:downcase (str:concat ascii-author " " ascii-title " " ascii-publisher)))
+               (str:downcase (str:concat author_ascii " " title_ascii " " publisher_ascii)))
      do (setf (getf card :|details_url|)
               (slugify-details-url card))
      collect card))
