@@ -317,7 +317,7 @@
   ;; (parse-integer (first (str:split "-" slug)))
   ;; not in a function yet.
   (format nil "/livre/~a-~a" (access card :|id|)
-          (slug:slugify (access card :|title|))))
+          (slug:slugify (access card :|title_ascii|))))
 
 (defun normalise-cards (cards)
   "Add a repr key that joins title and author.
