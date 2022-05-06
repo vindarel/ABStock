@@ -77,6 +77,7 @@
 ;; Load our default templates.
 (djula:add-template-directory
  (asdf:system-relative-pathname "abstock" "src/templates/"))
+
 ;; and load the current theme's templates (if any).
 (defun load-theme-templates (&optional (theme *theme*))
   "Load the Djula templates of the given theme (see `*THEME*')."
@@ -523,7 +524,6 @@
 (easy-routes:defroute save-admin-route ("/uuid-admin"
                                         :method :post
                                         :decorators (@json)) (textid api-token)
-                                        ;TODO: use api token.
   (setf api-token (hunchentoot:header-in* "api-token"))
   (log:info textid api-token)
   (unless (or (str:non-blank-string-p api-token)

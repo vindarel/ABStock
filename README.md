@@ -63,8 +63,6 @@ Interested? Please get in touch.
 ### Other features
 
 - access a simple admin page to edit the application's texts with a rich editor.
-  - on startup, the app tells you the admin URL, of the like `/6453ca7c-133f-5061-ab1a-c8f29a66-admin`. There is no user accounts or passwords.
-  - set an api token in the config: `(setf *api-token* "your token")`.
 - translate URLs ("/book/<slug>" or "/livre/<slug>")
 - redefine anything with the pre- and post-config files, written in the programming language of the application (Lisp)
 

@@ -118,7 +118,7 @@
   (asdf:system-relative-pathname :abstock *db-name*))
 
 (defun connect ()
-                                        ;TODO: needs to be run inside the directory of db.db
+  ;TODO: needs to be run inside the directory of db.db
   (if (uiop:file-exists-p *db-name*)
       (setf *connection*
             (dbi:connect :sqlite3
