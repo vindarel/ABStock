@@ -90,27 +90,31 @@
 (defvar *db-name* "db.db" "The DB name.")
 
 (defvar *cards* nil
-  "List of all books.")
+  "List of all books we display.")
+
+(defparameter *deposit-cards* nil
+  "The list of all cards in all deposits.")
 
 (defvar *old-cards* nil)
-(defvar *old-shelves* nil)
 
+(defvar *old-shelves* nil)
 (defvar *shelves* nil)
 (defvar *ignore-shelves-ids* nil
   "Ignore (don't show) these shelves. Cards that are only present in
   these shelves will still be shown. To correctly ignore those cards,
   we have to use proper lists for returns, which would remove their
   cards from the stock. This is not yet implemented in Abelujo.")
+
 (defvar *ignore-shelves-starting-by* nil
   "List of strings. Ignore the shelves whose name starts by one of them.")
 
 (defvar *page-length* 100
   "Page length: number of elements per page to show.")
-
 ;;
 ;; Dev helpers.
 ;;
 ;; We don't want to print 3000+ strings, it hangs the editor and the server.
+
 (setf *print-length* 100)
 
 (defun get-db-name ()
@@ -152,7 +156,7 @@
           (load (uiop:native-namestring file)))
         (format t "... no post-config file found.~&"))))
 
-(defun card-by-id (id)
+(defun query-card-by-id (id)
   "Generates SxQL query. (yield) generates the SQL. It is not executed."
   (select (:search_card.title
            :search_card.price
@@ -188,14 +192,15 @@
     (where (:= :search_card.id id))))
 
 (defun search-card (id)
+  "Search a card by id in the DB."
   ;; also fetch-all
-  (dbi:fetch (dbi:execute (dbi:prepare *connection* (yield (card-by-id id)))
+  (dbi:fetch (dbi:execute (dbi:prepare *connection* (yield (query-card-by-id id)))
                           (list id))))
-
 ;;
 ;; Get all ids.
 ;;
-(defun all-ids ()
+
+(defun query-all-ids ()
   (select (:search_card.id)
     (from :search_card)
     ;; (where (:<= :search_card.id 200))
@@ -203,11 +208,11 @@
 
 (defun get-all-ids ()
   "Get all the ids of the cards in the DB."
-  (dbi:fetch-all (dbi:execute (dbi:prepare *connection* (yield (all-ids))))))
-
+  (dbi:fetch-all (dbi:execute (dbi:prepare *connection* (yield (query-all-ids))))))
 ;; same, search one card by isbn (dev only, unused in prod).
-(defun card-by-isbn (isbn)
-  "Generates SxQL query. (yield) generates the SQL. It is not executed."
+
+(defun query-card-by-isbn (isbn)
+  "Generates an SxQL query. (yield) generates the SQL. It is not executed."
   (select ((:distinct :search_card.id)
            :search_card.created
            :search_card.price
@@ -245,12 +250,15 @@
     (where (:= :search_card.isbn isbn))))
 
 (defun search-isbn (isbn)
+  "Search a card by ISBN in the DB.
+  Returns a plist."
   ;; also fetch-all
-  (dbi:fetch (dbi:execute (dbi:prepare *connection* (yield (card-by-isbn isbn)))
+  (dbi:fetch (dbi:execute (dbi:prepare *connection* (yield (query-card-by-isbn isbn)))
                           (list isbn))))
 ;;
 ;; Get all cards data.
 ;;
+
 (defun query-all-cards (&key (order :desc))
   "Generates SxQL query. (yield) generates the SQL. It is not executed."
   (select ((:distinct :search_card.id)
@@ -293,22 +301,78 @@
           (join :search_card_publishers
                 :on (:and (:= :search_card.id :search_card_publishers.card_id)
                           (:= :search_publisher.id :search_card_publishers.publisher_id)))
-          (where (:> :search_card.quantity 0))
+          ;; DEV: don't filter on the quantity yet, to get the ones in deposits.
+          ;; (where (:> :search_card.quantity 0))
           (order-by `(,order :search_card.created))))
 
 (defun get-all-cards ()
   "Get all the ids of the cards in the DB."
   (if (uiop:file-exists-p *db-name*)
       (let* ((query (dbi:execute (dbi:prepare *connection*
-                                              (yield (query-all-cards)))
-                                 (list 0))))
+                                              (yield (query-all-cards)))))
+             ;; DB query:
+             (cards (dbi:fetch-all query)))
         ;; caution: what's long is printing all the cards.
         (log:info "(re)loading the DB")
         (setf *cards* (normalise-cards
                        (remove-duplicated-cards
-                        (dbi:fetch-all query))))
+                        (merge-cards-and-deposits cards
+                                                  (get-deposit-id/quantities)))))
         t)
       (warn "The DB file ~a does not exist. We can't load data from the DB.~&" *db-name*)))
+
+(defun query-deposit-ids/quantities ()
+  "Get the cards in deposits, with their current quantity in deposit.
+  All cards are returned.
+  We must filter them more manually."
+  (select ((:distinct :search_card.id)
+           (:as :search_depositstatecopies.nb_current :nb_current_deposit))
+    (from :search_depositstatecopies)
+    (join :search_card
+          :on (:= :search_card.id :search_depositstatecopies.card_id))
+    ;; where clause: don't forget dbi:execute argument (re-give the 0).
+    (where (:> :nb_current 0))))
+
+(defun get-deposit-id/quantities ()
+  "Return a plist of id and nb_current of the card in deposits.
+  See id/quantities-as-dict to transform the list as a hash-table, and merge-cards-and-deposits to merge and filter all cards."
+  (let* ((query (dbi:execute
+                 (dbi:prepare *connection*
+                              (yield (query-deposit-ids/quantities)))
+                 (list 0))))
+    (log:info "(re)loading the deposits")
+    (setf *deposit-cards* (dbi:fetch-all query))
+    (values *deposit-cards* (length *deposit-cards*))))
+
+(defun id/quantities-as-dict (plist)
+  "Helper function. Create a hash-table with this plist.
+   key: the :id.
+   val: the :nb_current"
+  (loop for elt in plist
+     with ht = (dict)
+     for id = (access elt :|id|)
+     for nb = (access elt :|nb_current_deposit|)
+     do (setf (gethash id ht)
+              nb)
+     finally (return ht)))
+
+(defun merge-cards-and-deposits (cards deposit-cards)
+  "Helper function. Merge the two lists, return cards that are either in stock, either in deposits.
+  Return: a list of cards.
+
+  cards: list of plist
+  deposit-cards: plist with only id and nb_current (in deposit)"
+  (loop for card in cards
+     with id/nb = (id/quantities-as-dict deposit-cards)
+     for quantity = (access card :|quantity|)
+     for nb_current_deposit = (access id/nb (access card :|id|))
+     if (and quantity
+             (plusp quantity))
+     collect card
+     else
+     if (and nb_current_deposit
+             (plusp nb_current_deposit))
+     collect card))
 
 (defun slugify-details-url (card)
   "Return a slug to identify this card, relative to the server root URL.
@@ -323,7 +387,6 @@
   "Add a repr key that joins title and author.
   Change details_url to a short, slugified URL relative to the server root.
   XXX: we should keep the initial details_url and add a new field."
-  (log:info cards)
   (loop for card in cards
      ;; access is more generic than getf, it also works with uninterned symbols
      ;; (but we don't have such anymore).

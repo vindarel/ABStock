@@ -1,4 +1,4 @@
-# v0.11, April, 202
+# v0.11, April, 2022
 
 - added **pagination** to all pages.
 - fixed display order: **most recent book first**.
@@ -10,7 +10,7 @@
   - when you start the app, it will tell you the URL, of the form `/5453ca7c-734f-5089-ad1a-b7d250f176-admin`. It is unique and re-generated at each startup, unless you save it into the config file: `(setf *admin-uuid* "uuid")` (sans the "-admin" part). You must also set an API token, see the developer documentation.
   - we use the Stylo rich text editor
   - for development: a variable allows to not use the content saved from this page: `*use-admin-custom-texts*`.
-
+- added: we now also show the cards that were in deposits (in the Abelujo DB).
 
 # v0.10, July, 2021
 
