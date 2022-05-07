@@ -399,6 +399,8 @@
                (str:downcase (str:concat author_ascii " " title_ascii " " publisher_ascii)))
      do (setf (getf card :|details_url|)
               (slugify-details-url card))
+     if (str:ends-with-p "epagine.fr/no_image.png" (access card :|cover|))
+     do (setf (access card :|cover|) nil) ;; our template will put our default cover.
      collect card))
 
 (defun sort-cards-by-creation-date (cards)
