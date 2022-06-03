@@ -286,6 +286,10 @@ Known TODOs:
   - done upstream in the master software.
 * simple stats
 
+## Changelog
+
+- 2022, June: the cache files `cards.lisp` and `shelves.lisp` were renamed with a `.lisp-expr` extension.
+
 ## Licence
 
 AGPLv3.

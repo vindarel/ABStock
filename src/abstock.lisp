@@ -704,8 +704,9 @@
         (format f "~s~&" *shelves*)
         (format t "~&Shelves saved on ~s.~&" "shelves.lisp")))))
 
-(defun reload-cards (&key (file "cards.lisp") (file-shelves "shelves.lisp"))
+(defun reload-cards (&key (file "cards.lisp-expr") (file-shelves "shelves.lisp-expr"))
   "Reload saved cards from file."
+  ;; Use "-expr" to not count this as source code (especially for rgrep and friends).
   (if (uiop:file-exists-p file)
       (progn
         (setf *old-cards* *cards*)
@@ -729,7 +730,7 @@
   - (load \"src/abstock.lisp\"): to reload a lisp file. HTML files are reloaded automatically.")
   (values))
 
-(defun quit (&key (save t) (file "cards.lisp"))
+(defun quit (&key (save t) (file "cards.lisp-expr"))
   "Quit and save cards on disk, for faster restarts."
   (when save
     (save :file file))
