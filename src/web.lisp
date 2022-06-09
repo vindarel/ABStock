@@ -6,11 +6,21 @@
 (defvar *server* nil
   "Server instance (Hunchentoot acceptor).")
 
-(defvar *api-token nil
+(defvar *api-token* nil
   "Basic security: API secret token to set in the config.lisp file. If it isn't set, the admin user won't be able to edit texts from the \"admin\" page.")
 
-(defparameter *port* 8899
-  "We can override it in the config file.")
+(defvar *user-template-lock* (bt:make-lock)
+  "Lock to save user HTML edited in the admin.")
+
+(defvar *admin-uuid* nil
+  "UUID used to build the admin URL.")
+
+(defvar *admin-url* "/uuid-admin"
+  "Admin UUID url, needs to be built with (get-admin-url).")
+
+(defparameter *use-admin-custom-texts* t
+  "If non true, don't read the saved admin content. Bypass it. We'll read the config only.
+  Dev and debugging purposes")
 
 (defvar *sentry-dsn-file* "~/.config/abstock/sentry-dsn.txt")
 
@@ -18,6 +28,12 @@
   ;; used in email.lisp, defined here before loading the config.lisp.
   '(:|sender-api-key| ""
     :|from| ""))
+
+;;
+;; Parameters
+;;
+(defparameter *port* 8899
+  "We can override it in the config file.")
 
 (defparameter *dev-mode* nil
   "If non-nil, don't use Sentry and use a subset of all the cards.")
@@ -445,22 +461,9 @@
 ;;   (djula:render-template* +card-page.html+ nil
 ;;                           :card card))
 
-(defvar *admin-uuid* nil
-  "UUID used to build the admin URL.")
-
-(defvar *api-token* nil
-  "UUID secret token for API.")
-
-(defvar *admin-url* "/uuid-admin"
-  "Admin UUID url, needs to be built with (get-admin-url).")
-
-(defparameter *use-admin-custom-texts* t
-  "If non true, don't read the saved admin content. Bypass it. We'll read the config only.
-  Dev and debugging purposes")
-
 (defun build-uuid ()
   (setf *admin-uuid*
-        (uuid:make-v5-uuid
+        (uuid:make-v5-uuid              ;; make-v1-uuid seems enough and random (time-based)
          uuid:+namespace-url+
          (str:concat "abstock"
                      ;; add a bit of randomness.
@@ -501,9 +504,6 @@
 (defun @json (next)
   (setf (hunchentoot:content-type*) "application/json")
   (funcall next))
-
-(defvar *user-template-lock* (bt:make-lock)
-  "Lock to save user HTML edited in the admin.")
 
 (defun write-custom-file (textid content)
   "From a textid (either 'welcome', 'selection' or 'body', write content to the corresponding file."
