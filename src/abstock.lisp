@@ -123,7 +123,7 @@
 
 (defun connect ()
   ;TODO: needs to be run inside the directory of db.db
-  (if (uiop:file-exists-p *db-name*)
+  (if (uiop:file-exists-p (get-db-name))
       (setf *connection*
             (dbi:connect :sqlite3
                          :database-name (get-db-name)))
