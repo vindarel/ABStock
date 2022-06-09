@@ -104,7 +104,7 @@
       "abstock" (str:concat "src/templates/themes/" theme "/")))))
 
 ;; do it at startup:
-(load-theme-templates)
+;; (load-theme-templates)
 
 ;; These templates are only loaded at startup.
 ;; It would be nice to re-load them on demand, when the theme changes for example.
@@ -120,6 +120,24 @@
 
 (defparameter +error-messages.html+ (djula:compile-template* (get-template "error-messages.html" *theme*)))
 (defparameter +404.html+ (djula:compile-template* (get-template "404.html" *theme*)))
+
+(defun load-templates (&optional (theme *theme*))
+  "Load templates with an optional theme.
+  Do this after we read the app config, to read the theme."
+  ;; XXX: this is factored out in Cosmo.
+  (setf +base.html+ (djula:compile-template* (get-template "base.html" theme)))
+  (setf +welcome.html+ (djula:compile-template* (get-template "welcome.html" theme)))
+  (setf +cards.html+ (djula:compile-template* (get-template "cards.html" theme)))
+  (setf +selection-page.html+ (djula:compile-template* (get-template "selection-page.html" theme)))
+  (setf +card-page.html+ (djula:compile-template* (get-template "card-page.html" theme)))
+  (setf +admin-page.html+ (djula:compile-template* (get-template "admin.html" theme)))
+
+  (setf +panier.html+ (djula:compile-template* (get-template "panier.html" theme)))
+  (setf +command-confirmed.html+ (djula:compile-template* (get-template "command-confirmed.html" theme)))
+
+  (setf +error-messages.html+ (djula:compile-template* (get-template "error-messages.html" theme)))
+  (setf +404.html+ (djula:compile-template* (get-template "404.html" theme)))
+  )
 
 ;;
 ;; Custom Djula filter to format prices.
@@ -189,7 +207,7 @@
 ;;
 ;; Routes.
 ;;
-(easy-routes:defroute root ("/" :method :get) ()
+(easy-routes:defroute root-route ("/" :method :get) ()
   (djula:render-template* +welcome.html+ nil
                           :contact *contact-infos*
                           :user-content *user-content*
@@ -611,6 +629,11 @@
     (uiop:format! t "Loading cards selection…")
     (setf *selection* (read-selection))
     (uiop:format! t "~&Done.~&"))
+
+  ;; Load theme templates
+  (log:info "current theme is " *theme*)
+  (load-theme-templates)
+  (load-templates)
 
   ;; Start the web server.
   (start-server :port port)
