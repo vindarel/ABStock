@@ -17,10 +17,16 @@ Another solution to run the app is to run the executable (see README).
 
 (in-package :abstock)
 (handler-case
-    (abstock:start :port (ignore-errors (parse-integer (uiop:getenv "AB_PORT")))
-                   :load-db  (if (uiop:getenv "LOAD_DB")
-                                 nil
-                                 t))
+    (progn
+      (abstock:start :port (ignore-errors (parse-integer (uiop:getenv "AB_PORT")))
+                     :load-db  (if (uiop:getenv "LOAD_DB")
+                                   nil
+                                   t))
+
+      ;; XXX: needed for binary, but when run from sources this deletes the REPL.
+      (bt:join-thread (find-if (lambda (th)
+                                   (search "hunchentoot" (bt:thread-name th)))
+                                 (bt:all-threads))))
   (error (c)
     (format *error-output* "~&An error occured: ~a~&" c)
     (unless *dev-mode*
