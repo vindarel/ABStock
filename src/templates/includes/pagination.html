@@ -7,11 +7,15 @@
       <ul class="pagination-list">
         <li>
           {% if pagination.page == 1 %}
+          <a class="pagination-link" aria-label="Goto first page" disabled
+             href="/search?q={{ query }}&rayon={{ shelf_id }}&page=1"> << </a>
           <a class="pagination-link" aria-label="Goto previous page" disabled> < </a>
           {% else %}
+          <a class="pagination-link" aria-label="Goto first page"
+             href="/search?q={{ query }}&rayon={{ shelf_id }}&page=1"> << </a>
           <a class="pagination-link" aria-label="Goto previous page"
-             href="/search?q={{ query }}&rayon={{ shelf_id }}&page=1"> < </a>
-          {% endif %}
+             href="/search?q={{ query }}&rayon={{ shelf_id }}&page={{ pagination.page|add:-1 }}"> < </a>
+	  {% endif %}
 
           {% for _ in pagination.max-nb-buttons.make-list %}
           <!-- show the is-current class (blue button) or not -->
@@ -42,9 +46,13 @@
 
           {% if pagination.page == pagination.nb-pages %}
           <a class="pagination-link" aria-label="Goto next page" disabled> > </a>
+          <a class="pagination-link" aria-label="Goto last page" disabled
+	     href="/search?q={{ query }}&rayon={{ shelf_id }}&page={{ pagination.nb-pages }}"> >> </a>
           {% else %}
           <a class="pagination-link" aria-label="Goto next page"
-             href="/search?q={{ query }}&rayon={{ shelf_id }}&page={{ pagination.nb-pages }}"> > </a>
+             href="/search?q={{ query }}&rayon={{ shelf_id }}&page={{ pagination.page|add:1 }}"> > </a>
+          <a class="pagination-link" aria-label="Goto last page"
+	     href="/search?q={{ query }}&rayon={{ shelf_id }}&page={{ pagination.nb-pages }}"> >> </a>
           {% endif %}
         </li>
         <li>
