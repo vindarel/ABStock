@@ -13,7 +13,10 @@
 (defparameter *base-url* "https://www.librairie-de-paris.fr/livre/{ISBN}")
 
 (defun get-html (url)
-  (dex:get url))
+  (handler-case
+      (dex:get url)
+    (error ()
+      (log:error "Could not get the summary for URL ~a. Probably a 404 not found." url))))
 
 (defun build-url (isbn)
   (str:replace-all "{ISBN}" isbn *base-url*))
