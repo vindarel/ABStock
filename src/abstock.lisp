@@ -307,7 +307,7 @@
 
 (defun get-all-cards ()
   "Get all the ids of the cards in the DB."
-  (if (uiop:file-exists-p *db-name*)
+  (if (uiop:file-exists-p (get-db-name))
       (let* ((query (dbi:execute (dbi:prepare *connection*
                                               (yield (query-all-cards)))))
              ;; DB query:
