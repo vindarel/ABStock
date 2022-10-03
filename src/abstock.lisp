@@ -322,36 +322,56 @@
       (warn "The DB file ~a does not exist. We can't load data from the DB.~&" *db-name*)))
 
 (defun query-deposit-ids/quantities ()
-  "Get the cards in deposits, with their current quantity in deposit.
+  "Get the cards in deposits, with their current quantity in deposit states.
   All cards are returned.
-  We must filter them more manually."
+  We must filter them more manually later."
   (select ((:distinct :search_card.id)
            (:as :search_depositstatecopies.nb_current :nb_current_deposit))
-    (from :search_depositstatecopies)
+    (from :search_depositstatecopies
+          :search_depositstate)
     (join :search_card
           :on (:= :search_card.id :search_depositstatecopies.card_id))
-    ;; where clause: don't forget dbi:execute argument (re-give the 0).
-    (where (:> :nb_current 0))))
+    (where (:and
+            (:= :search_depositstatecopies.deposit_state_id :search_depositstate.id)
+            (:is-null :search_depositstate.closed)
+            ;; Don't filter by quantity.
+            ;; We want all deposit states that are not closed and sum the current quantity.
+            ;; where clause: don't forget dbi:execute argument (re-give the 0).
+            ;; (:> :nb_current 0)
+            ))))
 
 (defun get-deposit-id/quantities ()
-  "Return a plist of id and nb_current of the card in deposits.
+  "Return a plist of id and nb_current of the card in deposit states.
+
+  We can have several results for one card. To get the current
+  quantity in deposits, we have to sum the nb_current_deposit
+  quantities (see Card.quantity_deposits in Abelujo).
+
   See id/quantities-as-dict to transform the list as a hash-table, and merge-cards-and-deposits to merge and filter all cards."
   (let* ((query (dbi:execute
                  (dbi:prepare *connection*
                               (yield (query-deposit-ids/quantities)))
-                 (list 0))))
+                 ;; (list 0)
+                 )))
     (log:info "(re)loading the deposits")
     (setf *deposit-cards* (dbi:fetch-all query))
     (values *deposit-cards* (length *deposit-cards*))))
 
-(defun id/quantities-as-dict (plist)
+(defun id/quantities-as-dict (deposit-cards)
   "Helper function. Create a hash-table with this plist.
+
+   deposit-cards: list of plists with a card :id and a
+   :nb_current_deposit. Can have multiple tuples for one card, then we
+   must sum their quantities to get the quantity in deposit.
+
    key: the :id.
    val: the :nb_current"
-  (loop for elt in plist
+  (loop for elt in deposit-cards
      with ht = (dict)
      for id = (access elt :|id|)
-     for nb = (access elt :|nb_current_deposit|)
+     for nb = (loop for plist in deposit-cards
+                 if (equal (access plist :|id|) id) ;XXX: quadratic :S
+                 sum (access plist :|nb_current_deposit|))
      do (setf (gethash id ht)
               nb)
      finally (return ht)))
@@ -365,7 +385,8 @@
   (loop for card in cards
      with id/nb = (id/quantities-as-dict deposit-cards)
      for quantity = (access card :|quantity|)
-     for nb_current_deposit = (access id/nb (access card :|id|))
+     for card_id = (access card :|id|)
+     for nb_current_deposit = (access id/nb card_id)
      if (and quantity
              (plusp quantity))
      collect card
