@@ -22,6 +22,7 @@ ABStock was developed during the global lock-down to help a bookshop
 keep an activity and a link with its clients. It proved 100%
 useful. You can have a site on the same model.
 
+*Update, November 2022*: you can now have a more evolved website with (optional) online payments. Check this demo: [https://librairie.abelujo.cc/](https://librairie.abelujo.cc/).
 
 [Install it yourself](/docs/en/install.md) or ask us. Contact us at `contact@abelujo.cc`.
 
