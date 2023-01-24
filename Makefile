@@ -1,6 +1,6 @@
 LISP ?= sbcl
 LISP_FLAGS ?= --disable-debugger
-USERINIT ?= /home/vince/.sbclrc  # for Systemd. How to parametrize it?
+USERINIT ?= /home/vince/.sbclrc  # for Systemd. Need to parametrize it.
 
 deps:
 	git clone https://github.com/mmontone/cl-sentry-client/ ~/quicklisp/local-projects/cl-sentry-client
@@ -17,4 +17,4 @@ rund:
 
 # from sources
 run:
-	rlwrap $(LISP) --load run.lisp --eval '(in-package :abstock)'
+	rlwrap $(LISP) $(LISP_FLAGS) --userinit $(USERINIT) --load run.lisp --eval '(in-package :abstock)'

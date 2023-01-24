@@ -23,10 +23,11 @@ Another solution to run the app is to run the executable (see README).
                                    nil
                                    t))
 
-      ;; XXX: needed for binary, but when run from sources this deletes the REPL.
+      ;; XXX: needed for the binary, but when run from sources this deletes access to the REPL.
       (bt:join-thread (find-if (lambda (th)
                                    (search "hunchentoot" (bt:thread-name th)))
-                                 (bt:all-threads))))
+                               (bt:all-threads))))
+
   (error (c)
     (format *error-output* "~&An error occured: ~a~&" c)
     (unless *dev-mode*
