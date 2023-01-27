@@ -654,6 +654,9 @@
           (let ((swank-port (- *port* 5000)))
             (format t "~&Starting a Swank server on port ~a…~&" swank-port)
             (ql:quickload "swank")
+            ;; necessary? Otherwise, can't connect to the remote Swank:
+            ;; "Can't locate module: SWANK-IO-PACKAGE::SWANK-INFO"
+            (swank-loader:init :load-contribs t)
             (swank:create-server :port swank-port :dont-close t))
           (format t "~&Let's not start a Swank server, alright.~&"))
     (error (c)
