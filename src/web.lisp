@@ -22,6 +22,15 @@
   "If non true, don't read the saved admin content. Bypass it. We'll read the config only.
   Dev and debugging purposes")
 
+(defparameter *start-swank-server* t
+  "If non true, don't start a Swank server.
+  By default, start it on port (- *port* 5000), to get a number in 400x.
+  From your Slime at home, forward the port
+
+    ssh -L4006:127.0.0.1:4006 username@example.com
+
+  and now do M-x slime-connect, choose localhost and your port 4006. See the Cookbook.")
+
 (defvar *sentry-dsn-file* "~/.config/abstock/sentry-dsn.txt")
 
 (defvar *email-config*
@@ -638,6 +647,17 @@
   ;; Start the web server.
   (start-server :port port)
   (uiop:format! t "~&~a~&" (cl-ansi-text:green "✔ Ready. You can access the application!"))
+
+  ;; Start Swank server.
+  (handler-case
+      (if *start-swank-server*
+          (let ((swank-port (- *port* 5000)))
+            (format t "~&Starting a Swank server on port ~a…~&" swank-port)
+            (ql:quickload "swank")
+            (swank:create-server :port swank-port :dont-close t))
+          (format t "~&Let's not start a Swank server, alright.~&"))
+    (error (c)
+      (format t "~&Could not start Swank server: ~a~&" c)))
 
   ;; Build the admin URL (uuid like)
   (get-admin-url)

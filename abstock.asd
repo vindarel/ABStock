@@ -6,6 +6,7 @@
   :depends-on (
                ;; use CIEL !
                :bordeaux-threads
+               :swank
                ;; web client
                :dexador
                :mito

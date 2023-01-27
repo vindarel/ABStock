@@ -220,6 +220,26 @@ to see the logs:
 
 use `-f` to follow the logs as they are written.
 
+### Swank server - remote control
+
+By default, ABStock will start a Swank server on port `(- *port*
+5000)`, to get a number around 400x.
+
+Set the parameter `*start-swank-server*` to nil in the config file if you don't want to.
+
+That means that we can connect to the running ABStock application on
+our server, from the comfort of our developer environment at home.
+
+This is specially useful if we start ABStock with SystemD, because we
+wouldn't get a Lisp REPL. But we still want access to a REPL, for
+poking around and throwing quick commands in.
+
+From your machine at home, forward the port of the remote server to localhost:
+
+    ssh -L4006:127.0.0.1:4006 username@example.com
+
+and now do M-x slime-connect, choose localhost and your port 4006. See [the Cookbook](https://lispcookbook.github.io/cl-cookbook/debugging.html#remote-debugging).
+
 
 ## Develop
 
