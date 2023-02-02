@@ -89,6 +89,11 @@
 
 (defvar *db-name* "db.db" "The DB name.")
 
+(defvar *db-app-name* :abstock "Where the DB comes from, usually an external application.
+  Used to personalize the retrieval of external data. Currently very limited use.
+
+  (abstock/currencies:find-default-currency *db-app-name*)")
+
 (defvar *cards* nil
   "List of all books we display.")
 

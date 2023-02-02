@@ -61,6 +61,7 @@
                 :components
                 ((:file "abstock")
                  (:file "pagination")
+                 (:file "currencies")
                  (:file "utils")
                  (:file "user-content")
                  (:file "parameters")

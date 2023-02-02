@@ -154,7 +154,8 @@
 ;;
 
 (djula:def-filter :price (val)
-  (format nil "~,2F" val))
+  "Print the price, with the currency symbol"
+  (format nil "~a" (abstock/currencies:display-price val)))
 
 (djula:def-filter :rest (list)
   (rest list))
@@ -278,6 +279,7 @@
                             ;; but at the same time the path isn't discovered automatically
                             ;; at startup like the others because we use an "include".
                             :validation-form-template (get-template "validation-form.html" *theme*)
+                            :default_currency (print (abstock/currencies:default-currency-symbol))
                             :user-content *user-content*
                             :contact *contact-infos*)))
 
@@ -294,10 +296,11 @@
   (with-output-to-string (s)
     (loop for card in cards
        do (format s
-                  "- ~a; ~a; ~,2f€; ~a~&"
+                  "- ~a; ~a; ~a; ~a~&"
                   (getf card :|title|)
                   (getf card :|author|)
-                  (getf card :|price|)
+                  (abstock/currencies:display-price
+                   (getf card :|price|))
                   (getf card :|isbn|)))))
 
 (defun total-command (cards)
@@ -311,8 +314,9 @@
             email
             (format-phone-number phone))
     (format s "~%Il/elle a commandé:~&~%~a~&~%" (cards-to-txt cards))
-    (format s "Le total de la commande est de: ~,2F €.~&~%"
-            (total-command cards))
+    (format s "Le total de la commande est de: ~a.~&~%"
+            (abstock/currencies:display-price
+             (total-command cards)))
     (format s "Moyen de paiement: ~a~&~%" payment)
     (when (not (str:blankp message))
       (format s "Et il/elle a ajouté ce petit mot:~%~%«~a»~%~%" (str:shorten 300 message)))
@@ -323,8 +327,9 @@
   (with-output-to-string (s)
     (format s "Bonjour,~&~%")
     (format s "Nous vous confirmons votre commande des titres suivants:~&~%~a~&~%" (cards-to-txt cards))
-    (format s "Le total de la commande est de: ~,2F €.~&~%"
-            (total-command cards))
+    (format s "Le total de la commande est de: ~a.~&~%"
+            (abstock/currencies:display-price
+             (total-command cards)))
     (format s "Merci !")))
 
 (defun send-confirmation-email (&key to name from reply-to cards)
@@ -621,6 +626,12 @@
         (uiop:format! t "Loading init file...~&")
         (load-init))
       (uiop:format! t "Skipping init file.~&"))
+
+  ;; Read extra info from the DB:
+  ;; - get the default currency.
+  (uiop:format! t "db app name? ~a" *db-app-name*)
+  (uiop:format! t "~&Getting the DEFAULT CURRENCY: ~a~&"
+                (abstock/currencies::find-default-currency *db-app-name* :db-name *db-name*))
 
   ;; Load cards.txt if it exists.
   (uiop:format! t "Loading data from cards.txt~&")

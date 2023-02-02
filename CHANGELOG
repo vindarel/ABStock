@@ -1,5 +1,7 @@
 # DEV
 
+- Jan, 2023: stopped hardcoding the € symbol. Handle different currencies.
+  - see currencies.lisp's docstring.
 - fixed: in some cases we could display books that were not in stock and not in deposits. We fixed the deposit quantity calculation.
 
 # v0.11, April, 2022
