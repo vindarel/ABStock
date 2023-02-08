@@ -16,7 +16,11 @@
       <div class="column is-6 is-offset-3">
         <h1 class="title">
           {% if user-content.welcome-image %}
-          <img src="{{ user-content.welcome-image }}"></img>
+          <div class="card-image has-text-centered">
+            <figure class="image is-inline-block">
+              <img src="{{ user-content.welcome-image }}"></img>
+            </figure>
+          </div>
           {% endif %}
         </h1>
         <h2 class="subtitle">
