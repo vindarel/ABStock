@@ -309,6 +309,7 @@ Known TODOs:
 
 ## Changelog
 
+- 2023, January: really use style.css, use a symlink to your theme.css to add styling.
 - 2022, June: the cache files `cards.lisp` and `shelves.lisp` were renamed with a `.lisp-expr` extension.
 
 ## Licence
