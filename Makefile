@@ -1,6 +1,6 @@
 LISP ?= sbcl
 LISP_FLAGS ?= --non-interactive
-USERINIT ?= /home/vince/.sbclrc  # for Systemd. Need to parametrize it.
+USERINIT ?= /home/$(USER)/.sbclrc  # for Systemd.
 
 deps:
 	git clone https://github.com/mmontone/cl-sentry-client/ ~/quicklisp/local-projects/cl-sentry-client
