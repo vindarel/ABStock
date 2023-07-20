@@ -64,20 +64,20 @@
           </div>
           {% endif %}
 
+          {% if user-content.brand-link-title %}
           <span class="navbar-item">
             <a class="button is-white is-outlined" href="{{ user-content.brand-link }}">
               <span class="icon">
                 <i class="fa fa-home"></i>
               </span>
               <span>
-                {% if user-content.brand-link-title %}
                 {{ user-content.brand-link-title }}
                 {% else %}
                 {{ user-content.brand-name }}
-                {% endif %}
               </span>
             </a>
           </span>
+          {% endif %}
 
           <div id="navbarMenu" class="navbar-menu">
             <div class="navbar-end">
