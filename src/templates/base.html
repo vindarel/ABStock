@@ -30,18 +30,23 @@
         <div class="container">
 
           <div class="navbar-brand">
-            <a class="navbar-item" href="{% if domain %} {{ domain }} {% else %} ../ {% endif %}">
+            <span class="navbar-item">
+              <a class="button is-white is-outlined" href="{% if domain %} {{ domain }} {% else %} ../ {% endif %}">
+              <span class="icon">
+                <i class="fa fa-home"></i>
+              </span>
+              <span>
               {% if user-content.brand-home-title %}
               {{ user-content.brand-home-title }}
               {% else %}
               Home
               {% endif %}
+              </span>
 
-            </a>
+              </a>
+            </span>
 
             <span class="navbar-burger burger" data-target="navbarMenu">
-              <span></span>
-              <span></span>
               <span></span>
             </span>
           </div>
