@@ -156,6 +156,10 @@ For each currency object that exists in this package, have a corresponding `form
   (defmethod find-default-currency ((app (eql :your-app)) :db-name …)
     :currency)" app))
 
+(defmethod find-default-currency ((app (eql :abstock)) &key db-name)
+  (declare (ignore db-name))
+  "€")
+
 (defmethod find-default-currency ((app (eql :abelujo)) &key db-name)
   "Find the default currency registered in Abelujo's DB.
 
