@@ -24,9 +24,7 @@ Another solution to run the app is to run the executable (see README).
                                    t))
 
       ;; XXX: needed for the binary, but when run from sources this deletes access to the REPL.
-      (bt:join-thread (find-if (lambda (th)
-                                   (search "hunchentoot" (bt:thread-name th)))
-                               (bt:all-threads))))
+      (sleep most-positive-fixnum))
 
   (error (c)
     (format *error-output* "~&An error occured: ~a~&" c)
