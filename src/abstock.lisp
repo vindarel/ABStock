@@ -822,30 +822,38 @@
            :arg-parser #'identity
            :long "pid"))
 
-  (multiple-value-bind (options
-                        ;; free-args
-                        )
-      ;; There is no error handling of malformed arguments yet.
-      (opts:get-opts)
+  (handler-case 
+      (multiple-value-bind (options
+                            ;; free-args
+                            )
+	  ;; Error handling for unknown commandline opts only.
+	  (opts:get-opts)
+	
+	(when (getf options :help)
+	  (format t *banner*)
+	  (opts:describe
+	   :prefix "ABStock usage:"
+	   :args "[keywords]") ;; to replace "ARG" in "--nb ARG"
+	  (uiop:quit))
+	
+	(when (getf options :version)
+	  (format t "ABStock version ~a" *version*)
+	  (print-system-info)
+	  (uiop:quit))
+	
+	(format t *banner*)
+	
+	(when (getf options :verbose)
+	  (print-system-info))
+	
+	(when (getf options :pid)
+	  (save-pid (getf options :pid)))
+	
+	(run-app-from-shell))
 
-    (when (getf options :help)
-      (format t *banner*)
+    (opts:unknown-option (c)
+      (format t "~%~a~%~%" c)
       (opts:describe
        :prefix "ABStock usage:"
        :args "[keywords]") ;; to replace "ARG" in "--nb ARG"
-      (uiop:quit))
-
-    (when (getf options :version)
-      (format t "ABStock version ~a" *version*)
-      (print-system-info)
-      (uiop:quit))
-
-    (format t *banner*)
-
-    (when (getf options :verbose)
-      (print-system-info))
-
-    (when (getf options :pid)
-      (save-pid (getf options :pid)))
-
-    (run-app-from-shell)))
+      )))
