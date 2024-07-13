@@ -108,7 +108,7 @@ For each currency object that exists in this package, have a corresponding `form
   (format stream "~,2f~a" price (slot-value currency 'symbol)))
 
 (defmethod format-price (price (currency (eql *fcfa*)) &key (stream nil))
-  (format stream "~,2f ~a" price (slot-value currency 'symbol)))
+  (format stream "~a ~a" price (slot-value currency 'symbol)))
 
 (defmethod format-price (price (currency (eql *usd*)) &key (stream nil))
   (format stream "~a~,2f" (slot-value currency 'symbol) price))
