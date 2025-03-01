@@ -34,19 +34,19 @@
 ;; Content.
 
 (setf (user-content-brand-name *user-content*)
-      "My Shop")
+      "ABStock")
 
 (setf (user-content-brand-home-title *user-content*)
-      "My Shop Online")
+      "ABStock")
 
 (setf (user-content-brand-link *user-content*)
-      "http://foo.fr")
+      "")
 
 (setf (user-content-brand-link-title *user-content*)
-      "My Shop.fr")
+      "")
 
 (setf (user-content-brand-contact-link *user-content*)
-      "http://path/to/contact.html")
+      "")
 
 (setf (user-content-welcome-image *user-content*)
       nil)  ;; "path/to/img.png"
@@ -68,7 +68,7 @@
 ;;; Sélection du libraire.
 ;;;
 (setf (user-content-enable-product-selection *user-content*)
-      nil)
+      t)
 
 (setf (user-content-product-selection-short-name *user-content*)
       ;; mainly for the navbar button. Defaults to "Sélection du libraire".
@@ -90,7 +90,7 @@
 (setf (user-content-basket-text *user-content*)
       """"
           <p>
-          You are nearly don. Fill in the validation form below and we'll come back to you. <br/>
+          You are nearly done. Fill in the validation form below and we'll come back to you. <br/>
           Thank you!
       """"
 )
@@ -101,9 +101,8 @@
 
 ;;; Additional headers.
 (setf (user-content-additional-headers *user-content*)
+      ;; We can put additional HTML in headers here, such as a Matomo code.
       """"
-      HTML.
-      you can put here Matomo code.
       """")
 
 (setf *ignore-shelves-starting-by* '("test-" "TEST"))
